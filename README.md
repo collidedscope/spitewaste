@@ -18,7 +18,7 @@ Spitewaste is the pseudo-assembly language referred to throughout this document,
 
 **spw** is a command-line utility whose primary purpose is to "lower" Spitewaste programs to Whitespace for execution by some external interpreter, but it's capable of several (perhaps too many) other transformations; see `spw help convert` for further details. In addition to losslessly converting between various representations, spw can generate pretty pictures of Whitespace code syntax-highlighted in your favorite color scheme via `spw image`.
 
-Spitewaste is not [a Whitespace interpreter](../spiceweight), but `spw exec` will convert its input to something your interpreter of choice should understand and ferry it along. Finally, `spw compile` will blindly translate Whitespace instructions to functionally equivalent C++ code and feed that into a compiler; the results aren't spectacular (compilers loathe `goto`), but it's fun to pretend Whitespace is a compiled language.
+Spitewaste is not [a Whitespace interpreter](../../../spiceweight), but `spw exec` will convert its input to something your interpreter of choice should understand and ferry it along. Finally, `spw compile` will blindly translate Whitespace instructions to functionally equivalent C++ code and feed that into a compiler; the results aren't spectacular (compilers loathe `goto`), but it's fun to pretend Whitespace is a compiled language.
 
 ## Where <sub>can I get it?</sub>
 
