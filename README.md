@@ -1,7 +1,4 @@
-<p align="center">
-<img src="abc" /><br >
-"Code should be invisible." — someone, surely
-</p>
+<p align="center">"Code should be invisible." — someone, surely</p>
 
 # Spitewaste
 
