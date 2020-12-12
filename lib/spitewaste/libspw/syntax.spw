@@ -1,0 +1,2 @@
+$++ = push 1 add
+$-- = push 1 sub

@@ -1,0 +1,5 @@
+main: push 6 call factorial onum exit
+factorial: push 1 swap call range dup dup dup push 2 sub jn reduce_done_a pop push -9 swap push 1 sub store
+reduce_loop_a: mul push -9 dup load push 1 sub dup jz reduce_done_a store jump reduce_loop_a
+reduce_done_a: pop pop ret
+range: copy 1 push 1 add swap copy 1 copy 1 sub jn range pop ret 

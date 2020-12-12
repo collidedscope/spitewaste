@@ -1,0 +1,98 @@
+import syntax
+
+; Calling range() will insert between the top two stack values all of the
+; intervening consecutive elements: [9 10 3 7] -> [9 10 3 4 5 6 7]
+range:
+  copy 1 push 1 add swap
+  copy 1 copy 1 sub jn range
+  pop ret
+
+;;;
+
+die: :println exit
+;;;
+
+alpha: push "0123456789abcdefghijklmnopqrstuvwxyz" ret
+
+; string to integer in base b
+stoi: ; [s b]
+  swap push 0 ; tally
+
+_stoi_loop: ; [b s t]
+  swap dup jz _stoi_done
+  swap copy 2 copy 2
+  :strlen push 1 sub :pow
+  copy 2 push 128 mod
+  :alpha swap :strindex
+  dup jn _stoi_invalid ; found something non-alphanumeric
+  mul add swap push 128 div swap
+  jump _stoi_loop
+
+_stoi_invalid: pop pop slide 1 swap div ret
+
+_stoi_done: swap slide 2 ret
+
+;;;
+
+bin:  push  2 :stoi ret
+oct:  push  8 :stoi ret
+to_i: push 10 :stoi ret
+hex:  push 16 :stoi ret
+
+;;;
+
+; integer to string in base b
+itos: ; [i b]
+  swap push 0 ; empty string
+
+_itos_loop:
+  swap dup jz _itos_done
+  swap copy 1 copy 3 mod
+  :alpha swap :charat
+  swap :strcat
+  swap copy 2 div
+  swap jump _itos_loop
+
+_itos_done: swap slide 2 ret
+
+to_s: push 10 :itos ret
+
+;;;
+
+digits: ; [ n d ]
+  copy 1 jz _digits_zero ; special case
+  push -1 swap store
+  push -1 swap ; sentinel value
+
+_digits_loop:
+  dup jz _digits_done
+  push -1 load :divmod
+  swap jump _digits_loop
+
+_digits_zero: dup div ret
+
+_digits_done: push 1 sub :to_a ret
+
+; increment value at heap address n
+inc: dup load $++ store ret
+
+; decrement value at heap address n
+dec: dup load $-- store ret
+
+;;;
+
+eq: sub jz _eq_yes push 0 ret
+_eq_yes: push 1 ret
+
+neq: sub jz _neq_no push 1 ret
+_neq_no: push 0 ret
+
+gt: swap
+lt: sub jn _lt_yes push 0 ret
+_lt_yes: push 1 ret
+
+;;;
+
+heap_search:
+  $++ dup load copy 2 :eq jz heap_search
+  slide 1 ret

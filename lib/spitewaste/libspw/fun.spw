@@ -1,0 +1,42 @@
+import string
+
+palindrome?: dup :strrev :eq ret
+
+;;;
+
+anagrams?:
+  :strunpack push 0 :to_a :sort :strjoin swap
+  :strunpack push 0 :to_a :sort :strjoin :eq ret
+
+;;;
+
+isop: :upcase push 0 swap ; tally
+_isop_loop: ; [t s]
+  dup jz _isop_done
+  swap copy 1 push 128 mod
+  dup :isalpha jz _isop_no ; ignore non-alphabetical
+  push 64
+_isop_resume:
+  sub add
+  swap push 128 div jump _isop_loop
+
+_isop_no: dup jump _isop_resume
+
+_isop_done: pop ret
+
+;;;
+
+collatz: push 1 ; sequence length
+_collatz_loop:
+  copy 1 dup push 1 sub jz _collatz_done
+  dup push 2 mod ; m2 n m2
+  swap copy 1 push 2 mul $++ mul
+  push 2 copy 2 sub div add
+  swap $++ jump _collatz_loop
+
+_collatz_done: pop ret
+
+;;;
+
+ruby:
+  push "'" :strcat push "ruby -e 'p " swap :strcat shell ret

@@ -1,0 +1,233 @@
+import math
+import case
+
+;;; String packing and unpacking
+
+; convert a 0-terminated string on the stack to a single base-128 integer
+strpack: push 0 ; tally
+_strpack_loop:
+  swap dup jz _strpack_done
+  copy 1 push 128 mul add
+  slide 1
+  jump _strpack_loop
+
+_strpack_done: pop :strrev ret
+
+; convert a single base-128 integer to a 0-terminated string on the stack
+strunpack:
+  :strrev push 0 swap ; terminator
+
+_strunpack_loop:
+  dup jz _strunpack_done
+  dup push 128 mod swap push 128 div
+  jump _strunpack_loop
+
+_strunpack_done: pop ret
+
+;;;
+
+; takes a packed string and just returns it log128 to give the length
+strlen: push 128 :ilog ret
+
+;;;
+
+; takes two packed strings and returns their concatenation (as a packed string)
+strcat:
+  push 128 copy 2 :strlen :pow
+  mul add ret
+
+;;;
+
+; reverses a packed string in-place (heapless) [s] => [s.reverse]
+strrev: push 0 swap ; [tally string]
+
+_strrev_loop: ; [t s]
+  dup jz _strrev_done
+  swap push 128 mul ; [s t]
+  copy 1 push 128 mod add
+  swap push 128 div
+  jump _strrev_loop
+
+_strrev_done: pop ret
+
+;;;
+
+; takes a packed string, a start index, and a length and returns the
+; corresponding substring (simply by doing division with powers of 128; neat)
+strslice:
+  swap push 128 swap :pow
+  copy 2 swap div
+  swap push 128 swap :pow
+  mod slide 1 ret
+
+;;;
+
+; index of substring t in string s ; [s t]
+strindex: swap push 0
+
+_strindex_loop: ; [t s i]
+  copy 1 copy 3 :strlen push 0 swap :strslice
+  copy 3 sub jz _strindex_found
+  push 1 add ; increment index
+  swap push 128 div dup jz _strindex_no
+  swap jump _strindex_loop
+
+_strindex_no: push -1 slide 3 ret
+
+_strindex_found: slide 2 ret
+
+;;;
+
+charat: push 1 :strslice ret
+
+;;;
+
+; 1 if the character at the top of the stack is alphabetical, 0 otherwise
+isalpha:
+  dup push 123 :lt jz _isalpha_no
+  dup push 64 :gt jz _isalpha_no
+  push 32 mod $-- push 32 mod push 26 :lt ret
+_isalpha_no: dup sub ret
+
+;;;
+
+; repeat a string s n times [s n]
+strrep: push 0 swap
+_strrep_loop: ; [s t n]
+  dup jz _strrep_done
+  swap copy 2 :strcat
+  swap push 1 sub
+  jump _strrep_loop
+
+_strrep_done: swap slide 2 ret
+
+;;; String alignment
+
+; helper function for ljustc and rjustc, since the only difference is whether
+; we swap before calling strcat.
+_justc: swap copy 2 :strlen sub push 0 :max :strrep ret
+
+; Left-justify string s to width w with character c. [s w c]
+ljustc: :_justc :strcat ret
+
+; Left-justify string s to width w with spaces. [s w]
+ljust: push ' ' :ljustc ret
+
+; Right-justify string s to width w with character c. [s w c]
+rjustc: :_justc swap :strcat ret
+
+; Right-justify string s to width w with spaces. [s w]
+rjust: push ' ' :rjustc ret
+
+; Center string s to width w with character c. [s w c]
+centerc:
+  swap dup copy 3 :strlen sub
+  push 0 :max push 2 div
+  copy 2 swap :strrep
+  copy 3 :strcat
+  swap copy 1 :strlen sub
+  push 0 :max
+  copy 2 swap :strrep :strcat
+  slide 2 ret
+
+; Center string s to width w with spaces. [s w]
+center: push ' ' :centerc ret
+
+;;;
+
+; remove the last character of a string
+strchop:
+  dup :strlen push 1 sub
+  push 0 swap :strslice ret
+
+; Split string s on delimiting character d.
+; ! clobbers heap addresses -1 and -2
+strsplit: ; [s d]
+  push -3 push 1 store ; number of found substrings
+  push -2 swap store ; stash delimiter to allow some stack juggling
+_strsplit_loop: ; [s]
+  dup dup push -2 load
+  :strindex dup jn _strsplit_done ; done when index of delimiter is -1
+  push 0 swap :strslice
+  swap copy 1 push -3 load
+  swap :strlen
+  swap push -3 swap push 1 add store ; update number of found
+  push 1 add push 128 swap :pow div ; shrink haystack
+  jump _strsplit_loop
+
+_strsplit_done: push 2 sub slide 1 load ret
+
+;;;
+
+; [...strs n delim]
+; ! clobbers heap address -2 (strlen uses -1)
+strjoinc:
+  dup :strlen pop ; get delimiter length into -1
+  push -2 swap store
+  map (push -2 load :strcat) ; add delimiter to all elements
+  swap push 128 copy 1 :strlen
+  push -2 load :strlen
+  sub :pow mod swap ; remove delimiter from last and flow
+strjoin: reduce (:strcat) ret
+
+;;;
+
+; return the number of ocurrences of character c in string s [s c]
+strcountc: swap push 0 swap
+
+_strcountc_loop: ; c t s
+  dup jz _strcountc_done
+  dup push 128 mod copy 3 sub jz _strcountc_yes
+  push 128 div jump _strcountc_loop
+
+_strcountc_yes:
+  swap push 1 add swap push 128 div
+  jump _strcountc_loop
+
+_strcountc_done: swap slide 2 ret
+
+; number of ocurrences of all characters in string c [s c]
+; ! clobbers heap address -2
+strcount:
+  swap push -2 swap store
+  :strunpack push 0 :to_a
+  map (push -2 load swap :strcountc)
+  reduce (add) ret
+
+;;;
+
+; Convert all characters in src to the corresponding characters in dest.
+; ! clobbers heap addresses -1, -2, and -3
+strtrans: ; [string src dest]
+  push -3 swap store
+  push -2 swap store
+  dup :strlen push -1 swap store
+  :strunpack push -1 load
+  map (:_strtrans) pop
+  :strpack ret
+
+_strtrans:
+  dup push -2 load swap :strindex
+  dup jn _strtrans_no
+  push -3 load swap :charat
+  slide 1 ret
+
+_strtrans_no: pop ret
+
+strexpand:
+  push 0 swap push 128 :divmod
+  swap :range :strpack :strrev ret
+
+strsqueeze: push 0 swap ; [sentinel s]
+_strsqueeze_loop: ; [s]
+  dup jz _strsqueeze_done
+  push 128 :divmod dup copy 3 sub jz _strsqueeze_skip
+  swap jump _strsqueeze_loop
+
+_strsqueeze_skip: pop jump _strsqueeze_loop
+
+_strsqueeze_done: pop :strpack :strrev ret
+
+strsum: :strunpack push 0 :to_a :arysum ret
+
+lines: push 10 :strsplit ret

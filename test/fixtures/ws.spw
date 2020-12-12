@@ -1,0 +1,137 @@
+; Whitespace interpreter in Spitewaste
+
+import io
+import stack
+import string
+import syntax
+
+; instruction "table" [it]
+push "XX.." push "XAX." push "XAB." push "BXX." push "BXA." push "BXB."
+push "BAX." push "BAA." push "XBB." push "XBX." push "XBA." push "AXXX"
+push "AXXA" push "AXXB" push "AXAX" push "AXAA" push "AAX." push "AAA."
+push "BAB." push "ABAX" push "ABAA" push "ABXX" push "ABXA" push "BBB."
+push 24 reduce (:strcat)
+
+push 0 ; program string accumulator
+read_loop:
+  push -1 dup ichr load jn read_done
+  push -1 load push '|' sub jz read_done
+  push 128 mul push -1 load push 56 add add jump read_loop
+read_done: :strrev
+
+$ip = -100 ; instruction pointer
+push $ip dup store
+push 0 ; instruction buffer
+
+parse_loop: ; [it prog buf]
+  copy 1 jz parse_done
+  copy 1 push 128 mod :strcat ; add next character to instruction buffer
+  swap push 128 div ; then slice it off
+  swap :try_insn jump parse_loop ; maybe now buffer contains a valid insn?
+
+try_insn: ; [it prog buf]
+  copy 2 copy 1 push 4 push '.' :ljustc :strindex
+  dup push 4 mod jz found_insn ; valid iff index in table is multiple of 4
+  pop ret
+
+found_insn: ; [it prog buf index]
+  slide 1 push 4 div ; index now 0-23
+  push $ip dup :dec load copy 1 store ; store op
+  push 8 sub jn parse_number
+  push 0 jump number_parsed
+
+parse_number: ; [it prog]
+  push 128 copy 1 push 'B' :strindex
+  push 1 add :pow :divmod push 128 :divmod ; [it prog sign num]
+  swap push "XAB" push "01_" :strtrans :bin
+  swap push 'X' sub jz number_parsed
+  push -1 mul
+
+number_parsed:
+  push $ip dup :dec load swap store ; store instruction (op + arg)
+  push 0 ret ; clear instruction buffer
+
+parse_done:
+  push $ip,1 add slide 3
+  dup push $ip load store ; preserve address of final instruction/start of jumps
+
+labels_loop:
+  push 2 sub dup push $ip,1 add load sub jn labels_done
+  dup load push 3 sub jz add_label ; found label insn
+  jump labels_loop
+
+add_label:
+  push $ip dup :dec load copy 1 store
+  jump labels_loop
+
+labels_done:
+  push $ip,2 add slide 1
+  push $ip load store ; preserve address of final jump/start of call stack
+  push $ip dup store ; reset ip
+
+interpret: ; []
+  push $ip dup :dec load load ; get next op
+  push $ip :dec ; decrement again so arg can be read (or skipped if N/A)
+  dup push  0 sub jz _push
+  dup push  1 sub jz _copy
+  dup push  2 sub jz _slide
+  dup push  3 sub jz _label
+  dup push  4 sub jz _call
+  dup push  5 sub jz _jump
+  dup push  6 sub jz _jz
+  dup push  7 sub jz _jn
+  dup push  8 sub jz _pop
+  dup push  9 sub jz _dup
+  dup push 10 sub jz _swap
+  dup push 11 sub jz _add
+  dup push 12 sub jz _sub
+  dup push 13 sub jz _mul
+  dup push 14 sub jz _div
+  dup push 15 sub jz _mod
+  dup push 16 sub jz _store
+  dup push 17 sub jz _load
+  dup push 18 sub jz _ret
+  dup push 19 sub jz _ichr
+  dup push 20 sub jz _inum
+  dup push 21 sub jz _ochr
+  dup push 22 sub jz _onum
+  dup push 23 sub jz _exit
+  pop exit
+
+_push:  pop push $ip load load jump interpret
+_pop:   pop pop  jump interpret
+_dup:   pop dup  jump interpret
+_swap:  pop swap jump interpret
+_copy:  pop push $ip load load :ncopy  jump interpret
+_slide: pop push $ip load load :nslide jump interpret
+
+_label: pop jump interpret ; no-op
+_call:
+  pop push $ip,2 add dup :dec load
+  push $ip load store jump branch
+_ret:
+  pop push $ip,$ip,2 add load load store
+  push $ip,2 add :inc jump interpret
+
+_jz:    pop jz branch jump interpret
+_jn:    pop jn branch jump interpret
+_jump:  pop
+branch:
+  push $ip dup load load push 1 add ; arg -> offset into jump table
+  push $ip,1 add load sub ; subtract jump table start
+  push 0 swap sub load push 1 sub store ; negate and update ip
+  jump interpret
+
+_add:   pop add jump interpret
+_sub:   pop sub jump interpret
+_mul:   pop mul jump interpret
+_div:   pop div jump interpret
+_mod:   pop mod jump interpret
+
+_store: pop store jump interpret
+_load:  pop load  jump interpret
+_ichr:  pop ichr  jump interpret
+_inum:  pop inum  jump interpret
+_ochr:  pop ochr  jump interpret
+_onum:  pop onum  jump interpret
+_exit:  pop exit

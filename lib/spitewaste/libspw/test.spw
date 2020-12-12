@@ -1,0 +1,8 @@
+assert_eq:
+  dup copy 2 sub jz _assert_eq_yes
+  push "expected " :print onum
+  push ", got " :print onum
+  push " for test " :strcat :print :println
+  exit
+
+_assert_eq_yes: pop pop pop ret

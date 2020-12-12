@@ -1,0 +1,117 @@
+import util (range) ; for factorial
+
+; [b e] => [b^e]
+pow:
+  push 1 swap
+
+_pow_loop: ; [b n e]
+  dup jz _pow_done
+  swap copy 2 mul ; [b e n*b]
+  swap push 1 sub jump _pow_loop
+
+_pow_done: ; b n e
+  pop slide 1 ret
+
+;;;
+
+; [n] => [n!]
+factorial: push 0 swap :range
+_fac_loop: swap dup jz _fac_done mul jump _fac_loop
+_fac_done: pop ret
+
+;;;
+
+isqrt: ; [n] -> [isqrt(n)]
+  dup push 2 sub jn _isqrt_done
+  dup push 4 div :isqrt push 2 mul
+  dup push 1 add
+  copy 2 copy 1 dup mul sub jn _isqrt_cleanup
+  swap
+_isqrt_cleanup: swap slide 2
+_isqrt_done: ret
+
+;;;
+
+; intger logarithm ; [a b] => [log(a, b)]
+; ! clobbers heap address -1 TODO: maybe not necessary?
+ilog:
+  push -1 push 0 store ; tally
+
+_ilog_loop: ; a b
+  swap dup jz _ilog_done
+  push -1 :inc
+  copy 1 div swap
+  jump _ilog_loop
+
+_ilog_done: ; a b t
+  push -1 load slide 2 ret
+
+;;;
+
+; greatest common divisor
+gcd: ; [a  b]
+  dup jz _gcd_done
+  swap copy 1 mod
+  jump gcd
+
+_gcd_done: pop ret
+
+; least common multiple
+lcm: ; [a b]
+  copy 1 mul
+  swap dup copy 2 swap div
+  :gcd div ret
+
+;;;
+
+min: ; [a b]
+  copy 1 copy 1 sub jn _min_done swap
+_min_done: pop ret
+
+max: ; [a b]
+  copy 1 copy 1 sub jn _max_done swap
+_max_done: slide 1 ret
+
+;;;
+
+; -1, 0, or 1 to indicate the sign of the argument
+sign: ; [n]
+  dup jz _sign_zero
+  jn _sign_neg
+  push 1 ret
+_sign_zero: ret
+_sign_neg: push -1 ret
+
+; absolute value ; [n] => [abs(n)]
+abs: dup :sign mul ret
+
+;;;
+
+divmod:
+  push -1 swap store
+  dup push -1 load div
+  swap push -1 load mod ret
+
+;;;
+
+pos?: :sign push  1 :eq ret
+neg?: :sign push -1 :eq ret
+
+;;;
+
+divisors: ; [n]
+  dup push -1 swap store ; preserve n because array operations
+  :isqrt push 1 swap :range dup ; 1..n**0.5
+  reject (push -1 load swap mod) :arydup ; get first half of divisors
+  map (push -1 load swap div) :arycat ; map first half to second half
+  push -1 load copy 2 dup mul sub jz _divisors_square
+  ret
+
+_divisors_square: slide 1 $-- ret ; de-duplicate when N is a perfect square
+
+;;;
+
+nCk:
+  copy 1 copy 1 sub :factorial
+  swap :factorial mul
+  swap :factorial swap div ret

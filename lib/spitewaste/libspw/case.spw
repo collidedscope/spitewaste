@@ -1,0 +1,32 @@
+import bits
+;;; Case conversion
+
+upcase: :strunpack push 0 ; tally
+_upcase_loop:
+  swap dup jz _upcase_done
+  dup :isalpha jz _upcase_cat
+  push 95 :bitwise_and
+_upcase_cat:
+  :strcat jump _upcase_loop
+
+_upcase_done: pop ret
+
+downcase: :strunpack push 0 ; tally
+_downcase_loop:
+  swap dup jz _downcase_done
+  dup :isalpha jz _downcase_cat
+  push 32 :bitwise_or
+_downcase_cat:
+  :strcat jump _downcase_loop
+
+_downcase_done: pop ret
+
+swapcase: :strunpack push 0 ; tally
+_swapcase_loop:
+  swap dup jz _swapcase_done
+  dup :isalpha jz _swapcase_cat
+  push 32 :bitwise_xor
+_swapcase_cat:
+  :strcat jump _swapcase_loop
+
+_swapcase_done: pop ret

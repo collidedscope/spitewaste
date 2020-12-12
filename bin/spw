@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+require 'spitewaste/cli'
+require 'spitewaste/cli/asm'
+require 'spitewaste/cli/exec'
+require 'spitewaste/cli/compile'
+require 'spitewaste/cli/convert'
+require 'spitewaste/cli/image'
+
+SpitewasteCLI.start ARGV

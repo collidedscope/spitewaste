@@ -1,0 +1,72 @@
+import math
+
+; TODO: don't use strings for bitwise operations
+
+; bitwise bitwise_and
+; ! clobbers heap address -1
+bitwise_and: ; [a b] => [a & b]
+  push -1 push 0 store ; empty string tally
+
+_bitwise_and_loop:
+  copy 1 copy 1 add jz _bitwise_done
+  copy 1 push 2 mod
+  copy 1 push 2 mod
+  add push 2 sub jz _bitwise_and_yes
+  push '0' jump _bitwise_and_update
+
+_bitwise_and_yes: push '1'
+_bitwise_and_update: :_bitwise_update jump _bitwise_and_loop
+
+_bitwise_update:
+  push -1 load swap :strcat
+  push -1 swap store
+  push 2 div swap push 2 div ret
+
+_bitwise_done: push -1 load :strrev :bin slide 2 ret
+
+; bitwise bitwise_or
+; ! clobbers heap address -1
+bitwise_or: ; [a b] => [a | b]
+  push -1 push 0 store ; empty string tally
+
+_bitwise_or_loop:
+  copy 1 copy 1 add jz _bitwise_done
+  copy 1 push 2 mod
+  copy 1 push 2 mod
+  add jz _bitwise_or_no
+  push '1' jump _bitwise_or_update
+
+_bitwise_or_no: push '0'
+_bitwise_or_update: :_bitwise_update jump _bitwise_or_loop
+
+; bitwise bitwise_xor
+; ! clobbers heap address -1
+bitwise_xor: ; [a b] => [a ^ b]
+  push -1 push 0 store ; empty string tally
+
+_bitwise_xor_loop:
+  copy 1 copy 1 add jz _bitwise_done
+  copy 1 push 2 mod
+  copy 1 push 2 mod
+  add push 1 sub jz _bitwise_xor_yes
+  push '0' jump _bitwise_xor_update
+
+_bitwise_xor_yes: push '1'
+_bitwise_xor_update: :_bitwise_update jump _bitwise_xor_loop
+
+; flip all bits in n ; [n]
+bitwise_not:
+  dup push 0 swap push 1 add sub
+  swap push 2 :ilog push 2 swap :pow mod ret
+
+;;;
+
+; number of set bits in n ; [n]
+popcount: push 2 :digits reduce (add) ret
+
+;;;
+
+; most significant set bit in n, as a power of 2 ; [n]
+msb: dup jz _msb_zero
+  push 2 :itos :strlen $-- push 2 swap :pow ret
+_msb_zero: ret

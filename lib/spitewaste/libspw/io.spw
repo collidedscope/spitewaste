@@ -1,0 +1,39 @@
+; prints the character at the top of the stack until terminating zero
+print: :strunpack
+_print_loop:
+  dup jz _print_done
+  ochr jump _print_loop
+_print_done: pop ret
+
+; print with newline
+println: :print push 10 ochr ret
+
+;;;
+
+; reads a line of input onto the top of the stack as a packed string
+; ! clobbers heap address -1
+getline: push 0 ; terminator for strpack
+
+; read characters onto the stack until newline (10) or EOF (-1)
+_getline_loop:
+  push -1 dup ichr load
+  dup jn _getline_eof
+  dup push 10 sub jz _getline_done
+  jump _getline_loop
+
+_getline_eof: pop
+_getline_done: :strpack :strrev ret
+
+;;;
+
+prompt: :print :getline ret
+
+;;;
+
+; consume stdin until EOF
+readall: push 0 ; accumulated string
+_readall_loop:
+  :getline dup jz _readall_done
+  :strcat jump _readall_loop
+
+_readall_done: pop ret

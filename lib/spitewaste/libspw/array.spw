@@ -1,0 +1,82 @@
+$amax = 1000
+
+arysum: reduce (add) ret
+
+arydup:
+  dup $++ push -2 copy 1 store
+  times (push -2 load $-- :ncopy) ret
+
+arypop: slide 1 $-- ret
+
+aryshift: dup :dig $-- ret
+
+arycat: dup $++ :roll add ret
+
+arypack:
+  :arydup reduce (:max) $++ push -1 swap store
+  $-- times (push -1 load mul add)
+  push $amax mul push -1 load add
+  push $amax mul push -10 load add ret
+
+aryunpack:
+  push $amax :divmod push -2 swap store
+  push $amax :divmod push -1 swap store
+  push -2 load times (push -1 load :divmod swap)
+  push 2 sub load ret
+
+arylen: push $amax mod ret
+
+;;;
+
+aryindex: copy 1 ; two copies of length, one gets decremented, index is diff
+_aryindex_loop: ; [h n l]
+  dup jn _aryindex_notfound
+  dup push 2 add :roll copy 2 :eq jz _aryindex_no
+  copy 2 copy 1 sub swap $++ :nslide ret
+
+_aryindex_no: $-- jump _aryindex_loop
+
+_aryindex_notfound: slide 1 ret
+
+;;;
+
+; element at index i
+aryat: ; [a i]
+  dup jn _aryat_neg
+  copy 1 swap sub dup :pos? jz _aryat_oob
+  :roll swap $-- :nslide ret
+
+_aryat_neg: copy 1 add dup jn _aryat_oob jump aryat
+
+_aryat_oob: push "(aryat) index out of bounds!" :die
+
+minmax:
+  :arydup reduce (:max)
+  push -1 swap store
+  reduce (:min) push -1 load ret
+
+;;;
+
+sort: push -3 copy 1 store ; preserve length
+_sort_loop:
+  :arydup reduce (:min)
+  push -1 copy 1 store copy 1 $++ :bury ; stash minimum element
+  :arydup push -1 load :aryindex
+  copy 1 swap sub :dig $-- ; remove minimum element from array
+  push 0 copy 1 sub jn _sort_loop
+  push 3 sub load ret
+
+aryrev: push -3 copy 1 store
+_aryrev_loop:
+  swap copy 1 :bury $--
+  push 0 copy 1 sub jn _aryrev_loop
+  push 3 sub load ret
+
+;;;
+
+aryrep: push -1 swap push -3 copy 1 store store
+_aryrep_loop:
+  push -1 dup :dec load jz _aryrep_done
+  :arydup jump _aryrep_loop
+
+_aryrep_done: push -3 load $-- times (:arycat) ret

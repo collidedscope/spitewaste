@@ -1,0 +1,84 @@
+roll:
+  push -10 dup store ; current heap index kept at -10
+
+_roll_keep: ; [n]
+  dup jz _roll_remove
+  push -10 :dec
+  swap push -10 load swap store
+  push 1 sub jump _roll_keep
+
+_roll_remove:
+  push 10 sub load
+  swap push -10 swap store
+
+_roll_restore: ; i
+  dup load swap push 1 add
+  dup push 10 add jz _roll_done
+  jump _roll_restore
+
+_roll_done: load ret
+
+;;;
+
+bury:
+  push -10 dup store ; current heap index kept at -10
+  swap push -9 swap store ; preserve element to bury
+
+_bury_keep: ; [n]
+  dup jz _bury_restore
+  push -10 :dec
+  swap push -10 load swap store
+  push 1 sub jump _bury_keep
+
+_bury_restore:
+  push 9 sub load
+  push -10 load :_roll_restore pop ret
+
+;;;
+
+dig: :roll pop ret
+
+;;;
+
+to_a:
+  push -1 swap store
+  push -10 dup store
+
+_to_a_loop:
+  dup push -1 load sub jz _to_a_sentinel
+  push -10 dup :dec load
+  swap store jump _to_a_loop
+
+_to_a_sentinel: pop push -10
+
+_to_a_restore:
+  dup push -10 load sub jz _to_a_done
+  push 1 sub dup load swap
+  jump _to_a_restore
+
+_to_a_done: push -10 swap sub ret
+
+;;;
+
+; dynamic pop ; [n]
+npop:
+  dup jz _npop_done
+  swap pop push 1 sub jump npop
+
+_npop_done: pop ret
+
+; dynamic slide ; [n]
+nslide:
+  swap push -1 swap store
+  :npop push -1 load ret
+
+ncopy: push -10 dup store
+_ncopy_loop:
+  dup jz _ncopy_save swap
+  push -10 dup :dec load swap store
+  push 1 sub jump _ncopy_loop
+_ncopy_save: push 10 sub dup load swap copy 2 store
+_ncopy_restore:
+  dup push 9 add jz _ncopy_done
+  dup load swap push 1 add jump _ncopy_restore
+_ncopy_done: pop ret
