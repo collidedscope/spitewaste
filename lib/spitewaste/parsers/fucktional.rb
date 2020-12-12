@@ -66,6 +66,7 @@ SPW
 
     'minby' => 'maxby (%2$s push -1 mul)',
     'each' => 'dup times (dup call roll %2$s push 1 sub) pop',
+    'count' => 'select (%2$s) dup call nslide',
     'select' => generate_filter_spw('select', 0, 1),
     'reject' => generate_filter_spw('reject', 1, 0),
   }
