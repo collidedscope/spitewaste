@@ -27,7 +27,7 @@ _strunpack_done: pop ret
 ;;;
 
 ; takes a packed string and just returns it log128 to give the length
-strlen: push 128 :ilog ret
+strlen: dup push 128 :ilog swap push 128 mod push 0 :neq add ret
 
 ;;;
 

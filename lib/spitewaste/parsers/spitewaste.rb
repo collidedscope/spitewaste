@@ -19,7 +19,7 @@ module Spitewaste
       @symbol_file = options['symbol_file']
 
       preprocess!
-      eliminate_dead_code!
+      eliminate_dead_code! unless options[:keep_dead_code]
     end
 
     def parse

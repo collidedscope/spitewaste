@@ -45,10 +45,9 @@ _isqrt_update: slide 1 jump _isqrt_loop
 ; [100 10] => [2]
 ; [42 2] => [5]
 ilog: push -1,0 store ; accumulator at -1
-_ilog_loop:
-  swap dup jz _ilog_done
-  push -1 :inc
-  copy 1 div swap jump _ilog_loop
+_ilog_loop: ; [n b]
+  swap copy 1 div dup jz _ilog_done
+  push -1 :inc swap jump _ilog_loop
 _ilog_done: push -1 load slide 2 ret
 
 ; greatest common divisor

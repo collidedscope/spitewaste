@@ -57,7 +57,7 @@ _strpack_done: pop call strrev ret
 strunpack: call strrev push 0 swap
 _strunpack_loop: dup jz _strunpack_done dup push 128 mod swap push 128 div jump _strunpack_loop
 _strunpack_done: pop ret
-strlen: push 128 call ilog ret
+strlen: dup push 128 call ilog swap push 128 mod push 0 call neq add ret
 strcat: push 128 copy 2 call strlen call pow mul add ret
 strrev: push 0 swap
 _strrev_loop: dup jz _strrev_done swap push 128 mul copy 1 push 128 mod add swap push 128 div jump _strrev_loop
@@ -82,7 +82,7 @@ pow: push 1 swap
 _pow_loop: dup jz _pow_done swap copy 2 mul swap push 1 sub jump _pow_loop
 _pow_done: swap slide 2 ret
 ilog: push -1 push 0 store
-_ilog_loop: swap dup jz _ilog_done push -1 call inc copy 1 div swap jump _ilog_loop
+_ilog_loop: swap copy 1 div dup jz _ilog_done push -1 call inc swap jump _ilog_loop
 _ilog_done: push -1 load slide 2 ret
 max: copy 1 copy 1 sub jn _max_done swap
 _max_done: slide 1 ret
@@ -94,4 +94,6 @@ _stoi_invalid: pop pop slide 1 swap div ret
 _stoi_done: swap slide 2 ret
 bin: push 2 call stoi ret
 inc: dup load push 1 add store ret
-dec: dup load push 1 sub store ret 
+dec: dup load push 1 sub store ret
+neq: sub jz _neq_no push 1 ret
+_neq_no: push 0 ret 

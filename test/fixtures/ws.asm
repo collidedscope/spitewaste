@@ -695,8 +695,15 @@ label 58
 pop
 ret
 label 59
+dup
 push 128
 call 83
+swap
+push 128
+mod
+push 0
+call 97
+add
 ret
 label 60
 push 128
@@ -881,12 +888,12 @@ push 0
 store
 label 84
 swap
+copy 1
+div
 dup
 jz 85
 push -1
 call 95
-copy 1
-div
 swap
 jump 84
 label 85
@@ -1013,4 +1020,12 @@ load
 push 1
 sub
 store
+ret
+label 97
+sub
+jz 98
+push 1
+ret
+label 98
+push 0
 ret

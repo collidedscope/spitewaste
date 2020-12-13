@@ -17,7 +17,7 @@ module Spitewaste
     black = program.size - white
 
     return :whitespace if white > black
-    program[/[^-\w\s]/] ? :spitewaste : :assembly # TODO: something more robust?
+    program[/import|[^-\w\s]/] ? :spitewaste : :assembly
   end
 end
 
