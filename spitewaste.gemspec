@@ -1,17 +1,22 @@
 require_relative 'lib/spitewaste/version'
 
-Gem::Specification.new do |spec|
-  spec.name          = 'spitewaste'
-  spec.version       = Spitewaste::VERSION
-  spec.author        = 'Collided Scope (collidedscope)'
+Gem::Specification.new do |s|
+  s.name          = 'spitewaste'
+  s.version       = Spitewaste::VERSION
+  s.author        = 'Collided Scope (collidedscope)'
 
-  spec.summary       = 'Make programming in Whitespace even better.'
-  spec.description   = 'Spitewaste is a collection of tools that makes it almost too easy to write Whitespace.'
-  spec.homepage      = 'https://github.com/collidedscope/spitewaste'
-  spec.license       = 'WTFPL'
+  s.summary       = 'Make programming in Whitespace even better.'
+  s.description   = 'Spitewaste is a collection of tools that makes it almost too easy to read and write Whitespace programs.'
+  s.homepage      = 'https://github.com/collidedscope/spitewaste'
+  s.license       = 'WTFPL'
 
-  spec.files         = `git ls-files`.split.reject { |f| f[/^test/] }
-  spec.bindir        = 'bin'
-  spec.executables   = ['spw']
-  spec.require_paths = ['lib']
+  s.add_dependency 'rake'
+  s.add_dependency 'minitest'
+  s.add_dependency 'thor'
+  s.add_dependency 'oily_png'
+
+  s.files         = `git ls-files`.split.reject { |f| f[/^(test|demo)/] }
+  s.bindir        = 'bin'
+  s.executables   = ['spw']
+  s.require_paths = ['lib']
 end
