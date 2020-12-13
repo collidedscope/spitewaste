@@ -348,3 +348,20 @@ _strsqueeze_done: pop :strpack :strrev ret
 ; ["a"] => [97]
 ; [""] => [] TODO: bug, should be 0
 strsum: :strunpack push 0 :to_a reduce (add) ret
+
+; rotates the string S to the left N times, wrapping
+; [S N]
+;
+; ["abc" 0] => ["abc"]
+; ["abcd" 1] => ["bcda"]
+; ["abcd" 5] => ["bcda"]
+; ["foodbar" 4] => ["barfood"]
+strrotl: push 128 swap copy 2 :strlen mod :pow :divmod :strcat ret
+
+; rotates the string S to the right N times, wrapping
+; [S N]
+;
+; ["abcd" 1] => ["dabc"]
+; ["abcd" 5] => ["dabc"]
+; ["foodbar" 3] => ["barfood"]
+strrotr: push 0 swap sub :strrotl ret
