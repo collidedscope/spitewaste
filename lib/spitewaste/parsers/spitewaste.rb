@@ -94,7 +94,7 @@ module Spitewaste
     end
 
     def resolve_strings
-      @src.gsub!(/"([^"]+)"/m) {
+      @src.gsub!(/"([^"]*)"/m) {
         [0, *$1.reverse.bytes] * ' push ' + ' :strpack'
       }
     end
