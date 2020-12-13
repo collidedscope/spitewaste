@@ -4,101 +4,129 @@ import case
 ;;; String packing and unpacking
 
 ; convert a 0-terminated string on the stack to a single base-128 integer
-strpack: push 0 ; tally
+; [0 ... c b a] => ["abc..."]
+;
+; [0 99 98 97] => ["abc"]
+; [0 99 98 97] => [1634657]
+; [0] => [0]
+strpack: push 0 ; accumulator
 _strpack_loop:
   swap dup jz _strpack_done
-  copy 1 push 128 mul add
-  slide 1
+  copy 1 push 128 mul add slide 1
   jump _strpack_loop
-
 _strpack_done: pop :strrev ret
 
 ; convert a single base-128 integer to a 0-terminated string on the stack
-strunpack:
-  :strrev push 0 swap ; terminator
-
+; ["abc..."] => [0 ... c b a]
+;
+; ["abc"] => [0 99 98 97]
+; [1634657] => [0 99 98 97]
+; [0] => [0]
+strunpack: :strrev push 0 swap ; terminator
 _strunpack_loop:
   dup jz _strunpack_done
   dup push 128 mod swap push 128 div
   jump _strunpack_loop
-
 _strunpack_done: pop ret
 
-;;;
-
-; takes a packed string and just returns it log128 to give the length
+; returns the length of a packed string, which is just the
+; value itself log-128, +1 if the integer logarithm isn't exact.
+; [S] => [len(S)]
+;
+; [""] => [0]
+; ["abc"] => [3]
+; ["foobar"] => [6]
 strlen: dup push 128 :ilog swap push 128 mod push 0 :neq add ret
 
-;;;
-
 ; takes two packed strings and returns their concatenation (as a packed string)
-strcat:
-  push 128 copy 2 :strlen :pow
-  mul add ret
+; [S T] => [S+T]
+;
+; ["foo" ""] => ["foo"]
+; ["" "foo"] => ["foo"]
+; ["foo" "bar"] => ["foobar"]
+strcat: push 128 copy 2 :strlen :pow mul add ret
 
-;;;
-
-; reverses a packed string in-place (heapless) [s] => [s.reverse]
-strrev: push 0 swap ; [tally string]
-
-_strrev_loop: ; [t s]
+; reverses a packed string "in-place"
+; [S] => [reverse(S)]
+;
+; ["foo"] => ["oof"]
+; ["bark"] => ["krab"]
+; ["ab"] => ["ba"]   ['a'] => ['a']   [""] => [""]
+strrev: push 0 swap
+_strrev_loop:
   dup jz _strrev_done
-  swap push 128 mul ; [s t]
+  swap push 128 mul
   copy 1 push 128 mod add
   swap push 128 div
   jump _strrev_loop
-
 _strrev_done: pop ret
 
-;;;
-
-; takes a packed string, a start index, and a length and returns the
+; takes a packed string S, a start index I, and a length L and returns the
 ; corresponding substring (simply by doing division with powers of 128; neat)
+; [S I L] => [substring]
+;
+; ["foobar" 0  6] => ["foobar"]
+; ["foobar" 1  4] => ["ooba"]
+; ["foobar" 1 10] => ["oobar"]
+; ["foobar" 5  1] => ['r']
+; ["foobar" 6  0] => [""]
 strslice:
   swap push 128 swap :pow
   copy 2 swap div
   swap push 128 swap :pow
   mod slide 1 ret
 
-;;;
-
-; index of substring t in string s ; [s t]
+; returns the index of substring T in string S (or -1 if not found)
+; [S T] => [index]
+;
+; ["foobar" 'o'] => [1]
+; ["foobar" "ob"] => [2]
+; ["foobar" ""] => [0]
+; ["foobar" "bar"] => [3]
+; ["foobar" "bark"] => [-1]
 strindex: swap push 0
-
 _strindex_loop: ; [t s i]
   copy 1 copy 3 :strlen push 0 swap :strslice
   copy 3 sub jz _strindex_found
-  push 1 add ; increment index
-  swap push 128 div dup jz _strindex_no
+  push 1 add swap push 128 div dup jz _strindex_no
   swap jump _strindex_loop
-
 _strindex_no: push -1 slide 3 ret
-
 _strindex_found: slide 2 ret
 
-;;;
-
+; returns the character at index I in string S
+; [S I] => [char]
+;
+; ["foobar" 1] => ['o']
+; ["foobar" 3] => ['b']
+; ["foobar" 5] => ['r']
+; ["foobar" 6] => [""]
 charat: push 1 :strslice ret
 
-;;;
-
-; 1 if the character at the top of the stack is alphabetical, 0 otherwise
+; returns 1 if the character at the top of the stack is
+; alphabetical (ASCII 65-90 or 97-122), 0 otherwise
+; [C] => [0/1]
+;
+; ['@'] => [0]   ['a'] => [1]
+; ['z'] => [1]   ['['] => [0]
+; ['`'] => [0]   ['A'] => [1]
+; ['Z'] => [1]   ['{'] => [0]
 isalpha:
   dup push 123 :lt jz _isalpha_no
   dup push 64 :gt jz _isalpha_no
   push 32 mod $-- push 32 mod push 26 :lt ret
 _isalpha_no: dup sub ret
 
-;;;
-
-; repeat a string s n times [s n]
+; returns string S replicated N times
+; [S N] => [S+S+...]
+;
+; ["abc" 1] => ["abc"]
+; ["abc" 2] => ["abcabc"]
+; ["abc" 0] => [""]
 strrep: push 0 swap
-_strrep_loop: ; [s t n]
+_strrep_loop:
   dup jz _strrep_done
   swap copy 2 :strcat
-  swap push 1 sub
-  jump _strrep_loop
-
+  swap push 1 sub jump _strrep_loop
 _strrep_done: swap slide 2 ret
 
 ;;; String alignment
@@ -107,19 +135,48 @@ _strrep_done: swap slide 2 ret
 ; we swap before calling strcat.
 _justc: swap copy 2 :strlen sub push 0 :max :strrep ret
 
-; Left-justify string s to width w with character c. [s w c]
+; left-justifies string S to width W with character C
+; [S W C] => [S, left-justified]
+;
+; ["foo" 5 'x'] => ["fooxx"]
+; ["foobar" 4 'x'] => ["foobar"]
+; ["" 3 'x'] => ["xxx"]
 ljustc: :_justc :strcat ret
 
-; Left-justify string s to width w with spaces. [s w]
+; left-justifies string S to width W with spaces
+; [S W] => [S, left-justified]
+;
+; ["foo" 5] => ["foo  "]
+; ["foobar" 4] => ["foobar"]
+; ["" 3] => [528416]
 ljust: push ' ' :ljustc ret
 
-; Right-justify string s to width w with character c. [s w c]
+; right-justifies string S to width W with character C
+; [S W C] => [S, right-justified]
+;
+; ["foo" 5 'x'] => ["xxfoo"]
+; ["foobar" 4 'x'] => ["foobar"]
+; ["" 3 'x'] => ["xxx"]
 rjustc: :_justc swap :strcat ret
 
-; Right-justify string s to width w with spaces. [s w]
+; right-justifies string S to width W with spaces
+; [S W C] => [S, right-justified]
+;
+; ["foo" 5] => ["  foo"]
+; ["foobar" 4] => ["foobar"]
+; ["" 3] => [528416]
 rjust: push ' ' :rjustc ret
 
-; Center string s to width w with character c. [s w c]
+; centers string S to width W with character C, favoring left alignment when
+; there's a parity mismatch (even-length string to odd width or vice versa)
+; ! TODO: This seems unnecessarily intricate, but perhaps just its nature.
+; [S W C] => [S, centered]
+;
+; ["abc" 7 'x']  => ["xxabcxx"]
+; ["abc" 6 'x']  => ["xabcxx"]
+; ["abcd" 6 'o'] => ["oabcdo"]
+; ["abcd" 7 'o'] => ["oabcdoo"]
+; ["abcd" 3 '!'] => ["abcd"]
 centerc:
   swap dup copy 3 :strlen sub
   push 0 :max push 2 div
@@ -130,22 +187,42 @@ centerc:
   copy 2 swap :strrep :strcat
   slide 2 ret
 
-; Center string s to width w with spaces. [s w]
+; centers string S to width W with spaces
+; [S W] => [S, centered]
+;
+; ["abc" 7] => ["  abc  "]
+; ["abc" 6] => [" abc  "]
+; ["abcd" 6] => [" abcd "]
+; ["abcd" 7] => [" abcd  "]
+; ["abcd" 3] => ["abcd"]
 center: push ' ' :centerc ret
 
 ;;;
 
-; remove the last character of a string
-strchop:
-  dup :strlen push 1 sub
-  push 0 swap :strslice ret
+; removes the last character of a string
+; [S] => [S.chop]
+;
+; ["foobar"] => ["fooba"]
+; ["abc"] => ["ab"]
+; ["a"] => [""]
+; ! [""] => ERROR TODO: Should just be a no-op.
+strchop: dup :strlen push 1 sub push 0 swap :strslice ret
 
-; Split string s on delimiting character d.
-; ! clobbers heap addresses -1 and -2
-strsplit: ; [s d]
+; splits string S on delimiting character C, leaving the resultant substrings
+; on the stack as a pseudo-array (length at top of stack)
+; ! TODO: permit string delimiter
+; ! clobbers heap addresses -1 (strlen), -2, and -3
+; [S C] => [A]
+;
+; ["fooxbar" 'x'] => ["foo" "bar" 2]
+; ["foobar" 'x'] => ["foobar" 1]
+; ["foo|bar|baz" '|'] => ["foo" "bar" "baz" 3]
+; ["foo,,bar" ','] => ["foo" "" "bar" 3]
+; ["/foo/bar/" '/'] => ["" "foo" "bar" "" 4]
+strsplit:
   push -3 push 1 store ; number of found substrings
   push -2 swap store ; stash delimiter to allow some stack juggling
-_strsplit_loop: ; [s]
+_strsplit_loop:
   dup dup push -2 load
   :strindex dup jn _strsplit_done ; done when index of delimiter is -1
   push 0 swap :strslice
@@ -154,80 +231,120 @@ _strsplit_loop: ; [s]
   swap push -3 swap push 1 add store ; update number of found
   push 1 add push 128 swap :pow div ; shrink haystack
   jump _strsplit_loop
-
 _strsplit_done: push 2 sub slide 1 load ret
 
-;;;
+; splits the string S on newlines
+lines: push 10 :strsplit ret
 
-; [...strs n delim]
-; ! clobbers heap address -2 (strlen uses -1)
+; joins the pseudo-array of strings A into string S with delimiter string D
+; ! clobbers heap address -2 (and strlen uses -1)
+; [A D] => [S]
+;
+; ["foo" "bar" 2 'x'] => ["fooxbar"]
+; ["foo" "bar" "baz" 3 '--'] => ["foo--bar--baz"]
+; ["foo" 1 "?!"] => ["foo"]
 strjoinc:
   dup :strlen pop ; get delimiter length into -1
   push -2 swap store
   map (push -2 load :strcat) ; add delimiter to all elements
   swap push 128 copy 1 :strlen
   push -2 load :strlen
-  sub :pow mod swap ; remove delimiter from last and flow
+  sub :pow mod swap ; remove delimiter from last and flow into strjoin
+
+; concatenates the pseudo-array of strings A into string S
+; [A] => [S]
+;
+; ["foo" 1] => ["foo"]
+; ["foo" "bar" 2] => ["foobar"]
+; ["foo" 'x' "bar" 'x' "baz" 5] => ["fooxbarxbaz"]
 strjoin: reduce (:strcat) ret
 
-;;;
-
-; return the number of ocurrences of character c in string s [s c]
+; returns the number of ocurrences of character C in string S
+; [S C] => [N]
+;
+; ["foobar" 'a'] => [1]
+; ["foobar" 'o'] => [2]
+; ["foobar" 'c'] => [0]
 strcountc: swap push 0 swap
-
-_strcountc_loop: ; c t s
+_strcountc_loop:
   dup jz _strcountc_done
   dup push 128 mod copy 3 sub jz _strcountc_yes
   push 128 div jump _strcountc_loop
-
 _strcountc_yes:
   swap push 1 add swap push 128 div
   jump _strcountc_loop
-
 _strcountc_done: swap slide 2 ret
 
-; number of ocurrences of all characters in string c [s c]
+; returns the total number of ocurrences of all characters in string T in string S
+; [S T] => [N]
 ; ! clobbers heap address -2
+;
+; ["foobar" 'o'] => [2]
+; ["foobar" "ob"] => [3]
+; ["foxboar" "box"] => [4]
+; ["eunoia" "aeiou"] => [5]
+; ["why" "aeiou"] => [0]
 strcount:
   swap push -2 swap store
   :strunpack push 0 :to_a
   map (push -2 load swap :strcountc)
   reduce (add) ret
 
-;;;
-
-; Convert all characters in src to the corresponding characters in dest.
+; translates all characters in A to the corresponding characters in B
+; in stirng S, ; similar to the `tr` utility in Unix. A and B must be
+; of the same length. TODO: make this smarter (ranges, length mismatch)
 ; ! clobbers heap addresses -1, -2, and -3
-strtrans: ; [string src dest]
+; [S A B] => [S]
+;
+; ["abcd" "abc" "xyz"] => ["xyzd"]
+; ["foobar" "oba" "ele"] => ["feeler"]
+; ["abcdcba" "abcd" "xyz|"] => ["xyz|zyx"]
+strtrans:
   push -3 swap store
   push -2 swap store
   dup :strlen push -1 swap store
   :strunpack push -1 load
-  map (:_strtrans) pop
-  :strpack ret
-
+  map (:_strtrans) pop :strpack ret
 _strtrans:
   dup push -2 load swap :strindex
   dup jn _strtrans_no
   push -3 load swap :charat
   slide 1 ret
-
 _strtrans_no: pop ret
 
+; expands the length-2 string S to contain the intervening ASCII characters
+; ! TODO: make this smarter; multiple ranges in one string
+; [S] => [S, expanded]
+;
+; ["CJ"] => ["CDEFGHIJ"]
+; ["DA"] => ["DE"] TODO: bug
+; ["af"] => ["abcdef"]
+; ["09"] => ["0123456789"]
+; ["(1"] => ["()*+,-./01"]
 strexpand:
   push 0 swap push 128 :divmod
   swap :range :strpack :strrev ret
 
-strsqueeze: push 0 swap ; [sentinel s]
+; "squeezes" runs of the same character in string S to just one occurrence
+; [S] => [S, squeezed]
+;
+; ["abc"] => ["abc"]
+; ["foobar"] => ["fobar"]
+; ["bookkeeper"] => ["bokeper"]
+; ["xxxxxxx"] => ["x"]
+strsqueeze: push 0 swap
 _strsqueeze_loop: ; [s]
   dup jz _strsqueeze_done
   push 128 :divmod dup copy 3 sub jz _strsqueeze_skip
   swap jump _strsqueeze_loop
-
 _strsqueeze_skip: pop jump _strsqueeze_loop
-
 _strsqueeze_done: pop :strpack :strrev ret
 
-strsum: :strunpack push 0 :to_a :arysum ret
-
-lines: push 10 :strsplit ret
+; returns the sum of the ordinal values of the characters in string S
+; [S] => [N]
+;
+; ["ABC"] => [198]
+; ["012"] => [147]
+; ["a"] => [97]
+; [""] => [] TODO: bug, should be 0
+strsum: :strunpack push 0 :to_a reduce (add) ret

@@ -1,24 +1,38 @@
 import syntax
 
-; Calling range() will insert between the top two stack values all of the
-; intervening consecutive elements: [9 10 3 7] -> [9 10 3 4 5 6 7]
+; inserts between the top two stack values the intervening consecutive elements
+; ! TODO: Support step, and negative as well.
+; [I J] => [I I+1 ... J]
+;
+; [2 5] => [2 3 4 5]
+; [0 4] => [0 1 2 3 4]
+; [-2 0] => [-2 -1 0]
+; [-3 3] => [-3 -2 -1 0 1 2 3]
+; [4 4] => [4 5] TODO: bug
 range:
   copy 1 push 1 add swap
   copy 1 copy 1 sub jn range
   pop ret
 
-;;;
-
+; prints the string at the top of the stack and halts execution
 die: :println exit
-;;;
 
+; for stoi and itos
 alpha: push "0123456789abcdefghijklmnopqrstuvwxyz" ret
 
-; string to integer in base b
-stoi: ; [s b]
-  swap push 0 ; tally
-
-_stoi_loop: ; [b s t]
+; converts the string S to an integer in base B (2-36)
+; ! TODO: support prefixes?
+; [S B]
+;
+; ["101010" 2] => [42]
+; ["0777"   8] => [511]
+; ["12345" 10] => [12345]
+; ["123_"  10] => [123]
+; ["123____"  10] => [123000] ; TODO: bug
+; ["dead"  16] => [57005]
+; ["gabe"  17] => [81699]
+stoi: swap push 0 ; accumulator
+_stoi_loop: ; [b s a]
   swap dup jz _stoi_done
   swap copy 2 copy 2
   :strlen push 1 sub :pow
@@ -27,24 +41,24 @@ _stoi_loop: ; [b s t]
   dup jn _stoi_invalid ; found something non-alphanumeric
   mul add swap push 128 div swap
   jump _stoi_loop
-
-_stoi_invalid: pop pop slide 1 swap div ret
-
+_stoi_invalid: pop pop slide 1 swap div ret ; return what we were able to parse
 _stoi_done: swap slide 2 ret
 
-;;;
-
+;;; creature comforts
 bin:  push  2 :stoi ret
 oct:  push  8 :stoi ret
 to_i: push 10 :stoi ret
 hex:  push 16 :stoi ret
 
-;;;
-
-; integer to string in base b
-itos: ; [i b]
-  swap push 0 ; empty string
-
+; converts the integer N to a string in base B
+; [N B]
+;
+; [42 2] => ["101010"]
+; [511 8] => ["777"]
+; [12345 10] => ["12345"]
+; [57005 16] => ["dead"]
+; [81699 17] => ["gabe"]
+itos: swap push 0 ; accumulator
 _itos_loop:
   swap dup jz _itos_done
   swap copy 1 copy 3 mod
@@ -52,47 +66,83 @@ _itos_loop:
   swap :strcat
   swap copy 2 div
   swap jump _itos_loop
-
 _itos_done: swap slide 2 ret
 
+; creature comfort
 to_s: push 10 :itos ret
 
-;;;
-
-digits: ; [ n d ]
+; puts the digits of N in base B on the stack as a pseudo-array
+; [N B]
+;
+; [42 2] => [1 0 1 0 1 0 6]
+; [12345 10] => [1 2 3 4 5 5]
+; [255 16] => [15 15 2]
+; [256 16] => [1 0 0 3]
+digits:
   copy 1 jz _digits_zero ; special case
   push -1 swap store
   push -1 swap ; sentinel value
-
 _digits_loop:
   dup jz _digits_done
   push -1 load :divmod
   swap jump _digits_loop
-
 _digits_zero: dup div ret
-
 _digits_done: push 1 sub :to_a ret
 
-; increment value at heap address n
+; increments the value at heap address N TODO: make heap effects test-able ?
+; [N]
 inc: dup load $++ store ret
 
-; decrement value at heap address n
+; decrements the value at heap address N
+; [N]
 dec: dup load $-- store ret
 
-;;;
-
+; pops A and B and pushes 1 if they're equal, 0 otherwise
+; [A B] => [A == B]
+;
+; [1 2] => [0]
+; [3 3] => [1]
+; [-4 4] => [0]
+; ['A' 65] => [1]
+; ['B' 65] => [0]
 eq: sub jz _eq_yes push 0 ret
 _eq_yes: push 1 ret
 
+; pops A and B and pushes 1 if they're not equal, 0 otherwise
+; [A B] => [A != B]
+;
+; [1 2] => [1]
+; [3 3] => [0]
+; [-4 4] => [1]
+; ['A' 65] => [0]
+; ['B' 65] => [1]
 neq: sub jz _neq_no push 1 ret
 _neq_no: push 0 ret
 
-gt: swap
+; pops A and B and pushes 1 if A is greater than B, 0 otherwise
+; [A B] => [A > B]
+;
+; [4 3] => [1]
+; [3 4] => [0]
+; [2 2] => [0]
+; [2 1] => [1]
+gt: swap ; intentionally flow into lt
+
+; pops A and B and pushes 1 if A is less than than B, 0 otherwise
+; [A B] => [A < B]
+;
+; [3 4] => [1]
+; [4 3] => [0]
+; [2 2] => [0]
+; [1 2] => [1]
 lt: sub jn _lt_yes push 0 ret
 _lt_yes: push 1 ret
 
-;;;
-
-heap_search:
+; Though extremely rare, it's possible that we know a particular value is
+; stored in the heap at some key, just not which one. This subroutine takes
+; a value V to search for and a starting index I, and either returns the first
+; key associated with that value or loops forever. Probably don't touch.
+; [V I]
+heap_seeking_missile:
   $++ dup load copy 2 :eq jz heap_search
   slide 1 ret

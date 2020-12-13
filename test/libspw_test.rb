@@ -15,8 +15,8 @@ class LibspwTest < Minitest::Test
   symbols = JSON.load File.read tmp.path
 
   # Assemble to Whitespace, parse, and interpret to set up jump targets.
-  ws = StringIO.new.tap { |sio| as.assemble! format: :whitespace, io: sio }
-  ws = Whitespace.new ws.tap(&:close).string
+  src = StringIO.new.tap { |sio| as.assemble! format: :whitespace, io: sio }
+  ws = Whitespace.new src.tap(&:close).string
   ws.parse
   ws.interpret
 

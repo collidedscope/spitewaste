@@ -41,78 +41,117 @@ _isqrt_update: slide 1 jump _isqrt_loop
 ; ! clobbers heap address -1 TODO: maybe unnecessarily?
 ; [N B] => [logB(N)]
 ;
-; [15 4] => [1], [16 4] => [2]
+; [15   4] => [1]
+; [16   4] => [2]
 ; [100 10] => [2]
-; [42 2] => [5]
+; [42   2] => [5]
 ilog: push -1,0 store ; accumulator at -1
 _ilog_loop: ; [n b]
   swap copy 1 div dup jz _ilog_done
   push -1 :inc swap jump _ilog_loop
 _ilog_done: push -1 load slide 2 ret
 
-; greatest common divisor
-gcd: ; [a  b]
-  dup jz _gcd_done
-  swap copy 1 mod
-  jump gcd
-
+; returns the greatest common divisor of A and B
+; [A B] => [gcd(A, B)]
+;
+; [6 9] => [3]
+; [13 17] => [1]
+; [24 36] => [12]
+gcd: dup jz _gcd_done swap copy 1 mod jump gcd
 _gcd_done: pop ret
 
-; least common multiple
-lcm: ; [a b]
-  copy 1 mul
-  swap dup copy 2 swap div
-  :gcd div ret
+; returns the least common multiple of A and B
+; [A B] => [lcm(A, B)]
+;
+; [6 9] => [18]
+; [13 17] => [221]
+; [24 36] => [72]
+lcm: copy 1 mul swap dup copy 2 swap div :gcd div ret
 
-;;;
-
-min: ; [a b]
-  copy 1 copy 1 sub jn _min_done swap
+; keeps the minimum of the top two stack values
+; [A B] => [A < B ? A : B]
+;
+; [3 1] => [1]
+; [2 4] => [2]
+min: copy 1 copy 1 sub jn _min_done swap
 _min_done: pop ret
 
-max: ; [a b]
-  copy 1 copy 1 sub jn _max_done swap
+; keeps the maximum of the top two stack values
+; [A B] => [A > B ? A : B]
+;
+; [3 1] => [3]
+; [2 4] => [4]
+max: copy 1 copy 1 sub jn _max_done swap
 _max_done: slide 1 ret
 
-;;;
-
-; -1, 0, or 1 to indicate the sign of the argument
-sign: ; [n]
-  dup jz _sign_zero
-  jn _sign_neg
-  push 1 ret
+; returns -1, 0, or 1 to indicate the sign of N
+; [N] => [-1 | 0 | 1]
+;
+; [17] => [1]
+; [-25] => [-1]
+; [0] => [0]
+sign: dup jz _sign_zero jn _sign_neg push 1 ret
 _sign_zero: ret
 _sign_neg: push -1 ret
 
-; absolute value ; [n] => [abs(n)]
+; returns the absolute value of N
+; [N] => [N < 0 ? -N : N]
+;
+; [-5] => [5]
+; [10] => [10]
+; [0] => [0]
 abs: dup :sign mul ret
 
-;;;
-
-divmod:
+; pops A and B and pushes both their quotient and modulus
+; [A B] => [A/B A%B]
+;
+; [17 5] => [3 2]
+; [42 6] => [7 0]
+; [ 1 5] => [0 1]
+; ! [9 0] => [!!] TODO: find a way to expect exceptions
+divmod: dup jz _divmod_dbz
   push -1 swap store
   dup push -1 load div
   swap push -1 load mod ret
+_divmod_dbz: push "/ by 0" :die
 
-;;;
-
+; returns whether N is greater than 0
+; [N] => [N > 0]
+;
+; [5] => [1]   [-3] => [0]   [0] => [0]
 pos?: :sign push  1 :eq ret
+
+; returns whether N is less than 0
+; [N] => [N < 0]
+;
+; [5] => [0]   [-3] => [1]   [0] => [0]
 neg?: :sign push -1 :eq ret
 
-;;;
-
+; returns a pseudo-array of the positive divisors of N; as an optimization,
+; they're not returned in ascending order, but rather in two "halves".
+; The alternative is unnecessarily invoking to_a and clobbering heap.
+; [N]
+;
+; [10] => [1 2 10 5 4]
+; [12] => [1 2 3 12 6 4 6]
+; [25] => [1 5 25 3] ; no duplicate for perfect squares
+; [60] => [1 2 3 4 5 6 60 30 20 15 12 10 12]
 divisors: ; [n]
-  dup push -1 swap store ; preserve n because array operations
-  :isqrt push 1 swap :range dup ; 1..n**0.5
+  dup push -1 swap store ; preserve N because array operations
+  :isqrt push 1 swap :range dup ; 1..isqrt(N)
   reject (push -1 load swap mod) :arydup ; get first half of divisors
   map (push -1 load swap div) :arycat ; map first half to second half
-  push -1 load copy 2 dup mul sub jz _divisors_square
-  ret
-
+  push -1 load copy 2 dup mul sub jz _divisors_square ret
 _divisors_square: slide 1 $-- ret ; de-duplicate when N is a perfect square
 
-;;;
-
+; returns the number of ways to choose K elements from a set of N
+; [N K]
+;
+; [ 4 5] => [0]
+; [ 7 7] => [1]
+; [13 3] => [286]
+; [16 4] => [1820]
+; [50 3] => [19600]
 nCk:
   copy 1 copy 1 sub :factorial
   swap :factorial mul

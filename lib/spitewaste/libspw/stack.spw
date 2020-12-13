@@ -1,77 +1,99 @@
+;;; Heavy-handed stack manipulation
+
+; These subrtouines do some pretty intricate stack-based operations, relying
+; heavily on clobbering the heap in order to maintain their "bookkeeping".
+; Many of them use heap addresses -10 and lower, unbounded, so they're only
+; meant to be used in a pinch or when there just isn't much of an alternative.
+
+; rolls the Ith element (counting from 0) to the top of the stack,
+; shifting the elements above it down by 1.
+; [I]
+;
+; [1 2 3 2] => [2 3 1]
+; [1 2 3 4 1] => [1 2 4 3]
+; [1 2 3 4 5 3] => [1 3 4 5 2]
 roll:
   push -10 dup store ; current heap index kept at -10
-
 _roll_keep: ; [n]
   dup jz _roll_remove
   push -10 :dec
   swap push -10 load swap store
   push 1 sub jump _roll_keep
-
 _roll_remove:
   push 10 sub load
   swap push -10 swap store
-
 _roll_restore: ; i
   dup load swap push 1 add
   dup push 10 add jz _roll_done
   jump _roll_restore
-
 _roll_done: load ret
 
-;;;
-
+; "buries" X in the stack at index I, counting from 0
+; [X I]
+;
+; [1 2 3 4 2] => [1 4 2 3] ; 2nd element of stack now 4
+; [1 2 3 4 5 8 5] => [8 1 2 3 4 5]
 bury:
   push -10 dup store ; current heap index kept at -10
   swap push -9 swap store ; preserve element to bury
-
 _bury_keep: ; [n]
   dup jz _bury_restore
   push -10 :dec
   swap push -10 load swap store
   push 1 sub jump _bury_keep
-
 _bury_restore:
   push 9 sub load
   push -10 load :_roll_restore pop ret
 
-;;;
 
+; "digs" out the Ith element of the stack and discards it
+; [I]
+;
+; [1 2 3 4 5 2] => [1 2 4 5]
+; [1 2 3 4 5 4] => [2 3 4 5]
 dig: :roll pop ret
 
-;;;
-
-to_a:
-  push -1 swap store
-  push -10 dup store
-
+; pops elements off the stack until it hits the specified sentinel value S,
+; pushing them to the resulting pseudo-array. It's often more convenient to
+; build up a collection in reverse order, and we often don't know in advance
+; how many elements we'll meet, but we do know to stop at the sentinel.
+; [S En ... E1 S] => [E1 ... En n]
+;
+; [-1 9 8 7 -1] => [7 8 9 3]
+; [0 'c' 'b' 'a' 0] => ['a' 'b' 'c' 3]
+to_a: push -1 swap store push -10 dup store
 _to_a_loop:
   dup push -1 load sub jz _to_a_sentinel
   push -10 dup :dec load
   swap store jump _to_a_loop
-
 _to_a_sentinel: pop push -10
-
 _to_a_restore:
   dup push -10 load sub jz _to_a_done
   push 1 sub dup load swap
   jump _to_a_restore
-
 _to_a_done: push -10 swap sub ret
 
-;;;
-
-; dynamic pop ; [n]
-npop:
-  dup jz _npop_done
-  swap pop push 1 sub jump npop
-
+; pops N elements off the top of the stack
+; [N]
+;
+; [1 2 3 4 5 3] => [1 2]
+; [1 2 3 4 0] => [1 2 3 4]
+npop: dup jz _npop_done swap pop push 1 sub jump npop
 _npop_done: pop ret
 
-; dynamic slide ; [n]
-nslide:
-  swap push -1 swap store
-  :npop push -1 load ret
+; slides N elements off the stack, as if the `slide` operator took an argument
+; [N]
+;
+; [1 2 3 4 5 2] => [1 2 5]
+; [1 2 3 4 1] => [1 2 4]
+nslide: swap push -1 swap store :npop push -1 load ret
 
+; copies the Nth element to the top of the stack; this does exactly what
+; a `copy N` instruction would do, but we don't always know N in advance
+; [N]
+;
+; [1 2 3 4 0] => [1 2 3 4 4] ; `copy 0` is just dup
+; [1 2 3 4 3] => [1 2 3 4 1]
 ncopy: push -10 dup store
 _ncopy_loop:
   dup jz _ncopy_save swap

@@ -7,12 +7,14 @@ Rake::TestTask.new(:test) do |t|
   t.test_files = FileList['test/*_test.rb']
 end
 
+task test: :docs
+
 desc 'Generate standard library documentation.'
 task :docs do |t|
   docs = {}
 
   Dir.chdir('lib/spitewaste/libspw') do |d|
-    Dir['math*'].each do |path|
+    %w[array.spw stack.spw util.spw string.spw math.spw].each do |path|
       lib = File.basename path, '.spw'
       docs[lib] = extract_docs path
     end
@@ -44,10 +46,10 @@ def strpack s
 end
 
 def parse_stack s
-  s.split.map { Integer(_1) rescue strpack _1.delete %('") }
+  s.scan(/"[^"]*"|\S+/).map { Integer(_1) rescue strpack _1.delete %('") }
 end
 
-StackRx = /(?<=\[)[^\]]+(?=\])/ # match [.+], but don't capture the brackets
+StackRx = /(?<=\[)[^\]]*(?=\])/ # match [.*], but don't capture the brackets
 
 def parse_doc doc
   # strip comment character and any implementation details
