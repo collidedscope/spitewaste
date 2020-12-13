@@ -1,3 +1,3 @@
 module Spitewaste
-  VERSION = '0.1.002'
+  VERSION = '0.1.003'
 end

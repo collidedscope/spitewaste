@@ -10,10 +10,10 @@ Gem::Specification.new do |s|
   s.homepage      = 'https://github.com/collidedscope/spitewaste'
   s.license       = 'WTFPL'
 
-  s.add_dependency 'rake'
-  s.add_dependency 'minitest'
-  s.add_dependency 'thor'
-  s.add_dependency 'oily_png'
+  s.add_dependency 'rake', '~> 13.0.1'
+  s.add_dependency 'minitest', '~> 5.14.2'
+  s.add_dependency 'thor', '~> 1.0.1'
+  s.add_dependency 'oily_png', '~> 1.2.1'
 
   s.files         = `git ls-files`.split.reject { |f| f[/^(test|demo)/] }
   s.bindir        = 'bin'
