@@ -100,7 +100,7 @@ module Spitewaste
     end
 
     def remove_comments
-      @src.gsub!(/;.+/, '')
+      @src.gsub!(/;.*/, '')
     end
 
     def add_sugar
@@ -109,7 +109,7 @@ module Spitewaste
       # character literals
       @src.gsub!(/'(.)'/) { $1.ord }
       # quick push (`push 1,2,3` desugars to individual pushes)
-      @src.gsub!(/push \S+/) { _1.split(?,) * ' push ' }
+      @src.gsub!(/push \S+/) { |m| m.split(?,) * ' push ' }
     end
 
     def gensym
