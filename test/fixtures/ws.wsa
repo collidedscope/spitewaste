@@ -80,7 +80,7 @@ _strtrans: dup push -2 load swap call strindex dup jn _strtrans_no push -3 load 
 _strtrans_no: pop ret
 pow: push 1 swap
 _pow_loop: dup jz _pow_done swap copy 2 mul swap push 1 sub jump _pow_loop
-_pow_done: pop slide 1 ret
+_pow_done: swap slide 2 ret
 ilog: push -1 push 0 store
 _ilog_loop: swap dup jz _ilog_done push -1 call inc copy 1 div swap jump _ilog_loop
 _ilog_done: push -1 load slide 2 ret

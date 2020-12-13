@@ -872,8 +872,8 @@ push 1
 sub
 jump 81
 label 82
-pop
-slide 1
+swap
+slide 2
 ret
 label 83
 push -1
