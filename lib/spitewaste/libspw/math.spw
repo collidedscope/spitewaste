@@ -109,11 +109,10 @@ abs: dup :sign mul ret
 ; [42 6] => [7 0]
 ; [ 1 5] => [0 1]
 ; ! [9 0] => [!!] TODO: find a way to expect exceptions
-divmod: dup jz _divmod_dbz
+divmod:
   push -1 swap store
   dup push -1 load div
   swap push -1 load mod ret
-_divmod_dbz: push "/ by 0" :die
 
 ; returns whether N is greater than 0
 ; [N] => [N > 0]

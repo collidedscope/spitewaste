@@ -38,10 +38,6 @@ _inum: pop inum jump interpret
 _ochr: pop ochr jump interpret
 _onum: pop onum jump interpret
 _exit: pop exit
-print: call strunpack
-_print_loop: dup jz _print_done ochr jump _print_loop
-_print_done: pop ret
-println: call print push 10 ochr ret
 roll: push -10 dup store
 _roll_keep: dup jz _roll_remove push -10 call dec swap push -10 load swap store push 1 sub jump _roll_keep
 _roll_remove: push 10 sub load swap push -10 swap store
@@ -90,13 +86,7 @@ _ilog_loop: swap copy 1 div dup jz _ilog_done push -1 call inc swap jump _ilog_l
 _ilog_done: push -1 load slide 2 ret
 max: copy 1 copy 1 sub jn _max_done swap
 _max_done: slide 1 ret
-sign: dup jz _sign_zero jn _sign_neg push 1 ret
-_sign_zero: ret
-_sign_neg: push -1 ret
-divmod: dup jz _divmod_dbz push -1 swap store dup push -1 load div swap push -1 load mod ret
-_divmod_dbz: push 0 push 48 push 32 push 121 push 98 push 32 push 47 call strpack call die
-pos?: call sign push 1 call eq ret
-die: call println exit
+divmod: push -1 swap store dup push -1 load div swap push -1 load mod ret
 alpha: push 0 push 122 push 121 push 120 push 119 push 118 push 117 push 116 push 115 push 114 push 113 push 112 push 111 push 110 push 109 push 108 push 107 push 106 push 105 push 104 push 103 push 102 push 101 push 100 push 99 push 98 push 97 push 57 push 56 push 55 push 54 push 53 push 52 push 51 push 50 push 49 push 48 call strpack ret
 stoi: swap push 0
 _stoi_loop: swap dup jz _stoi_done swap copy 2 copy 2 call strlen push 1 sub call pow copy 2 push 128 mod call alpha swap call strindex dup jn _stoi_invalid mul add swap push 128 div swap jump _stoi_loop
@@ -105,7 +95,5 @@ _stoi_done: swap slide 2 ret
 bin: push 2 call stoi ret
 inc: dup load push 1 add store ret
 dec: dup load push 1 sub store ret
-eq: sub jz _eq_yes push 0 ret
-_eq_yes: push 1 ret
 neq: sub jz _neq_no push 1 ret
 _neq_no: push 0 ret 
