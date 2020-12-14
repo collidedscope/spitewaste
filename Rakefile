@@ -64,8 +64,8 @@ end
 StackRx = /(?<=\[)[^\]]*(?=\])/ # match [.*], but don't capture the brackets
 
 def parse_doc doc
-  # strip comment character and any implementation details
-  doc.gsub!(/; */, '').gsub!(/^!.+\n/, '')
+  # strip leading comment to margin and any implementation details (!)
+  doc.gsub!(/^; */, '').gsub!(/^!.+\n/, '')
 
   head, specs = doc.split "\n\n"
   *desc, effect = head.split ?\n

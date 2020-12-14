@@ -2,6 +2,7 @@
 
 require 'spitewaste/cli'
 require 'spitewaste/cli/asm'
+require 'spitewaste/cli/docs'
 require 'spitewaste/cli/exec'
 require 'spitewaste/cli/compile'
 require 'spitewaste/cli/convert'
