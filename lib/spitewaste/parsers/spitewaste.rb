@@ -57,13 +57,6 @@ module Spitewaste
     private
 
     def preprocess!
-      # Macros can be used in all sorts of nifty ways, but the most useful is
-      # as a way to configure how certain subroutines behave. Library code gets
-      # loaded and processed after user code, so the "defaults" would actually
-      # override user settings; the fix is to set any user macros now and make
-      # it so that library settings only take effect if the macro is undefined.
-      @src.gsub!(/(\$\S+)\s*=\s*(.+)/) { @macros[$1] = $2; '' }
-
       resolve_imports
       seed_prng if @seen.include? 'random'
       resolve_strings
@@ -131,6 +124,8 @@ module Spitewaste
     end
 
     def propagate_macros
+      # Macros are write-once, allowing user code to customize the special
+      # values that get used to drive certain behavior in the standard library.
       @src.gsub!(/(\$\S+)\s*=\s*(.+)/) { @macros[$1] ||= $2; '' }
       @src.gsub!(/(\$\S+)/) { @macros[$1] || raise("no macro '#{$1}'") }
     end
