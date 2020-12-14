@@ -14,7 +14,7 @@ task :docs do |t|
   docs = {}
 
   Dir.chdir('lib/spitewaste/libspw') do |d|
-    %w[array.spw stack.spw util.spw string.spw math.spw].each do |path|
+    %w[rational.spw array.spw stack.spw util.spw string.spw math.spw].each do |path|
       lib = File.basename path, '.spw'
       docs[lib] = extract_docs path
     end
@@ -46,7 +46,19 @@ def strpack s
 end
 
 def parse_stack s
-  s.scan(/"[^"]*"|\S+/).map { Integer(_1) rescue strpack _1.delete %('") }
+  s.scan(/"[^"]*"|\S+/).map { |v|
+    begin
+      Integer v
+    rescue
+      if v[/R\((-?\d+),(-?\d+)\)/]
+        n, d = $1.to_i, $2.to_i
+        s = (n<=>0) * (d<=>0)
+        (n.abs * 2**31 + d.abs) * 2 + (s == -1 ? 0 : 1)
+      else
+        strpack v.delete %('")
+      end
+    end
+  }
 end
 
 StackRx = /(?<=\[)[^\]]*(?=\])/ # match [.*], but don't capture the brackets

@@ -1,0 +1,153 @@
+;;; Rational numbers
+
+import math ; abs, divmod, gcd, pow, sign
+import util ; die!, neq
+
+; maximum value of either component of a rational number before behavior is
+; undefined; 2^31 by default to give interpreters without bignums a chance,
+; but customizable from userland.
+$RAT = push 2,31 :pow
+
+; encodes a numerator N and a denominator D as a rational number R with the
+; following structure: ((N × $RAT + D) << 1) + sign (0 for negative, else 1).
+; This representation is nice because, with care, it makes it so that we never
+; have to involve the heap (besides divmod) just to do fairly basic arithmetic.
+; [N D] => [R]
+;
+; [22 7]  => [R(22,7)]
+; [4 8]   => [R(4,8)]  ; no implicit simplification TODO: make it configurable?
+; [5 1]   => [R(5,1)]  ; no conversion to integer (duh)
+; [-3 4]  => [R(-3,4)]
+; [3 -4]  => [R(-3,4)] ; sign always held in the numerator
+; [-1 -3] => [R(1,3)]
+to_r: dup jz _to_r_dbz
+  dup :sign copy 2 :sign mul push -1 :neq
+  copy 2 :abs copy 2 :abs
+  $RAT copy 2 mul add push 2 mul
+  copy 2 add slide 4 ret
+_to_r_dbz: push "0 in denominator!" :die!
+
+; returns the numerator N of the rational number R, which may be negative
+; [R] => [N]
+;
+; [R(22,7)] => [22]
+; [R(-3,4)] => [-3]
+; [R(3,-4)] => [-3]
+ratnum: push 2 :divmod push 2 mul push 1 sub swap $RAT div mul ret
+
+; returns the denominator D of the rational number R; always positive
+; [R] => [D]
+;
+; [R(22,7)] => [7]
+; [R(-3,4)] => [4]
+; [R(3,-4)] => [4]
+ratden: push 2 div $RAT mod ret
+
+; decomposes the rational number R into its numerator N and denominator D
+; [R] => [N D]
+;
+; [R(22,7)] => [22 7]
+; [R(-3,4)] => [-3 4]
+; [R(3,-4)] => [-3 4]
+; [R(4,8)]  => [4 8]  ; no implicit simplification
+from_r: dup :ratnum swap :ratden ret
+
+; fully simplifies the rational number R by dividing both of its components
+; by their greatest common divisor
+; [R] => [R, simplified]
+;
+; [R(4,8)] => [R(1,2)]
+; [R(-3,12)] => [R(-1,4)]
+; [R(17,-51)] => [R(-1,3)]
+ratsimp:
+  push 2 :divmod swap $RAT :divmod dup copy 2 :gcd
+  swap copy 1 div copy 2 copy 2 div swap :to_r
+  slide 2 push 2 div push 2 mul add ret
+
+; helper prologue shared by all but ratmul
+_rathead:
+  copy 1 :ratnum copy 1 :ratden mul
+  copy 2 :ratden copy 2 :ratnum mul ret
+
+; helper epilogue shared by all but ratdiv
+_rattail:
+  copy 2 :ratden copy 2 :ratden mul
+  :to_r :ratsimp slide 2 ret
+
+; returns the simplified sum of the rational numbers Ra and Rb
+; [Ra Rb] => [Ra + Rb]
+;
+; [R(-9,-14) R(-3,19)]  => [R(129,266)]
+; [R(17,30)  R(18,10)]  => [R(71,30)]
+; [R(-27,14) R(15,-23)] => [R(-831,322)]
+; [R(3,-9)   R(8,3)]    => [R(7,3)]
+; [R(-5,27)  R(-2,-27)] => [R(-1,9)]
+; [R(-27,-8) R(-15,22)] => [R(237,88)]
+; [R(-9,-29) R(-27,3)]  => [R(-252,29)]
+; [R(2,-21)  R(4,6)]    => [R(4,7)]
+ratadd: :_rathead add :_rattail ret
+
+; returns the simplified difference of the rational numbers Ra and Rb
+; [Ra Rb] => [Ra - Rb]
+;
+; [R(21,25)  R(-28,27)]  => [R(1267,675)]
+; [R(14,7)   R(13,6)]    => [R(-1,6)]
+; [R(-24,-9) R(-5,-21)]  => [R(17,7)]
+; [R(-27,-2) R(-2,26)]   => [R(353,26)]
+; [R(-27,3)  R(2,-22)]   => [R(-98,11)]
+; [R(-4,23)  R(-9,13)]   => [R(155,299)]
+; [R(-14,19) R(-18,-11)] => [R(-496,209)]
+; [R(-29,21) R(-15,-16)] => [R(-779,336)]
+ratsub: :_rathead sub :_rattail ret
+
+; returns the simplified product of the rational numbers Ra and Rb
+; [Ra Rb] => [Ra × Rb]
+;
+; [R(-24,26) R(-1,-30)]  => [R(-2,65)]
+; [R(19,4)   R(27,2)]    => [R(513,8)]
+; [R(25,27)  R(4,-11)]   => [R(-100,297)]
+; [R(1,18)   R(4,8)]     => [R(1,36)]
+; [R(1,27)   R(-8,29)]   => [R(-8,783)]
+; [R(25,-13) R(-6,24)]   => [R(25,52)]
+; [R(6,-13)  R(9,23)]    => [R(-54,299)]
+; [R(11,8)   R(-19,-19)] => [R(11,8)]
+ratmul: copy 1 :ratnum copy 1 :ratnum mul :_rattail ret
+
+; returns the simplified quotient of the rational numbers Ra and Rb
+; [Ra Rb] => [Ra / Rb]
+;
+; [R(-30,-22) R(15,12)]   => [R(12,11)]
+; [R(13,28)   R(-15,29)]  => [R(-377,420)]
+; [R(7,-30)   R(-22,-12)] => [R(-7,55)]
+; [R(15,4)    R(8,-8)]    => [R(-15,4)]
+; [R(-23,28)  R(-16,-15)] => [R(-345,448)]
+; [R(-18,12)  R(6,18)]    => [R(-9,2)]
+; [R(29,-2)   R(11,-21)]  => [R(609,22)]
+; [R(-23,25)  R(25,-3)]   => [R(69,625)]
+ratdiv: :_rathead :to_r :ratsimp slide 2 ret
+
+; returns the simplified modulus of the rational numbers Ra and Rb
+; [Ra Rb] => [Ra % Rb]
+;
+; [R(-15,-3) R(-16,-10)] => [R(1,5)]
+; [R(4,2)    R(21,21)]   => [R(0,1)]
+; [R(24,10)  R(-18,-3)]  => [R(12,5)]
+; [R(3,-7)   R(-2,16)]   => [R(-3,56)]
+; [R(4,28)   R(-29,7)]   => [R(-4,1)]
+; [R(7,-27)  R(10,23)]   => [R(109,621)]
+; [R(28,-3)  R(30,-12)]  => [R(-11,6)]
+; [R(-29,21) R(19,-23)]  => [R(-268,483)]
+ratmod: :_rathead mod :_rattail ret
+
+; returns the sign of the rational number R
+; [R] => [-1 | 0 | 1]
+;
+; [R(4,3)] => [1]
+; [R(4,-3)] => [-1]
+; [R(0,10)] => [0]
+; [R(-3,4)] => [-1]
+; [R(-3,-4)] => [1]
+ratsign:
+  dup $RAT push 2 mul push 2 add sub jn _ratsign_zero
+  push 2 mod push 2 mul push 1 sub ret
+_ratsign_zero: pop push 0 ret
