@@ -57,6 +57,13 @@ module Spitewaste
     private
 
     def preprocess!
+      # Macros can be used in all sorts of nifty ways, but the most useful is
+      # as a way to configure how certain subroutines behave. Library code gets
+      # loaded and processed after user code, so the "defaults" would actually
+      # override user settings; the fix is to set any user macros now and make
+      # it so that library settings only take effect if the macro is undefined.
+      @src.gsub!(/(\$\S+)\s*=\s*(.+)/) { @macros[$1] = $2; '' }
+
       resolve_imports
       seed_prng if @seen.include? 'random'
       resolve_strings
@@ -124,25 +131,14 @@ module Spitewaste
     end
 
     def propagate_macros
-      @src.gsub!(/(\$\S+)\s*=\s*(.+)/) { @macros[$1] = $2; '' }
+      @src.gsub!(/(\$\S+)\s*=\s*(.+)/) { @macros[$1] ||= $2; '' }
       @src.gsub!(/(\$\S+)/) { @macros[$1] || raise("no macro '#{$1}'") }
-
-      # @src.gsub!(/(\$[^(]+)\s*\((.+)\)\s*{(.+)}/m) { @macros[$1] = $2, $3; '' }
-      # @src.gsub!(/(\$[^(]+)\((.+?)\)/m) {
-      #   unless (params, body = @macros[$1])
-      #     raise "no macro function '#{$1}'"
-      #   end
-
-      #   params = params.split(?,).map &:strip
-      #   args = $2.split ?,
-      #   body.gsub /\b(#{params * ?|})\b/, params.zip(args).to_h
-      # }
     end
 
     def eliminate_dead_code!
       tokens = @src.split
 
-      # We need an entry point from which to begin determining which routines
+      # We need an entry point whence to begin determining which routines
       # are never invoked, but Whitespace programs aren't required to start
       # with a label. Here, we add an implcit "main" to the beginning of the
       # source unless it already contains an explicit entry point. TODO: better?
