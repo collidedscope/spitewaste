@@ -1,4 +1,6 @@
-import bits
+import bits   ; bitwise_and, bitwise_or, bitwise_xor
+import string ; isalpha, strcat, strunpack
+
 ;;; Case conversion
 
 upcase: :strunpack push 0 ; tally

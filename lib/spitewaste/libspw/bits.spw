@@ -1,6 +1,8 @@
-import math
+import math   ; ilog, pow
+import string ; strcat, strlen, strrev
+import util   ; bin, digits, itos
 
-; TODO: don't use strings for bitwise operations
+; TODO: don't use strings for bitwise operations!
 
 ; bitwise bitwise_and
 ; ! clobbers heap address -1

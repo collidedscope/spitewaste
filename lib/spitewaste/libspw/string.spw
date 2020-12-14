@@ -1,5 +1,7 @@
-import math
 import case
+import math  ; divmod, ilog, max, pow
+import stack ; to_a
+import util  ; gt, lt, neq, range
 
 ;;; String packing and unpacking
 

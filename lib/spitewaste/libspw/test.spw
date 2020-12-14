@@ -1,3 +1,6 @@
+import io     ; print, println
+import string ; strcat
+
 assert_eq:
   dup copy 2 sub jz _assert_eq_yes
   push "expected " :print onum

@@ -1,3 +1,6 @@
+import math ; divmod
+import util ; inc
+
 ; [n] => [0|1]
 prime?: ; [n]
   dup push 3 sub jn _prime_special ; special-case < 3
@@ -40,7 +43,5 @@ _factor_loop: ; [d n]
 _divisor_loop:
   dup copy 2 :divmod jz _divisor_keep
   pop swap :next_prime swap jump _factor_loop
-
 _divisor_keep: push -2 :inc slide 1 copy 1 swap jump _factor_loop
-
 _factor_done: slide 1 push 3 sub load ret

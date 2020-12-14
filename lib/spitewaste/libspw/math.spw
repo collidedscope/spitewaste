@@ -1,4 +1,5 @@
-import util ; range for factorial, inc for ilog
+import array ; arycat, arydup
+import util  ; eq, inc, range
 
 ; returns B raised to the power E
 ; [B E] => [B**E]

@@ -1,3 +1,5 @@
+import string ; strcat, strpack, strrev, strunpack
+
 ; prints the character at the top of the stack until terminating zero
 print: :strunpack
 _print_loop:

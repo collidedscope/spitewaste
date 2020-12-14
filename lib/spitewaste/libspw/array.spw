@@ -1,3 +1,7 @@
+import math  ; divmod, max, min, pos?
+import stack ; bury, dig, ncopy, nslide, roll
+import util  ; dec, die!, eq
+
 $amax = 1000
 
 arysum: reduce (add) ret
@@ -48,7 +52,7 @@ aryat: ; [a i]
 
 _aryat_neg: copy 1 add dup jn _aryat_oob jump aryat
 
-_aryat_oob: push "(aryat) index out of bounds!" :die
+_aryat_oob: push "(aryat) index out of bounds!" :die!
 
 minmax:
   :arydup reduce (:max)

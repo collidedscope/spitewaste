@@ -1,4 +1,7 @@
-import syntax
+import io     ; println
+import math   ; divmod, pow
+import stack  ; to_a
+import string ; charat, strcat, strindex, strlen
 
 ; inserts between the top two stack values the intervening consecutive elements
 ; ! TODO: Support step, and negative as well.
@@ -15,7 +18,7 @@ range:
   pop ret
 
 ; prints the string at the top of the stack and halts execution
-die: :println exit
+die!: :println exit
 
 ; for stoi and itos
 alpha: push "0123456789abcdefghijklmnopqrstuvwxyz" ret

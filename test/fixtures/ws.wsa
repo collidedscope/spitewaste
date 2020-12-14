@@ -78,15 +78,6 @@ map_loop_f: push -9 call inc swap dup dup push -9 load sub jz map_done_f call ro
 map_done_f: pop pop call strpack ret
 _strtrans: dup push -2 load swap call strindex dup jn _strtrans_no push -3 load swap call charat slide 1 ret
 _strtrans_no: pop ret
-pow: push 1 swap
-_pow_loop: dup jz _pow_done swap copy 2 mul swap push 1 sub jump _pow_loop
-_pow_done: swap slide 2 ret
-ilog: push -1 push 0 store
-_ilog_loop: swap copy 1 div dup jz _ilog_done push -1 call inc swap jump _ilog_loop
-_ilog_done: push -1 load slide 2 ret
-max: copy 1 copy 1 sub jn _max_done swap
-_max_done: slide 1 ret
-divmod: push -1 swap store dup push -1 load div swap push -1 load mod ret
 alpha: push 0 push 122 push 121 push 120 push 119 push 118 push 117 push 116 push 115 push 114 push 113 push 112 push 111 push 110 push 109 push 108 push 107 push 106 push 105 push 104 push 103 push 102 push 101 push 100 push 99 push 98 push 97 push 57 push 56 push 55 push 54 push 53 push 52 push 51 push 50 push 49 push 48 call strpack ret
 stoi: swap push 0
 _stoi_loop: swap dup jz _stoi_done swap copy 2 copy 2 call strlen push 1 sub call pow copy 2 push 128 mod call alpha swap call strindex dup jn _stoi_invalid mul add swap push 128 div swap jump _stoi_loop
@@ -96,4 +87,13 @@ bin: push 2 call stoi ret
 inc: dup load push 1 add store ret
 dec: dup load push 1 sub store ret
 neq: sub jz _neq_no push 1 ret
-_neq_no: push 0 ret 
+_neq_no: push 0 ret
+pow: push 1 swap
+_pow_loop: dup jz _pow_done swap copy 2 mul swap push 1 sub jump _pow_loop
+_pow_done: swap slide 2 ret
+ilog: push -1 push 0 store
+_ilog_loop: swap copy 1 div dup jz _ilog_done push -1 call inc swap jump _ilog_loop
+_ilog_done: push -1 load slide 2 ret
+max: copy 1 copy 1 sub jn _max_done swap
+_max_done: slide 1 ret
+divmod: push -1 swap store dup push -1 load div swap push -1 load mod ret 

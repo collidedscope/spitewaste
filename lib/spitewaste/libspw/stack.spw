@@ -5,6 +5,8 @@
 ; Many of them use heap addresses -10 and lower, unbounded, so they're only
 ; meant to be used in a pinch or when there just isn't much of an alternative.
 
+import util ; dec
+
 ; rolls the Ith element (counting from 0) to the top of the stack,
 ; shifting the elements above it down by 1.
 ; [I]

@@ -1,4 +1,8 @@
-import string
+import array  ; sort
+import case   ; upcase
+import stack  ; to_a
+import string ; isalpha, strcat, strjoin, strrev, strunpack
+import util   ; eq
 
 palindrome?: dup :strrev :eq ret
 

@@ -1,3 +1,5 @@
+import math ; pow
+
 srand: push $seed swap store ret
 
 rand:
