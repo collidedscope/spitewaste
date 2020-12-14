@@ -118,7 +118,7 @@ module Spitewaste
 
     def fucktionalize
       # Iteratively remove pseudo-fp calls until we can't to allow nesting.
-      1 while @src.gsub!(/(#{FUCKTIONAL.keys * ?|})\s*\((.+)\)/) do
+      1 while @src.gsub!(/(#{FUCKTIONAL.keys * ?|})\s*\((.+?)\)/m) do
         FUCKTIONAL[$1] % [gensym, $2]
       end
     end
