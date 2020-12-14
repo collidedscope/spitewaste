@@ -16,28 +16,25 @@ class SpitewasteCLI
 - use % to write to $HOME/.cache/spitewaste directory, where Spiceweight knows to look',
     aliases: '-s'
 
-  def exec file = '/dev/stdin'
+  def exec input = '/dev/stdin'
     fmt = SpitewasteCLI.validate_format options
 
-    raise LoadError, "No such file '#{file}'", [] unless File.exists? file
+    raise LoadError, "No such file '#{input}'", [] unless File.exists? input
 
     opts = options.dup # options is frozen
     if opts[:symbol_file] == '%'
-      opts[:symbol_file] = SpitewasteCLI.make_cache_path file
+      opts[:symbol_file] = SpitewasteCLI.make_cache_path input
     end
 
-    path =
-      if File.extname(file) != '.ws'
-        io = Tempfile.new
-        as = Spitewaste::Assembler.new File.read(file), format: fmt, **opts
-        as.assemble! format: :whitespace, io: io
-        io.tap(&:close).path
-      else
-        file
-      end
+    if File.extname(input) != '.ws'
+      io = Tempfile.new
+      as = Spitewaste::Assembler.new File.read(input), format: fmt, **opts
+      as.assemble! format: :whitespace, io: io
+      input = io.tap(&:close).path
+    end
 
     cmd = options[:interpreter].split
-    cmd.map! { |c| c == '%' ? path : c }
+    cmd.map! { |c| c == '%' ? input : c }
     Kernel.exec *cmd
   end
 end
