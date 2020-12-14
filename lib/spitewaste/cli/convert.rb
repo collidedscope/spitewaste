@@ -21,6 +21,8 @@ DESC
 - use % to write to $HOME/.cache/spitewaste directory, where Spiceweight knows to look',
     aliases: '-s'
 
+  shared_options
+
   def convert input = '/dev/stdin', output = '/dev/stdout'
     ext = File.extname output
     Kernel.exec 'spw', 'image', input, output if ext == '.png'

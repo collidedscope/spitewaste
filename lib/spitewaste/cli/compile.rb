@@ -39,6 +39,8 @@ DESC
     type: :boolean,
     aliases: '-k'
 
+  shared_options
+
   def compile file = nil
     fmt = SpitewasteCLI.validate_format options
 

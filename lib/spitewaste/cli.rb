@@ -11,29 +11,31 @@ class SpitewasteCLI < Thor
     exit 1
   end
 
-  # TODO: Figure out how to invoke a command from this class method.
-  def self.handle_no_command_error *args
-    exec $0, 'exec', *args
-  end
+  def self.shared_options
+    option :format,
+      desc: 'input format (in case auto-detection misguesses)',
+      aliases: '-f'
 
-  class_option :format,
-    desc: 'input format (in case auto-detection misguesses)',
-    aliases: '-f'
+    option :aliases,
+      desc: 'augment or override one or more of the default instruction mnemonics [WIP]',
+      banner: 'pop:drop...',
+      type: :array,
+      aliases: '-a'
 
-  class_option :aliases,
-    desc: 'augment or override one or more of the default instruction mnemonics [WIP]',
-    banner: 'pop:drop...',
-    type: :array,
-    aliases: '-a'
-
-  class_option :coexist,
-    desc: <<DESC,
+    option :coexist,
+      desc: <<DESC,
 allow multiple mnemonics to refer to the same instruction where possible [WIP]
 
 \e[1mNOTE: \e[0mIf --no-coexist (the default), aliases take precedence and render the original mnemonics invalid.
 DESC
-    type: :boolean,
-    aliases: '-x'
+      type: :boolean,
+      aliases: '-x'
+  end
+
+  # TODO: Figure out how to invoke a command from this class method.
+  def self.handle_no_command_error *args
+    exec $0, 'exec', *args
+  end
 
   def self.validate_format options
     if fmt = options[:format]&.to_sym and !VALID_FORMATS.include?(fmt)

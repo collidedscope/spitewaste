@@ -16,6 +16,8 @@ class SpitewasteCLI
 - use % to write to $HOME/.cache/spitewaste directory, where Spiceweight knows to look',
     aliases: '-s'
 
+  shared_options
+
   def exec input = '/dev/stdin'
     fmt = SpitewasteCLI.validate_format options
 

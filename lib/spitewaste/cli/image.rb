@@ -41,6 +41,8 @@ DESC
     type: :numeric,
     aliases: '-l'
 
+  shared_options
+
   def image input, output = nil
     fmt = SpitewasteCLI.validate_format options
     output ||= Pathname.new(input).sub_ext '.png'
