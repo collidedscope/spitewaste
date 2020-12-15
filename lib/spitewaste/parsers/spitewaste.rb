@@ -127,8 +127,22 @@ module Spitewaste
     def propagate_macros
       # Macros are write-once, allowing user code to customize the special
       # values that get used to drive certain behavior in the standard library.
+
+      parse = -> s { s.split(?,).map &:strip }
+
+      # Macro "functions" get handled first.
+      @src.gsub!(/(\$\S+?)\(([^)]+)\)\s*{(.+?)}/m) {
+        @macros[$1] ||= [$2, $3]; ''
+      }
+      @src.gsub!(/(\$\S+?)\(([^)]+)\)/) {
+        params, body = @macros[$1]
+        raise "no macro function '#$1'" unless body
+        map = parse[params].zip(parse[$2]).to_h
+        body.gsub(/`(.+?)`/) { map[$1] }
+      }
+
       @src.gsub!(/(\$\S+)\s*=\s*(.+)/) { @macros[$1] ||= $2; '' }
-      @src.gsub!(/(\$\S+)/) { @macros[$1] || raise("no macro '#{$1}'") }
+      @src.gsub!(/(\$\S+)/) { @macros[$1] || raise("no macro '#$1'") }
     end
 
     def eliminate_dead_code!
