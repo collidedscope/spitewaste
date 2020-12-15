@@ -9,7 +9,7 @@ module Spitewaste
         raise ArgumentError, "unknown format for parse: #{format}"
       end
 
-      @parser =
+      parser =
         case format
         when :whitespace
           WhitespaceParser
@@ -19,9 +19,9 @@ module Spitewaste
           SpitewasteParser
         end
 
-      parser = @parser.new(program, **options).tap &:parse
-      @instructions = parser.instructions
-      @src = parser.src if format == :spitewaste
+      @parser = parser.new(program, **options).tap &:parse
+      @instructions = @parser.instructions
+      @src = @parser.src if format == :spitewaste
     end
 
     def assemble! format:, io: STDOUT, **options

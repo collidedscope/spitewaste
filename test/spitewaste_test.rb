@@ -14,6 +14,7 @@ def src_to_src input, format
 end
 
 class SpitewasteTest < Minitest::Test
+  include Spitewaste
   extend Minitest::Spec::DSL
 
   let(:ws)  { get_fixture 'ws.ws' }
@@ -22,23 +23,23 @@ class SpitewasteTest < Minitest::Test
   let(:spw) { get_fixture 'ws.spw' }
 
   def test_that_it_guesses_whitespace_format
-    as = Spitewaste::Assembler.new ws
-    assert_equal as.parser, Spitewaste::WhitespaceParser
+    as = Assembler.new ws
+    assert_instance_of WhitespaceParser, as.parser
   end
 
   def test_that_it_guesses_spitewaste_format
-    as = Spitewaste::Assembler.new spw
-    assert_equal as.parser, Spitewaste::SpitewasteParser
+    as = Assembler.new spw
+    assert_instance_of SpitewasteParser, as.parser
   end
 
   def test_that_it_guesses_assembly_format
-    as = Spitewaste::Assembler.new asm
-    assert_equal as.parser, Spitewaste::AssemblyParser
+    as = Assembler.new asm
+    assert_instance_of AssemblyParser, as.parser
   end
 
   def test_that_it_guesses_wsa_format_as_spitewaste
-    as = Spitewaste::Assembler.new wsa
-    assert_equal as.parser, Spitewaste::SpitewasteParser
+    as = Assembler.new wsa
+    assert_instance_of SpitewasteParser, as.parser
   end
 
   def test_that_it_converts_spitewaste_to_whitespace
