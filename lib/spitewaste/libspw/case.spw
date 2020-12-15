@@ -1,34 +1,40 @@
-import bits   ; bitwise_and, bitwise_or, bitwise_xor
-import string ; isalpha, strcat, strunpack
-
 ;;; Case conversion
 
-upcase: :strunpack push 0 ; tally
-_upcase_loop:
-  swap dup jz _upcase_done
-  dup :isalpha jz _upcase_cat
-  push 95 :bitwise_and
-_upcase_cat:
-  :strcat jump _upcase_loop
+import bits   ; band, bor, bxor
+import string ; isalpha, strcat, strunpack
 
-_upcase_done: pop ret
+; The case conversion functions all behave very similarly, differing only in
+; how they modify the ordinal value V of a character to be kept.
+; upcase is V & 95, downcase is V | 32, and swapcase is V ^ 32.
+$casefun(case, op) {
+:strunpack push 0 ; get characters on stack and initialize accumulator
+_`case`_loop: swap dup jz _`case`_done dup :isalpha jz _`case`_cat `op`
+_`case`_cat: :strcat jump _`case`_loop
+_`case`_done: pop ret
+}
 
-downcase: :strunpack push 0 ; tally
-_downcase_loop:
-  swap dup jz _downcase_done
-  dup :isalpha jz _downcase_cat
-  push 32 :bitwise_or
-_downcase_cat:
-  :strcat jump _downcase_loop
+; returns string S with all alphabetical characters capitalized
+; [S] => [S']
+;
+; [""] => [""]
+; ["abc"] => ["ABC"]
+; ["123"] => ["123"]
+; ["Abc123Def"] => ["ABC123DEF"]
+upcase: $casefun(upcase, push 0x5F :band)
 
-_downcase_done: pop ret
+; returns string S with all alphabetical characters lower-cased
+; [S] => [S']
+;
+; [""] => [""]
+; ["ABC"] => ["abc"]
+; ["123"] => ["123"]
+; ["aBC123dEF"] => ["abc123def"]
+downcase: $casefun(downcase, push 0x20 :bor)
 
-swapcase: :strunpack push 0 ; tally
-_swapcase_loop:
-  swap dup jz _swapcase_done
-  dup :isalpha jz _swapcase_cat
-  push 32 :bitwise_xor
-_swapcase_cat:
-  :strcat jump _swapcase_loop
-
-_swapcase_done: pop ret
+; returns string S with the case of all alphabetical characters swapped
+; [S] => [S']
+;
+; [""] => [""]
+; ["FooBar"] => ["fOObAR"]
+; ["Abc123deF"] => ["aBC123DEf"]
+swapcase: $casefun(swapcase, push 0x20 :bxor)
