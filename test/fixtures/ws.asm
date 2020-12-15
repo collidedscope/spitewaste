@@ -328,8 +328,6 @@ load
 push -100
 call 87
 dup
-push 0
-sub
 jz 15
 dup
 push 1

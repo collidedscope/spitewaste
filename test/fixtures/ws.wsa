@@ -12,7 +12,7 @@ parse_done: push -100 push 1 add slide 3 dup push -100 load store
 labels_loop: push 2 sub dup push -100 push 1 add load sub jn labels_done dup load push 3 sub jz add_label jump labels_loop
 add_label: push -100 dup call dec load copy 1 store jump labels_loop
 labels_done: push -100 push 2 add slide 1 push -100 load store push -100 dup store
-interpret: push -100 dup call dec load load push -100 call dec dup push 0 sub jz _push dup push 1 sub jz _copy dup push 2 sub jz _slide dup push 3 sub jz _label dup push 4 sub jz _call dup push 5 sub jz _jump dup push 6 sub jz _jz dup push 7 sub jz _jn dup push 8 sub jz _pop dup push 9 sub jz _dup dup push 10 sub jz _swap dup push 11 sub jz _add dup push 12 sub jz _sub dup push 13 sub jz _mul dup push 14 sub jz _div dup push 15 sub jz _mod dup push 16 sub jz _store dup push 17 sub jz _load dup push 18 sub jz _ret dup push 19 sub jz _ichr dup push 20 sub jz _inum dup push 21 sub jz _ochr dup push 22 sub jz _onum dup push 23 sub jz _exit pop exit
+interpret: push -100 dup call dec load load push -100 call dec dup jz _push dup push 1 sub jz _copy dup push 2 sub jz _slide dup push 3 sub jz _label dup push 4 sub jz _call dup push 5 sub jz _jump dup push 6 sub jz _jz dup push 7 sub jz _jn dup push 8 sub jz _pop dup push 9 sub jz _dup dup push 10 sub jz _swap dup push 11 sub jz _add dup push 12 sub jz _sub dup push 13 sub jz _mul dup push 14 sub jz _div dup push 15 sub jz _mod dup push 16 sub jz _store dup push 17 sub jz _load dup push 18 sub jz _ret dup push 19 sub jz _ichr dup push 20 sub jz _inum dup push 21 sub jz _ochr dup push 22 sub jz _onum dup push 23 sub jz _exit pop exit
 _push: pop push -100 load load jump interpret
 _pop: pop pop jump interpret
 _dup: pop dup jump interpret

@@ -72,7 +72,7 @@ labels_done:
 interpret: ; []
   push $ip dup :dec load load ; get next op
   push $ip :dec ; decrement again so arg can be read (or skipped if N/A)
-  dup push  0 sub jz _push
+  dup             jz _push
   dup push  1 sub jz _copy
   dup push  2 sub jz _slide
   dup push  3 sub jz _label
