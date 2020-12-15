@@ -130,7 +130,7 @@ neg?: :sign push -1 :eq ret
 ; returns a pseudo-array of the positive divisors of N; as an optimization,
 ; they're not returned in ascending order, but rather in two "halves".
 ; The alternative is unnecessarily invoking to_a and clobbering heap.
-; [N]
+; [N] => [D1 ... Dn n]
 ;
 ; [10] => [1 2 10 5 4]
 ; [12] => [1 2 3 12 6 4 6]

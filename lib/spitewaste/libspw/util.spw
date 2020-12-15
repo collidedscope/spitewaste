@@ -47,7 +47,7 @@ _stoi_loop: ; [b s a]
 _stoi_invalid: pop pop slide 1 swap div ret ; return what we were able to parse
 _stoi_done: swap slide 2 ret
 
-;;; creature comforts
+; creature comforts
 bin:  push  2 :stoi ret
 oct:  push  8 :stoi ret
 to_i: push 10 :stoi ret
@@ -71,11 +71,14 @@ _itos_loop:
   swap jump _itos_loop
 _itos_done: swap slide 2 ret
 
-; creature comfort
-to_s: push 10 :itos ret
+; creature comforts
+to_bin: push  2 :itos ret
+to_oct: push  8 :itos ret
+to_s:   push 10 :itos ret
+to_hex: push 16 :itos ret
 
 ; puts the digits of N in base B on the stack as a pseudo-array
-; [N B]
+; [N B] => [Dn ...D0 n]
 ;
 ; [42 2] => [1 0 1 0 1 0 6]
 ; [12345 10] => [1 2 3 4 5 5]

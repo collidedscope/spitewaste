@@ -49,7 +49,7 @@ strlen: dup push 128 :ilog swap push 128 mod push 0 :neq add ret
 strcat: push 128 copy 2 :strlen :pow mul add ret
 
 ; reverses a packed string "in-place"
-; [S] => [reverse(S)]
+; [S] => [S']
 ;
 ; ["foo"] => ["oof"]
 ; ["bark"] => ["krab"]
@@ -65,7 +65,7 @@ _strrev_done: pop ret
 
 ; takes a packed string S, a start index I, and a length L and returns the
 ; corresponding substring (simply by doing division with powers of 128; neat)
-; [S I L] => [substring]
+; [S I L] => [S']
 ;
 ; ["foobar" 0  6] => ["foobar"]
 ; ["foobar" 1  4] => ["ooba"]
@@ -78,8 +78,8 @@ strslice:
   swap push 128 swap :pow
   mod slide 1 ret
 
-; returns the index of substring T in string S (or -1 if not found)
-; [S T] => [index]
+; returns the index I of substring T in string S (or -1 if not found)
+; [S T] => [I]
 ;
 ; ["foobar" 'o'] => [1]
 ; ["foobar" "ob"] => [2]
@@ -95,8 +95,8 @@ _strindex_loop: ; [t s i]
 _strindex_no: push -1 slide 3 ret
 _strindex_found: slide 2 ret
 
-; returns the character at index I in string S
-; [S I] => [char]
+; returns the character C at index I in string S
+; [S I] => [C]
 ;
 ; ["foobar" 1] => ['o']
 ; ["foobar" 3] => ['b']
@@ -106,7 +106,7 @@ charat: push 1 :strslice ret
 
 ; returns 1 if the character at the top of the stack is
 ; alphabetical (ASCII 65-90 or 97-122), 0 otherwise
-; [C] => [0/1]
+; [C] => [0 | 1]
 ;
 ; ['@'] => [0]   ['a'] => [1]
 ; ['z'] => [1]   ['['] => [0]
@@ -119,7 +119,7 @@ isalpha:
 _isalpha_no: dup sub ret
 
 ; returns string S replicated N times
-; [S N] => [S+S+...]
+; [S N] => [S']
 ;
 ; ["abc" 1] => ["abc"]
 ; ["abc" 2] => ["abcabc"]
@@ -138,7 +138,7 @@ _strrep_done: swap slide 2 ret
 _justc: swap copy 2 :strlen sub push 0 :max :strrep ret
 
 ; left-justifies string S to width W with character C
-; [S W C] => [S, left-justified]
+; [S W C] => [S']
 ;
 ; ["foo" 5 'x'] => ["fooxx"]
 ; ["foobar" 4 'x'] => ["foobar"]
@@ -146,7 +146,7 @@ _justc: swap copy 2 :strlen sub push 0 :max :strrep ret
 ljustc: :_justc :strcat ret
 
 ; left-justifies string S to width W with spaces
-; [S W] => [S, left-justified]
+; [S W] => [S']
 ;
 ; ["foo" 5] => ["foo  "]
 ; ["foobar" 4] => ["foobar"]
@@ -154,7 +154,7 @@ ljustc: :_justc :strcat ret
 ljust: push ' ' :ljustc ret
 
 ; right-justifies string S to width W with character C
-; [S W C] => [S, right-justified]
+; [S W C] => [S']
 ;
 ; ["foo" 5 'x'] => ["xxfoo"]
 ; ["foobar" 4 'x'] => ["foobar"]
@@ -162,7 +162,7 @@ ljust: push ' ' :ljustc ret
 rjustc: :_justc swap :strcat ret
 
 ; right-justifies string S to width W with spaces
-; [S W C] => [S, right-justified]
+; [S W C] => [S']
 ;
 ; ["foo" 5] => ["  foo"]
 ; ["foobar" 4] => ["foobar"]
@@ -172,7 +172,7 @@ rjust: push ' ' :rjustc ret
 ; centers string S to width W with character C, favoring left alignment when
 ; there's a parity mismatch (even-length string to odd width or vice versa)
 ; ! TODO: This seems unnecessarily intricate, but perhaps just its nature.
-; [S W C] => [S, centered]
+; [S W C] => [S']
 ;
 ; ["abc" 7 'x']  => ["xxabcxx"]
 ; ["abc" 6 'x']  => ["xabcxx"]
@@ -190,7 +190,7 @@ centerc:
   slide 2 ret
 
 ; centers string S to width W with spaces
-; [S W] => [S, centered]
+; [S W] => [S']
 ;
 ; ["abc" 7] => ["  abc  "]
 ; ["abc" 6] => [" abc  "]
@@ -202,7 +202,7 @@ center: push ' ' :centerc ret
 ;;;
 
 ; removes the last character of a string
-; [S] => [S.chop]
+; [S] => [S']
 ;
 ; ["foobar"] => ["fooba"]
 ; ["abc"] => ["ab"]
@@ -296,7 +296,7 @@ strcount:
 ; in stirng S, ; similar to the `tr` utility in Unix. A and B must be
 ; of the same length. TODO: make this smarter (ranges, length mismatch)
 ; ! clobbers heap addresses -1, -2, and -3
-; [S A B] => [S]
+; [S A B] => [S']
 ;
 ; ["abcd" "abc" "xyz"] => ["xyzd"]
 ; ["foobar" "oba" "ele"] => ["feeler"]
@@ -316,7 +316,7 @@ _strtrans_no: pop ret
 
 ; expands the length-2 string S to contain the intervening ASCII characters
 ; ! TODO: make this smarter; multiple ranges in one string
-; [S] => [S, expanded]
+; [S] => [S']
 ;
 ; ["CJ"] => ["CDEFGHIJ"]
 ; ["DA"] => ["DE"] TODO: bug
@@ -328,7 +328,7 @@ strexpand:
   swap :range :strpack :strrev ret
 
 ; "squeezes" runs of the same character in string S to just one occurrence
-; [S] => [S, squeezed]
+; [S] => [S']
 ;
 ; ["abc"] => ["abc"]
 ; ["foobar"] => ["fobar"]
