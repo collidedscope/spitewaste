@@ -41,7 +41,7 @@ class SpitewasteCLI
 
     IO.popen('less -R', 'w') do |io|
       found.each do |lib, fn, full|
-        full.gsub! /#{terms * ?|}/, &method(:hi)
+        full.gsub! /#{terms * ?|}/i, &method(:hi)
         desc, specs = full.split "\n\n"
         io.puts "#{?- * 10}\n#{lib}/#{bold under fn} #{desc}\n\n"
         io.puts specs if options[:show_specs]
