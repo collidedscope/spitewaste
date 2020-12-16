@@ -151,3 +151,26 @@ ratsign:
   dup $RAT push 2 mul push 2 add sub jn _ratsign_zero
   push 2 mod push 2 mul push 1 sub ret
 _ratsign_zero: pop push 0 ret
+
+; returns the simplified inverse of the rational number R
+; [R] => [1/R]
+;
+; [R(4,8)] => [R(2,1)]
+; [R(3,-5)] => [R(-5,3)]
+; [R(-22,-7)] => [R(7,22)]
+ratinv:
+  push 2 :divmod push 2 mul $--
+  swap $RAT :divmod copy 2 mul
+  swap :to_r :ratsimp slide 1 ret
+
+; returns the rational R raised to the power E
+; [R E] => [R']
+;
+; [R(4,2) 5] => [R(32,1)]
+; [R(-3,7) 0] => [R(1,1)]
+; [R(-3,14) 2] => [R(9,196)]
+ratpow:
+  swap push 2 :divmod push 2 mul $--
+  swap $RAT :divmod copy 2 mul
+  copy 3 :pow swap copy 3 :pow
+  swap :to_r :ratsimp slide 2 ret
