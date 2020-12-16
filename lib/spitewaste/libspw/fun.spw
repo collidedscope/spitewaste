@@ -4,43 +4,55 @@ import stack  ; to_a
 import string ; isalpha, strcat, strjoin, strrev, strunpack
 import util   ; eq
 
+; returns whether the string S is the same forwards and backwards
+; [S] => [0 | 1]
+;
+; ["racecar"] => [1]
+; ["divider"] => [0]
+; ["redivider"] => [1]
 palindrome?: dup :strrev :eq ret
 
-;;;
-
+; returns whether the strings S and T are composed of the same characters
+; [S T] => [0 | 1]
+;
+; ["allergy" "gallery"] => [1]
+; ["largely" "regally"] => [1]
+; ["foo" "bar"] => [0]
 anagrams?:
   :strunpack push 0 :to_a :sort :strjoin swap
   :strunpack push 0 :to_a :sort :strjoin :eq ret
 
-;;;
-
-isop: :upcase push 0 swap ; tally
-_isop_loop: ; [t s]
-  dup jz _isop_done
+; returns the sum of the alphabetical characters in string S where A=1, B=2...
+; [S] => [sum]
+;
+; ["Math"] => [42]
+; ["wizards"] => [100]
+; ["AbCd"] => [10]
+isop: :upcase push 0 swap
+_isop_loop: dup jz _isop_done
   swap copy 1 push 128 mod
-  dup :isalpha jz _isop_no ; ignore non-alphabetical
-  push 64
-_isop_resume:
-  sub add
-  swap push 128 div jump _isop_loop
-
+  dup :isalpha jz _isop_no push 64
+_isop_resume: sub add swap push 128 div jump _isop_loop
 _isop_no: dup jump _isop_resume
-
 _isop_done: pop ret
 
-;;;
-
+; returns the elements of the Collatz sequence for integer N as a pseudo-array
+; ! may run forever on some as-yet-unknown input
+; [N] => [A]
+;
+; [1] => [1 1]
+; [2] => [2 1 2]
+; [3] => [3 10 5 16 8 4 2 1 8]
+; [4] => [4 2 1 3]
+; [5] => [5 16 8 4 2 1 6]
 collatz: push 1 ; sequence length
 _collatz_loop:
   copy 1 dup push 1 sub jz _collatz_done
-  dup push 2 mod ; m2 n m2
+  dup push 2 mod
   swap copy 1 push 2 mul $++ mul
   push 2 copy 2 sub div add
   swap $++ jump _collatz_loop
-
 _collatz_done: pop ret
 
-;;;
-
-ruby:
-  push "'" :strcat push "ruby -e 'p " swap :strcat shell ret
+; ruby:
+;   push "'" :strcat push "ruby -e 'p " swap :strcat shell ret
