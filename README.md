@@ -35,8 +35,8 @@ See `spw help` for guidance on invoking the command-line interface, and [this tu
 * {ws, wsa, asm} to {ws, wsa, asm}
 * all supported formats to C++ and PNG
 - [x] Execute all supported formats by converting to Whitespace and passing the results to a user-specified interpreter
-- [ ] Thoroughly document the standard library and make it searchable (eventually `spw docs`)
-- - [ ] using a doctest-like approach for free specs
+- [x] Thoroughly document the standard library and make it searchable (via `spw docs`)
+- - [x] using a doctest-like approach for free specs
 - [ ] Write a proper Spitewaste parser for better error reporting (and performance?)
 - [ ] Support user-specified aliases of the builtin mnemonics in case you wanna say `discard` instead of `pop`, etc.
 - [ ] Resolve missing identifiers by auto-importing the necessary standard library?
