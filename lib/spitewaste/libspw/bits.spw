@@ -13,7 +13,7 @@ push -2,1,-1,0 store store
 _`op`_loop: push -1
   copy 2 push 2 mod copy 2 push 2 mod `bit`
   push -1 load swap push -2 load dup push 2 mul
-  push -2 swap store  mul add store
+  push -2 swap store mul add store
   push 2 div swap push 2 div
   dup copy 2 mul jz _`op`_done swap jump _`op`_loop
 _`op`_done: `done` ret
@@ -46,7 +46,7 @@ bor: $bitfun(bor, add $++ push 2 div, add push -2 load mul push -1 load add)
 ; [44 36] => [8]     [6 21]  => [19]
 bxor: $bitfun(bxor, :neq, add push -2 load mul push -1 load add)
 
-; returns the bitwise NOT of N by inverting all of its bits
+; returns the infinite-precision bitwise NOT of N by inverting all of its bits
 ; [N] => [~N]
 ;
 ; [58] => [5]    [46] => [17]
@@ -59,9 +59,16 @@ bnot:
 
 ; returns the number of bits in the binary representation of N
 ; [N] => [# of bits]
+;
+; [0] => [0]   [1] => [1]
+; [7] => [3]   [8] => [4]
+; [255] => [8]
 blength: dup jz _blength_zero push 2 :ilog $++ ret
 _blength_zero: ret
 
 ; returns the number of set bits in N
 ; [N] => [popcount]
+;
+; [0] => [0]   [1] => [1]
+; [7] => [3]   [8] => [1]
 popcount: push 2 :digits reduce (add) ret
