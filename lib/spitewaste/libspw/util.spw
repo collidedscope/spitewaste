@@ -34,7 +34,12 @@ alpha: push "0123456789abcdefghijklmnopqrstuvwxyz" ret
 ; ["123____"  10] => [123000] ; TODO: bug
 ; ["dead"  16] => [57005]
 ; ["gabe"  17] => [81699]
-stoi: swap push 0 ; accumulator
+; ["0" 10] => [0]   ["-0" 10] => [0]
+; ["-10001" 2] => [-17]
+; ["-123" 10] => [-123]
+; ["-ff" 16] => [-255]
+stoi: swap dup :_stoi_sign swap copy 1 :eq
+  push 2 mul $-- push -2 swap store push 0
 _stoi_loop: ; [b s a]
   swap dup jz _stoi_done
   swap copy 2 copy 2
@@ -44,8 +49,9 @@ _stoi_loop: ; [b s a]
   dup jn _stoi_invalid ; found something non-alphanumeric
   mul add swap push 128 div swap
   jump _stoi_loop
-_stoi_invalid: pop pop slide 1 swap div ret ; return what we were able to parse
-_stoi_done: swap slide 2 ret
+_stoi_sign: dup push 0 :charat push '-' :eq copy 1 :strlen :strslice ret
+_stoi_invalid: pop pop slide 1 swap div push -2 load mul ret
+_stoi_done: swap slide 2 push -2 load mul ret
 
 ; creature comforts
 bin:  push  2 :stoi ret

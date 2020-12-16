@@ -79,13 +79,16 @@ map_done_f: pop pop call strpack ret
 _strtrans: dup push -2 load swap call strindex dup jn _strtrans_no push -3 load swap call charat slide 1 ret
 _strtrans_no: pop ret
 alpha: push 0 push 122 push 121 push 120 push 119 push 118 push 117 push 116 push 115 push 114 push 113 push 112 push 111 push 110 push 109 push 108 push 107 push 106 push 105 push 104 push 103 push 102 push 101 push 100 push 99 push 98 push 97 push 57 push 56 push 55 push 54 push 53 push 52 push 51 push 50 push 49 push 48 call strpack ret
-stoi: swap push 0
+stoi: swap dup call _stoi_sign swap copy 1 call eq push 2 mul push 1 sub push -2 swap store push 0
 _stoi_loop: swap dup jz _stoi_done swap copy 2 copy 2 call strlen push 1 sub call pow copy 2 push 128 mod call alpha swap call strindex dup jn _stoi_invalid mul add swap push 128 div swap jump _stoi_loop
-_stoi_invalid: pop pop slide 1 swap div ret
-_stoi_done: swap slide 2 ret
+_stoi_sign: dup push 0 call charat push 45 call eq copy 1 call strlen call strslice ret
+_stoi_invalid: pop pop slide 1 swap div push -2 load mul ret
+_stoi_done: swap slide 2 push -2 load mul ret
 bin: push 2 call stoi ret
 inc: dup load push 1 add store ret
 dec: dup load push 1 sub store ret
+eq: sub jz _eq_yes push 0 ret
+_eq_yes: push 1 ret
 neq: sub jz _neq_no push 1 ret
 _neq_no: push 0 ret
 pow: push 1 swap

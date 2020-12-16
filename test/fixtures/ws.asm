@@ -227,7 +227,7 @@ push 4
 div
 push -100
 dup
-call 87
+call 88
 load
 copy 1
 store
@@ -243,10 +243,10 @@ push 66
 call 65
 push 1
 add
-call 90
-call 98
+call 93
+call 101
 push 128
-call 98
+call 101
 swap
 push 0
 push 66
@@ -259,7 +259,7 @@ push 49
 push 48
 call 53
 call 75
-call 85
+call 86
 swap
 push 88
 sub
@@ -269,7 +269,7 @@ mul
 label 9
 push -100
 dup
-call 87
+call 88
 load
 swap
 store
@@ -303,7 +303,7 @@ jump 11
 label 12
 push -100
 dup
-call 87
+call 88
 load
 copy 1
 store
@@ -322,11 +322,11 @@ store
 label 14
 push -100
 dup
-call 87
+call 88
 load
 load
 push -100
-call 87
+call 88
 dup
 jz 15
 dup
@@ -464,7 +464,7 @@ push -100
 push 2
 add
 dup
-call 87
+call 88
 load
 push -100
 load
@@ -482,7 +482,7 @@ store
 push -100
 push 2
 add
-call 86
+call 87
 jump 14
 label 24
 pop
@@ -569,7 +569,7 @@ label 41
 dup
 jz 42
 push -10
-call 87
+call 88
 swap
 push -10
 load
@@ -630,7 +630,7 @@ jz 50
 swap
 push -10
 dup
-call 87
+call 88
 load
 swap
 store
@@ -695,19 +695,19 @@ ret
 label 59
 dup
 push 128
-call 93
+call 96
 swap
 push 128
 mod
 push 0
-call 88
+call 91
 add
 ret
 label 60
 push 128
 copy 2
 call 59
-call 90
+call 93
 mul
 add
 ret
@@ -735,14 +735,14 @@ label 64
 swap
 push 128
 swap
-call 90
+call 93
 copy 2
 swap
 div
 swap
 push 128
 swap
-call 90
+call 93
 mod
 slide 1
 ret
@@ -802,7 +802,7 @@ copy 2
 call 59
 sub
 push 0
-call 96
+call 99
 call 70
 ret
 label 74
@@ -830,7 +830,7 @@ store
 swap
 label 76
 push -9
-call 86
+call 87
 swap
 dup
 dup
@@ -905,18 +905,30 @@ call 53
 ret
 label 81
 swap
+dup
+call 83
+swap
+copy 1
+call 89
+push 2
+mul
+push 1
+sub
+push -2
+swap
+store
 push 0
 label 82
 swap
 dup
-jz 84
+jz 85
 swap
 copy 2
 copy 2
 call 59
 push 1
 sub
-call 90
+call 93
 copy 2
 push 128
 mod
@@ -924,7 +936,7 @@ call 80
 swap
 call 65
 dup
-jn 83
+jn 84
 mul
 add
 swap
@@ -933,88 +945,112 @@ div
 swap
 jump 82
 label 83
+dup
+push 0
+call 69
+push 45
+call 89
+copy 1
+call 59
+call 64
+ret
+label 84
 pop
 pop
 slide 1
 swap
 div
-ret
-label 84
-swap
-slide 2
+push -2
+load
+mul
 ret
 label 85
+swap
+slide 2
+push -2
+load
+mul
+ret
+label 86
 push 2
 call 81
 ret
-label 86
+label 87
 dup
 load
 push 1
 add
 store
 ret
-label 87
+label 88
 dup
 load
 push 1
 sub
 store
 ret
-label 88
-sub
-jz 89
-push 1
-ret
 label 89
+sub
+jz 90
 push 0
 ret
 label 90
 push 1
-swap
+ret
 label 91
-dup
+sub
 jz 92
+push 1
+ret
+label 92
+push 0
+ret
+label 93
+push 1
+swap
+label 94
+dup
+jz 95
 swap
 copy 2
 mul
 swap
 push 1
 sub
-jump 91
-label 92
+jump 94
+label 95
 swap
 slide 2
 ret
-label 93
+label 96
 push -1
 push 0
 store
-label 94
+label 97
 swap
 copy 1
 div
 dup
-jz 95
+jz 98
 push -1
-call 86
+call 87
 swap
-jump 94
-label 95
+jump 97
+label 98
 push -1
 load
 slide 2
 ret
-label 96
+label 99
 copy 1
 copy 1
 sub
-jn 97
+jn 100
 swap
-label 97
+label 100
 slide 1
 ret
-label 98
+label 101
 push -1
 swap
 store
