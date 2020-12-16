@@ -1,45 +1,45 @@
 import math ; divmod
 import util ; inc
 
-; [n] => [0|1]
-prime?: ; [n]
+; returns 1 if the number N is prime, 0 otherwise
+; [N] => [0 | 1]
+;
+; [0] => [0]   [1] => [0]
+; [2] => [1]   [4] => [0]
+; [3] => [1]   [9] => [0]
+prime?:
   dup push 3 sub jn _prime_special ; special-case < 3
   dup push 2 mod jz _prime_even ; otherwise, even -> false
-  push 3
-
-_prime_loop: ; [n d]
-  copy 1 copy 1 dup mul sub jn _prime_yes ; divisor > isqrt(n), n is prime
+  push 3 ; initial divisor to check
+_prime_loop:
+  copy 1 copy 1 dup mul sub jn _prime_yes ; divisor > isqrt(n), so n is prime
   copy 1 copy 1 mod jz _prime_no
   push 2 add jump _prime_loop
+_prime_even: dup sub ret
+_prime_no: pop dup sub ret ; return 0
+_prime_yes: pop dup div ret ; return 1
+_prime_special: push 2 :eq ret
 
-_prime_yes:
-  pop dup div ret ; return 1
-
-_prime_even:
-  push 1
-_prime_no:
-  pop dup sub ret ; return 0
-
-_prime_special: ; [n]
-  push 2 sub jz _prime_two
-  push 0 ret ; false for n < 2
-
-_prime_two:
-  push 1 ret
-
-;;;
-
+; returns the first prime number P greater than N
+; [N] => [P]
+;
+; [0] => [2]   [1] => [2]
+; [2] => [3]   [3] => [5]
+; [13] => [17]
+; [100] => [101]
 next_prime: push 1 add dup :prime? jz next_prime ret
 
-;;;
-
-; prime factorization
-factor: ; [n]
-  push 2 swap ; initial divisor
-  push -2,0 store ; number of prime factors
-_factor_loop: ; [d n]
-  dup push 2 sub jn _factor_done
-  jump _divisor_loop ; prevent dead code elimination :(
+; returns the prime factorization of N as a pseudo-array
+; ! N must be greater than 1
+; [N] => [A]
+;
+; [2] => [2 1]
+; [8] => [2 2 2 3]
+; [15] => [3 5 2]
+; [17] => [17 1]
+; [100] => [2 2 5 5 4]
+factor: push 2 swap push -2,0 store
+_factor_loop: dup push 2 sub jn _factor_done jump _divisor_loop
 _divisor_loop:
   dup copy 2 :divmod jz _divisor_keep
   pop swap :next_prime swap jump _factor_loop
