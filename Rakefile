@@ -14,7 +14,8 @@ task :docs do |t|
   docs = {}
 
   Dir.chdir('lib/spitewaste/libspw') do |d|
-    %w[bits.spw case.spw rational.spw array.spw stack.spw util.spw string.spw math.spw].each do |path|
+    Dir['*.spw'].each do |path|
+      next if path['random']
       lib = File.basename path, '.spw'
       docs[lib] = extract_docs path
     end
