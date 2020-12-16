@@ -1,20 +1,56 @@
+;;; Pseudo-arrays
+
+; An "array" is really just a sequence of elements on the stack followed by
+; the number of elements, so care must be taken to ensure one knows what kind
+; of data is currently being operated on.
+
 import math  ; divmod, max, min, pos?
 import stack ; bury, dig, ncopy, nslide, roll
 import util  ; dec, die!, eq
 
 $amax = 1000
 
+; returns the sum of the array A
+; [A] => [sum]
+;
+; [3 1] => [3]
+; [4 3 2 1 4] => [10]
+; [-10 -5 7 5 10 5] => [7]
 arysum: reduce (add) ret
 
+; duplicates the array at the top of the stack
+; [A] => [A A]
+;
+; [1 2 3 3] => [1 2 3 3 1 2 3 3]
+; [7 50 10 2] => [7 50 10 2 50 10 2]
 arydup:
   dup $++ push -2 copy 1 store
   times (push -2 load $-- :ncopy) ret
 
+; removes the element at the end of the array A
+; [A] => [A']
+;
+; [10 1] => [0]
+; [1 2 3 4 4] => [1 2 3 3]
+; [7 10 20 30 3] => [7 10 20 2]
 arypop: slide 1 $-- ret
 
+; removes the element at the beginning of the array A
+; [A] => [A']
+;
+; [10 1] => [0]
+; [1 2 3 4 4] => [2 3 4 3]
+; [7 10 20 30 3] => [7 20 30 2]
 aryshift: dup :dig $-- ret
 
+; returns the concatenation of arrays A and B
+; [A B] => [A+B]
+;
+; [1 2 3 3 4 5 6 3] => [1 2 3 4 5 6 6]
+; [7 10 2 5 4 3 3] => [7 10 5 4 3 5]
 arycat: dup $++ :roll add ret
+
+;;;
 
 arypack:
   :arydup reduce (:max) $++ push -1 swap store
@@ -30,36 +66,43 @@ aryunpack:
 
 arylen: push $amax mod ret
 
-;;;
-
+; returns the index I of element E in array A (or -1 if not found)
+; [A E] => [I]
+;
+; [1 2 3 4 4 2] => [1]
+; [1 2 3 4 4 4] => [3]
+; [1 2 3 4 4 5] => [-1]
 aryindex: copy 1 ; two copies of length, one gets decremented, index is diff
-_aryindex_loop: ; [h n l]
-  dup jn _aryindex_notfound
+_aryindex_loop: dup jn _aryindex_notfound
   dup push 2 add :roll copy 2 :eq jz _aryindex_no
   copy 2 copy 1 sub swap $++ :nslide ret
-
 _aryindex_no: $-- jump _aryindex_loop
-
 _aryindex_notfound: slide 1 ret
 
-;;;
-
-; element at index i
-aryat: ; [a i]
+; returns the element E at index I in array A (or dies on out of bounds)
+; [A I] => [E]
+;
+; [1 2 3 4 4 0]  => [1]
+; [1 2 3 4 4 2]  => [3]
+; [1 2 3 4 4 -1] => [4]  negative index counts from the end
+aryat:
   dup jn _aryat_neg
   copy 1 swap sub dup :pos? jz _aryat_oob
   :roll swap $-- :nslide ret
-
 _aryat_neg: copy 1 add dup jn _aryat_oob jump aryat
-
 _aryat_oob: push "(aryat) index out of bounds!" :die!
 
+; returns the minimum and maximum elements of array A
+; [A] => [min max]
+;
+; [4 3 2 1 4] => [1 4]
+; [6 8 -3 4 0 5] => [-3 8]
+; [7 1] => [7 7]
 minmax:
-  :arydup reduce (:max)
-  push -1 swap store
+  :arydup reduce (:max) push -1 swap store
   reduce (:min) push -1 load ret
 
-;;;
+;;; TODO: make sort not atrociously inefficient
 
 sort: push -3 copy 1 store ; preserve length
 _sort_loop:
@@ -70,17 +113,25 @@ _sort_loop:
   push 0 copy 1 sub jn _sort_loop
   push 3 sub load ret
 
+; reverses the array A
+; [A] => [A']
+;
+; [1 2 3 3] => [3 2 1 3]
+; [7 1] => [7 1]
+; [5 4 3 2 1 5] => [1 2 3 4 5 5]
 aryrev: push -3 copy 1 store
 _aryrev_loop:
   swap copy 1 :bury $--
   push 0 copy 1 sub jn _aryrev_loop
   push 3 sub load ret
 
-;;;
-
+; returns the array A replicated N times
+; ! N must be greater than 1
+; [A N] => [A']
+;
+; [3 2 1 3 4] => [3 2 1 3 2 1 3 2 1 3 2 1 12]
 aryrep: push -1 swap push -3 copy 1 store store
 _aryrep_loop:
   push -1 dup :dec load jz _aryrep_done
   :arydup jump _aryrep_loop
-
 _aryrep_done: push -3 load $-- times (:arycat) ret
