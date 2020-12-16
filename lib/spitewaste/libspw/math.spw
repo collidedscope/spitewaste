@@ -2,10 +2,12 @@ import array ; arycat, arydup
 import util  ; eq, inc, range
 
 ; returns B raised to the power E
+; ! TODO: support negative exponents (return Rational)
 ; [B E] => [B**E]
 ;
 ; [0 0] => [1],   [0 9] => [0],   [9 0] => [1]
 ; [3 2] => [9],   [2 3] => [8],   [7 4] => [2401]
+; [-2 3] => [-8]  [-5 0] => [1]   [-4 4] => [256]
 pow: push 1 swap
 _pow_loop: ; [b n e]
   dup jz _pow_done
