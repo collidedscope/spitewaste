@@ -35,7 +35,7 @@ class Whitespace
     bin.tr(" \t", "01").to_i 2
   end
 
-  def interpret
+  def interpret inio: STDIN, outio: STDOUT
     @jumps = {}
     @insns.each_with_index do |(op, arg), i|
       @jumps[arg] = i if op == :label
@@ -63,10 +63,10 @@ class Whitespace
       when :store ; k, v = @stack.pop(2); @heap[k] = v
       when :load  ; @stack << @heap[@stack.pop].to_i
       when :ret   ; ip = calls.pop
-      when :ichr  ; @heap[@stack.pop] = (STDIN.getc || -1).ord
-      when :inum  ; @heap[@stack.pop] = STDIN.gets.to_i
-      when :ochr  ; STDOUT << @stack.pop.chr
-      when :onum  ; STDOUT << @stack.pop
+      when :ichr  ; @heap[@stack.pop] = (inio.getc || -1).ord
+      when :inum  ; @heap[@stack.pop] = inio.gets.to_i
+      when :ochr  ; outio << @stack.pop.chr
+      when :onum  ; outio << @stack.pop
       when :exit  ; break
       end
     end
