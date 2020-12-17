@@ -68,11 +68,12 @@ module Spitewaste
       strpack = parser.symbol_table['strpack']
 
       if [op, arg] == [:call, strpack]
-        # naively assume the null terminator arrived on the stack via push
+        # grab all the instructions between `push 0` and this `call strpack`
         start = @instructions[0, @ip].rindex [:push, 0]
         between = @instructions[start + 1...@ip]
 
         bytes = []
+        # optimization only applies if all of the intervening ops are pushes
         return unless between.all? { |op, arg| op == :push && bytes << arg }
 
         packed = bytes.reverse.zip(0..).sum { |b, e| b * 128 ** e }
