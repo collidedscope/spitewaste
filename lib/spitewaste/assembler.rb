@@ -44,49 +44,48 @@ module Spitewaste
         end
 
       # Worthwhile optimizations can only be done if we have a symbol table.
-      optimize! if parser.is_a? SpitewasteParser
+      optimize! if parser.respond_to? :symbol_table
 
       src = format == :wsassembly ? @src : @instructions
       emitter.new(src, **options).emit io: io
     end
 
-    def optimize_constant_pow op, arg
+    def optimize_constant_pow
       pow = parser.symbol_table['pow']
 
-      case [*@instructions[@ip - 2, 2], op, arg]
-        in [[:push, base], [:push, exp], :call, ^pow]
+      case @instructions[@ip - 2, 3]
+      in [[:push, base], [:push, exp], [:call, ^pow]]
         @instructions[@ip - 2, 3] = [[:push, base ** exp]]
 
-        in [[:push, base], [:dup, _], :call, ^pow]
+      in [[:push, base], [:dup, _], [:call, ^pow]]
         @instructions[@ip - 2, 3] = [[:push, base ** base]]
 
-        else nil
+      else nil
       end
     end
 
-    def optimize_constant_strpack op, arg
+    def optimize_constant_strpack
       strpack = parser.symbol_table['strpack']
+      return if @instructions[@ip] != [:call, strpack]
 
-      if [op, arg] == [:call, strpack]
-        # grab all the instructions between `push 0` and this `call strpack`
-        start = @instructions[0, @ip].rindex [:push, 0]
-        between = @instructions[start + 1...@ip]
+      # grab all the instructions between `push 0` and this `call strpack`
+      start = @instructions[0, @ip].rindex [:push, 0]
+      between = @instructions[start + 1...@ip]
 
-        bytes = []
-        # optimization only applies if all of the intervening ops are pushes
-        return unless between.all? { |op, arg| op == :push && bytes << arg }
+      bytes = []
+      # optimization only applies if all of the intervening ops are pushes
+      return unless between.all? { |op, arg| op == :push && bytes << arg }
 
-        packed = bytes.reverse.zip(0..).sum { |b, e| b * 128 ** e }
-        @instructions[start..@ip] = [[:push, packed]]
-        @ip = start + 1
-      end
+      packed = bytes.reverse.zip(0..).sum { |b, e| b * 128 ** e }
+      @instructions[start..@ip] = [[:push, packed]]
+      @ip = start + 1
     end
 
     def optimize!
       @ip = 0
-      while (op, arg = @instructions[@ip])
-        next if optimize_constant_pow op, arg
-        next if optimize_constant_strpack op, arg
+      while @instructions[@ip]
+        next @ip -= 1 if optimize_constant_pow
+        next if optimize_constant_strpack
         @ip += 1
       end
     end
