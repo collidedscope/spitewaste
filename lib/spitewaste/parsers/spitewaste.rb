@@ -11,7 +11,7 @@ module Spitewaste
     INSTRUCTIONS = /(\S+):|(\b(#{OPERATORS_M2T.keys * ?|})\s+(-?\d\S*)?)/
     SPECIAL_INSN = /(call|jump|jz|jn)\s+(\S+)/
 
-    attr_reader :src, :instructions, :error
+    attr_reader :src, :instructions, :error, :symbol_table
 
     def initialize program, **options
       @src = program.dup
