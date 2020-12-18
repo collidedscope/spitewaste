@@ -20,10 +20,10 @@ _pow_done: swap slide 2 ret
 ;
 ; [0] => [1],   [1] => [1],     [2] => [2]
 ; [3] => [6],   [5] => [120],   [10] => [3628800]
-factorial: push 0 swap :range
+factorial: dup jz _fac_zero push 0 swap :range
 _fac_loop: swap dup jz _fac_done mul jump _fac_loop
-
 _fac_done: pop ret
+_fac_zero: $++ ret
 
 ; returns the integer square root of N
 ; [N] => [floor(sqrt(N))]
@@ -155,6 +155,8 @@ _divisors_square: slide 1 $-- ret ; de-duplicate when N is a perfect square
 ; [16 4] => [1820]
 ; [50 3] => [19600]
 nCk:
+  copy 1 copy 1 sub jn _nCk_empty
   copy 1 copy 1 sub :factorial
   swap :factorial mul
   swap :factorial swap div ret
+_nCk_empty: push 0 slide 2 ret
