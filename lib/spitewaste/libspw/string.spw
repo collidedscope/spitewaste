@@ -319,9 +319,10 @@ _strtrans_no: pop ret
 ; [S] => [S']
 ;
 ; ["CJ"] => ["CDEFGHIJ"]
-; ["DA"] => ["DE"] TODO: bug
+; ["DA"] => ["DCBA"]
 ; ["af"] => ["abcdef"]
 ; ["09"] => ["0123456789"]
+; ["90"] => ["9876543210"]
 ; ["(1"] => ["()*+,-./01"]
 strexpand:
   push 0 swap push 128 :divmod
