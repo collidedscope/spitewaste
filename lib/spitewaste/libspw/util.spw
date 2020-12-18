@@ -4,18 +4,44 @@ import stack  ; to_a
 import string ; charat, strcat, strindex, strlen
 
 ; inserts between the top two stack values the intervening consecutive elements
-; ! TODO: Support step, and negative as well.
-; [I J] => [I I+1 ... J]
+; supports counting up or down
+; [I J] => [I I±1 ... J]
 ;
 ; [2 5] => [2 3 4 5]
+; [5 2] => [5 4 3 2]
 ; [0 4] => [0 1 2 3 4]
+; [4 0] => [4 3 2 1 0]
 ; [-2 0] => [-2 -1 0]
+; [0 -2] => [0 -1 -2]
 ; [-3 3] => [-3 -2 -1 0 1 2 3]
+; [3 -3] => [3 2 1 0 -1 -2 -3]
 ; [4 4] => [4 5] TODO: bug
-range:
+range: dup copy 2 sub jn _range_down
   copy 1 push 1 add swap
-  copy 1 copy 1 sub jn range
-  pop ret
+  copy 1 copy 1 sub jn range pop ret
+_range_down:
+  copy 1 push 1 sub swap
+  dup copy 2 sub jn _range_down pop ret
+
+$range_loop(fn, cmp) {
+`fn`:
+  copy 1 copy 1 add swap dup
+  copy 2 add push -1 load `cmp` jz `fn` pop ret
+}
+
+; inserts between the top two stack values the intervening consecutive elements,
+; counting by `step` up/down to (but never beyond) J
+; [I J S] => [I I±S ... ~J]
+;
+; [1 4 1] => [1 2 3 4]
+; [4 1 -1] => [4 3 2 1]
+; [2 10 3] => [2 5 8]
+; [10 2 -3] => [10 7 4]
+; [-5 25 10] => [-5 5 15 25]
+; [25 -5 -10] => [25 15 5 -5]
+steprange: swap push -1 swap store dup copy 2 sub jn _steprange_down_loop
+$range_loop(_steprange_loop, :gt)
+$range_loop(_steprange_down_loop, :lt)
 
 ; prints the string at the top of the stack and halts execution
 die!: :println exit
