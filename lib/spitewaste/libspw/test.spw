@@ -1,11 +1,10 @@
 import io     ; print, println
 import string ; strcat
+import util   ; die!
 
 assert_eq:
   dup copy 2 sub jz _assert_eq_yes
   push "expected " :print onum
   push ", got " :print onum
-  push " for test " :strcat :print :println
-  exit
-
+  push " for test " swap :strcat :die!
 _assert_eq_yes: pop pop pop ret
