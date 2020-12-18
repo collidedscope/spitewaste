@@ -1,3 +1,5 @@
+Warning[:experimental] = false
+
 module Spitewaste
   OPERATORS_M2T = { # mnemonic to tokens
     push:  "  ",       copy: " \t ",   slide: " \t\n",   label: "\n  ",
