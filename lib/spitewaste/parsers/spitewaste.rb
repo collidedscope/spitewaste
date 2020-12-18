@@ -160,7 +160,7 @@ module Spitewaste
       subroutines = {}
       while label = tokens.shift
         sublen = tokens.index { |t| t[/:$/] } || tokens.size
-        subroutines[label.chop] = tokens.shift sublen
+        subroutines[label.chop] ||= tokens.shift sublen
       end
 
       # A subroutine may indirectly depend on the one immediately after by
