@@ -39,7 +39,8 @@ $range_loop(fn, cmp) {
 ; [10 2 -3] => [10 7 4]
 ; [-5 25 10] => [-5 5 15 25]
 ; [25 -5 -10] => [25 15 5 -5]
-steprange: swap push -1 swap store dup copy 2 sub jn _steprange_down_loop
+steprange: swap push -1 swap store dup copy 2 sub
+  jn _steprange_down_loop jump _steprange_loop ; prevent DCE
 $range_loop(_steprange_loop, :gt)
 $range_loop(_steprange_down_loop, :lt)
 
