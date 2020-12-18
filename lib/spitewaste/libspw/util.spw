@@ -92,11 +92,13 @@ hex:  push 16 :stoi ret
 ; [N B]
 ;
 ; [42 2] => ["101010"]
+; [-42 2] => ["-101010"]
 ; [511 8] => ["777"]
 ; [12345 10] => ["12345"]
+; [-54321 10] => ["-54321"]
 ; [57005 16] => ["dead"]
 ; [81699 17] => ["gabe"]
-itos: swap push 0 ; accumulator
+itos: swap push -2 copy 1 :neg? store :abs push 0
 _itos_loop:
   swap dup jz _itos_done
   swap copy 1 copy 3 mod
@@ -104,7 +106,7 @@ _itos_loop:
   swap :strcat
   swap copy 2 div
   swap jump _itos_loop
-_itos_done: swap slide 2 ret
+_itos_done: swap slide 2 push 45,-2 load mul swap :strcat ret
 
 ; creature comforts
 to_bin: push  2 :itos ret
