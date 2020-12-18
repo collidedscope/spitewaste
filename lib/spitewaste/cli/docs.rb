@@ -29,7 +29,7 @@ class SpitewasteCLI
 
     docs.each do |lib, fns|
       fns.each do |fn, data|
-        full = data['full']
+        full = "#{lib}/#{bold under fn} #{data['full']}"
         ms = terms.count { |t| full[/#{t}/i] }
         found << [lib, fn, full, ms] if ms >= min
       end
@@ -43,7 +43,7 @@ class SpitewasteCLI
       found.each do |lib, fn, full|
         full.gsub! /#{terms * ?|}/i, &method(:hi)
         desc, specs = full.split "\n\n"
-        io.puts "#{?- * 10}\n#{lib}/#{bold under fn} #{desc}\n\n"
+        io.puts "#{?- * 10}\n#{desc}\n\n"
         io.puts specs if options[:show_specs]
       end
     end
