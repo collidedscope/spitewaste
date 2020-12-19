@@ -343,6 +343,25 @@ _strsqueeze_loop: ; [s]
 _strsqueeze_skip: pop jump _strsqueeze_loop
 _strsqueeze_done: pop :strpack :strrev ret
 
+$_strdel(cmp) {
+  :strunpack push -1 load :strlen
+  select (push -2 load swap :strindex `cmp`)
+  pop :strpack ret
+}
+
+; returns the string S with all characters in string T removed, like `tr -d`.
+; If the first character of T is '^', instead only those characters are kept.
+; [S T] => [S']
+;
+; ["abc123" "abc"] => ["123"]
+; ["abc123" "123"] => ["abc"]
+; ["abcba12321" "abc"] => ["12321"]
+; ["abc12321cba" "^2ac"] => ["ac22ca"]
+; ["facetious" "^aeiou"] => ["aeiou"]
+strdel: push -1 copy 2 store push -2 copy 1 store
+  push 0 :charat push '^' :neq jz _strdel_comp $_strdel(:neg?)
+_strdel_comp: $_strdel(:pos?)
+
 ; returns the sum of the ordinal values of the characters in string S
 ; [S] => [N]
 ;

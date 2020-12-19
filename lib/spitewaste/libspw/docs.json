@@ -2779,8 +2779,8 @@
       ]
     },
     "strtrans": {
-      "full": "translates all characters in A to the corresponding characters in B\nin stirng S, ; similar to the `tr` utility in Unix. A and B must be\nof the same length. TODO: make this smarter (ranges, length mismatch)\n[S A B] => [S']\n\n[\"abcd\" \"abc\" \"xyz\"] => [\"xyzd\"]\n[\"foobar\" \"oba\" \"ele\"] => [\"feeler\"]\n[\"abcdcba\" \"abcd\" \"xyz|\"] => [\"xyz|zyx\"]\n",
-      "desc": "translates all characters in A to the corresponding characters in B\nin stirng S, ; similar to the `tr` utility in Unix. A and B must be\nof the same length. TODO: make this smarter (ranges, length mismatch)",
+      "full": "translates all characters in A to the corresponding characters in B\nin string S, ; similar to the `tr` utility in Unix. A and B must be\nof the same length. TODO: make this smarter (ranges, length mismatch)\n[S A B] => [S']\n\n[\"abcd\" \"abc\" \"xyz\"] => [\"xyzd\"]\n[\"foobar\" \"oba\" \"ele\"] => [\"feeler\"]\n[\"abcdcba\" \"abcd\" \"xyz|\"] => [\"xyz|zyx\"]\n",
+      "desc": "translates all characters in A to the corresponding characters in B\nin string S, ; similar to the `tr` utility in Unix. A and B must be\nof the same length. TODO: make this smarter (ranges, length mismatch)",
       "effect": "[S A B] => [S']",
       "cases": [
         [
@@ -2905,6 +2905,58 @@
           ],
           [
             120
+          ]
+        ]
+      ]
+    },
+    "strdel": {
+      "full": "returns the string S with all characters in string T removed, like `tr -d`.\nIf the first character of T is '^', instead only those characters are kept.\n[S T] => [S']\n\n[\"abc123\" \"abc\"] => [\"123\"]\n[\"abc123\" \"123\"] => [\"abc\"]\n[\"abcba12321\" \"abc\"] => [\"12321\"]\n[\"abc12321cba\" \"^2ac\"] => [\"ac22ca\"]\n[\"facetious\" \"^aeiou\"] => [\"aeiou\"]\n",
+      "desc": "returns the string S with all characters in string T removed, like `tr -d`.\nIf the first character of T is '^', instead only those characters are kept.",
+      "effect": "[S T] => [S']",
+      "cases": [
+        [
+          [
+            1765872824673,
+            1634657
+          ],
+          [
+            842033
+          ]
+        ],
+        [
+          [
+            1765872824673,
+            842033
+          ],
+          [
+            1634657
+          ]
+        ],
+        [
+          [
+            455577041567603028321,
+            1634657
+          ],
+          [
+            13259036977
+          ]
+        ],
+        [
+          [
+            115428439177226335351137,
+            209213790
+          ],
+          [
+            3359575421409
+          ]
+        ],
+        [
+          [
+            8352980281199227110,
+            4050107592926
+          ],
+          [
+            31641465569
           ]
         ]
       ]
