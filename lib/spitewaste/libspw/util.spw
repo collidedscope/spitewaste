@@ -26,12 +26,13 @@ _range_down:
 
 $range_loop(fn, cmp) {
 `fn`:
-  copy 1 copy 1 add swap dup
-  copy 2 add push -1 load `cmp` jz `fn` pop ret
+  dup copy 2 add push -1 load `cmp` jz _`fn`_done
+  copy 1 copy 1 add swap jump `fn`
+_`fn`_done: pop ret
 }
 
-; inserts between the top two stack values the intervening consecutive elements,
-; counting by `step` up/down to (but never beyond) J
+; inserts between I and J the intervening consecutive elements, counting by
+; step S up/down to (but never beyond) J
 ; [I J S] => [I I±S ... ~J]
 ;
 ; [1 4 1] => [1 2 3 4]
@@ -42,10 +43,12 @@ $range_loop(fn, cmp) {
 ; [25 -5 -10] => [25 15 5 -5]
 ; [4 20 3] => [4 7 10 13 16 19]
 ; [20 4 -3] => [20 17 14 11 8 5]
+; [3 9 7] => [3]
+; [9 3 -7] => [9]
 steprange: swap push -1 copy 1 store copy 2 sub
   jn _steprange_down_loop jump _steprange_loop ; prevent DCE
-$range_loop(_steprange_loop, :gt)
-$range_loop(_steprange_down_loop, :lt)
+$range_loop(_steprange_loop, :lte)
+$range_loop(_steprange_down_loop, :gte)
 
 ; prints the string at the top of the stack and halts execution
 die!: :println exit
