@@ -63,8 +63,8 @@ module Spitewaste
       resolve_strings
       remove_comments
       add_sugar
-      fucktionalize
       propagate_macros
+      fucktionalize
     end
 
     def resolve_imports
