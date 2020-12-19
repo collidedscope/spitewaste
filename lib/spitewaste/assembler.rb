@@ -69,7 +69,7 @@ module Spitewaste
       return if @instructions[@ip] != [:call, strpack]
 
       # grab all the instructions between `push 0` and this `call strpack`
-      start = @instructions[0, @ip].rindex [:push, 0]
+      return unless start = @instructions[0, @ip].rindex([:push, 0])
       between = @instructions[start + 1...@ip]
 
       bytes = []
