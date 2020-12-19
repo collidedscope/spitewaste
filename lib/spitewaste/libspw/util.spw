@@ -15,10 +15,11 @@ import string ; charat, strcat, strindex, strlen
 ; [0 -2] => [0 -1 -2]
 ; [-3 3] => [-3 -2 -1 0 1 2 3]
 ; [3 -3] => [3 2 1 0 -1 -2 -3]
-; [4 4] => [4 5] TODO: bug
-range: dup copy 2 sub jn _range_down
+; [4 4] => [4]
+range: dup copy 2 sub jz _range_one dup copy 2 sub jn _range_down
   copy 1 push 1 add swap
   copy 1 copy 1 sub jn range pop ret
+_range_one: pop ret
 _range_down:
   copy 1 push 1 sub swap
   dup copy 2 sub jn _range_down pop ret

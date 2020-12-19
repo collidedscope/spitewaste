@@ -4013,7 +4013,7 @@
   },
   "util": {
     "range": {
-      "full": "inserts between the top two stack values the intervening consecutive elements\nsupports counting up or down\n[I J] => [I I±1 ... J]\n\n[2 5] => [2 3 4 5]\n[5 2] => [5 4 3 2]\n[0 4] => [0 1 2 3 4]\n[4 0] => [4 3 2 1 0]\n[-2 0] => [-2 -1 0]\n[0 -2] => [0 -1 -2]\n[-3 3] => [-3 -2 -1 0 1 2 3]\n[3 -3] => [3 2 1 0 -1 -2 -3]\n[4 4] => [4 5] TODO: bug\n",
+      "full": "inserts between the top two stack values the intervening consecutive elements\nsupports counting up or down\n[I J] => [I I±1 ... J]\n\n[2 5] => [2 3 4 5]\n[5 2] => [5 4 3 2]\n[0 4] => [0 1 2 3 4]\n[4 0] => [4 3 2 1 0]\n[-2 0] => [-2 -1 0]\n[0 -2] => [0 -1 -2]\n[-3 3] => [-3 -2 -1 0 1 2 3]\n[3 -3] => [3 2 1 0 -1 -2 -3]\n[4 4] => [4]\n",
       "desc": "inserts between the top two stack values the intervening consecutive elements\nsupports counting up or down",
       "effect": "[I J] => [I I±1 ... J]",
       "cases": [
@@ -4125,8 +4125,7 @@
             4
           ],
           [
-            4,
-            5
+            4
           ]
         ]
       ]
