@@ -293,7 +293,7 @@ strcount:
   reduce (add) ret
 
 ; translates all characters in A to the corresponding characters in B
-; in stirng S, ; similar to the `tr` utility in Unix. A and B must be
+; in string S, ; similar to the `tr` utility in Unix. A and B must be
 ; of the same length. TODO: make this smarter (ranges, length mismatch)
 ; ! clobbers heap addresses -1, -2, and -3
 ; [S A B] => [S']
