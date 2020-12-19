@@ -20,7 +20,9 @@ task :docs do |t|
       docs[lib] = extract_docs path
     end
 
-    File.open('docs.json', ?w) { |f| JSON.dump docs, f }
+    File.open('docs.json', ?w) { |f|
+      f.write JSON.pretty_generate docs
+    }
   end
 end
 
