@@ -3705,9 +3705,74 @@
         ]
       ]
     },
+    "arypush": {
+      "full": "places the element E at the end of the array A, increasing its length by 1\n[A E] => [A']\n\n[3 2 1 3 7] => [3 2 1 7 4]\n[4 2 2 0] => [4 2 0 3]\n[6 1 9] => [6 9 2]\n[7 5 8 2 4] => [7 5 8 4 3]\n",
+      "desc": "places the element E at the end of the array A, increasing its length by 1",
+      "effect": "[A E] => [A']",
+      "cases": [
+        [
+          [
+            3,
+            2,
+            1,
+            3,
+            7
+          ],
+          [
+            3,
+            2,
+            1,
+            7,
+            4
+          ]
+        ],
+        [
+          [
+            4,
+            2,
+            2,
+            0
+          ],
+          [
+            4,
+            2,
+            0,
+            3
+          ]
+        ],
+        [
+          [
+            6,
+            1,
+            9
+          ],
+          [
+            6,
+            9,
+            2
+          ]
+        ],
+        [
+          [
+            7,
+            5,
+            8,
+            2,
+            4
+          ],
+          [
+            7,
+            5,
+            8,
+            4,
+            3
+          ]
+        ]
+      ]
+    },
     "arypop": {
-      "full": "removes the element at the end of the array A\n[A] => [A']\n\n[10 1] => [0]\n[1 2 3 4 4] => [1 2 3 3]\n[7 10 20 30 3] => [7 10 20 2]\n",
-      "desc": "removes the element at the end of the array A",
+      "full": "removes the element at the end of the array A, decreasing its length by 1\n[A] => [A']\n\n[10 1] => [0]\n[1 2 3 4 4] => [1 2 3 3]\n[7 10 20 30 3] => [7 10 20 2]\n",
+      "desc": "removes the element at the end of the array A, decreasing its length by 1",
       "effect": "[A] => [A']",
       "cases": [
         [
@@ -3752,8 +3817,8 @@
       ]
     },
     "aryshift": {
-      "full": "removes the element at the beginning of the array A\n[A] => [A']\n\n[10 1] => [0]\n[1 2 3 4 4] => [2 3 4 3]\n[7 10 20 30 3] => [7 20 30 2]\n",
-      "desc": "removes the element at the beginning of the array A",
+      "full": "removes the element at the beginning of the array A, decreasing its length by 1\n[A] => [A']\n\n[10 1] => [0]\n[1 2 3 4 4] => [2 3 4 3]\n[7 10 20 30 3] => [7 20 30 2]\n",
+      "desc": "removes the element at the beginning of the array A, decreasing its length by 1",
       "effect": "[A] => [A']",
       "cases": [
         [
@@ -3793,6 +3858,75 @@
             20,
             30,
             2
+          ]
+        ]
+      ]
+    },
+    "aryunshift": {
+      "full": "places the element E at the beginning of the array A, increasing its length by 1\n[A E] => [A']\n\n[3 2 1 3 7] => [7 3 2 1 4]\n[4 2 0 3 9] => [9 4 2 0 4]\n[11 2 2 10] => [10 11 2 3]\n[7 2 8 2 0] => [7 0 2 8 3]\n",
+      "desc": "places the element E at the beginning of the array A, increasing its length by 1",
+      "effect": "[A E] => [A']",
+      "cases": [
+        [
+          [
+            3,
+            2,
+            1,
+            3,
+            7
+          ],
+          [
+            7,
+            3,
+            2,
+            1,
+            4
+          ]
+        ],
+        [
+          [
+            4,
+            2,
+            0,
+            3,
+            9
+          ],
+          [
+            9,
+            4,
+            2,
+            0,
+            4
+          ]
+        ],
+        [
+          [
+            11,
+            2,
+            2,
+            10
+          ],
+          [
+            10,
+            11,
+            2,
+            3
+          ]
+        ],
+        [
+          [
+            7,
+            2,
+            8,
+            2,
+            0
+          ],
+          [
+            7,
+            0,
+            2,
+            8,
+            3
           ]
         ]
       ]

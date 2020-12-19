@@ -27,7 +27,16 @@ arydup:
   dup $++ push -2 copy 1 store
   times (push -2 load $-- :ncopy) ret
 
-; removes the element at the end of the array A
+; places the element E at the end of the array A, increasing its length by 1
+; [A E] => [A']
+;
+; [3 2 1 3 7] => [3 2 1 7 4]
+; [4 2 2 0] => [4 2 0 3]
+; [6 1 9] => [6 9 2]
+; [7 5 8 2 4] => [7 5 8 4 3]
+arypush: swap $++ ret
+
+; removes the element at the end of the array A, decreasing its length by 1
 ; [A] => [A']
 ;
 ; [10 1] => [0]
@@ -35,13 +44,22 @@ arydup:
 ; [7 10 20 30 3] => [7 10 20 2]
 arypop: slide 1 $-- ret
 
-; removes the element at the beginning of the array A
+; removes the element at the beginning of the array A, decreasing its length by 1
 ; [A] => [A']
 ;
 ; [10 1] => [0]
 ; [1 2 3 4 4] => [2 3 4 3]
 ; [7 10 20 30 3] => [7 20 30 2]
 aryshift: dup :dig $-- ret
+
+; places the element E at the beginning of the array A, increasing its length by 1
+; [A E] => [A']
+;
+; [3 2 1 3 7] => [7 3 2 1 4]
+; [4 2 0 3 9] => [9 4 2 0 4]
+; [11 2 2 10] => [10 11 2 3]
+; [7 2 8 2 0] => [7 0 2 8 3]
+aryunshift: swap dup times (dup $++ :roll swap) $++ ret
 
 ; returns the concatenation of arrays A and B
 ; [A B] => [A+B]
