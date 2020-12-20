@@ -66,6 +66,10 @@ SPW
 
     'minby' => 'maxby (%2$s push -1 mul)',
     'each' => 'dup times (dup call roll %2$s push 1 sub) pop',
+    'all' => 'map (%2$s) reduce (add) push -11 load call eq',
+    # TODO: optimize any to stop early if possible
+    'any' => 'map (%2$s) reduce (add) push 0 call gt',
+    'none' => 'map (%2$s) reduce (add) push 0 call eq',
     'count' => 'select (%2$s) dup call nslide',
     'select' => generate_filter_spw('select', 0, 1),
     'reject' => generate_filter_spw('reject', 1, 0),
