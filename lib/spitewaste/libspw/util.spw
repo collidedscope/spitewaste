@@ -204,3 +204,16 @@ _gte_no: push 0 ret
 heap_seeking_missile:
   $++ dup load copy 2 :eq jz heap_search
   slide 1 ret
+
+; converts the #RRGGBB (leading '#' optional) color string S to a length-3
+; array containing the individual components as integers in the range 0-255
+; [S] => [R G B 3]
+;
+; ["#000000"] => [0 0 0 3]
+; ["ffffff"]  => [255 255 255 3]
+; ["#102030"] => [16 32 48 3]
+; ["c0ffee"] => [192 255 238 3]
+hex2rgb:
+  dup push 0 :charat push '#' :eq push 127 mul $++ div
+  push 128,2 :pow :divmod :hex swap
+  push 128,2 :pow :divmod :hex swap :hex push 3 ret

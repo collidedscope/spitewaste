@@ -5024,6 +5024,57 @@
       "cases": [
 
       ]
+    },
+    "hex2rgb": {
+      "full": "converts the #RRGGBB (leading '#' optional) color string S to a length-3\narray containing the individual components as integers in the range 0-255\n[S] => [R G B 3]\n\n[\"#000000\"] => [0 0 0 3]\n[\"ffffff\"]  => [255 255 255 3]\n[\"#102030\"] => [16 32 48 3]\n[\"c0ffee\"] => [192 255 238 3]\n",
+      "desc": "converts the #RRGGBB (leading '#' optional) color string S to a length-3\narray containing the individual components as integers in the range 0-255",
+      "effect": "[S] => [R G B 3]",
+      "cases": [
+        [
+          [
+            212768486332451
+          ],
+          [
+            0,
+            0,
+            0,
+            3
+          ]
+        ],
+        [
+          [
+            3532289323878
+          ],
+          [
+            255,
+            255,
+            255,
+            3
+          ]
+        ],
+        [
+          [
+            212871569741987
+          ],
+          [
+            16,
+            32,
+            48,
+            3
+          ]
+        ],
+        [
+          [
+            3497661143139
+          ],
+          [
+            192,
+            255,
+            238,
+            3
+          ]
+        ]
+      ]
     }
   },
   "prime": {
