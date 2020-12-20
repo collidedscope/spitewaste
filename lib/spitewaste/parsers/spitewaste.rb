@@ -61,8 +61,8 @@ module Spitewaste
       resolve_imports
       seed_prng if @seen.include? 'random'
       resolve_strings
-      remove_comments
       add_sugar
+      remove_comments
       propagate_macros
       fucktionalize
     end
