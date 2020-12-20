@@ -1814,6 +1814,8 @@
       ]
     }
   },
+  "terminal": {
+  },
   "string": {
     "strpack": {
       "full": "convert a 0-terminated string on the stack to a single base-128 integer\n[0 ... c b a] => [\"abc...\"]\n\n[0 99 98 97] => [\"abc\"]\n[0 99 98 97] => [1634657]\n[0] => [0]\n",

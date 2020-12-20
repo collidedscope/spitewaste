@@ -1,0 +1,14 @@
+;;; Miscellaneous terminal-based functionality
+
+import util ; hex2rgb
+
+$_setg(code) {
+  push 91,27 ochr ochr
+  push `code` onum push 50,59 ochr ochr
+  :hex2rgb each (push 59 ochr onum)
+  push 109 ochr ret
+}
+
+setfg: $_setg(38)
+setbg: $_setg(48)
+reset: push 109,91,27 ochr ochr ochr ret
