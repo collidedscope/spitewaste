@@ -196,6 +196,18 @@ lte: swap ; intentionally flow into gte
 gte: sub jn _gte_no push 1 ret
 _gte_no: push 0 ret
 
+; returns 1 if the number N is between A and B (inclusive), 0 otherwise
+; ! A must be <= B for sensible results TODO: bug?
+; [N A B]
+;
+; [5 0 10] => [1]
+; [11 0 10] => [0]
+; [4 0 4] => [1]
+; [-1 0 4] => [0]
+; [-5 -10 0] => [1]
+; [3 4 2] => [0]
+between?: copy 2 :gte swap copy 2 :lte mul slide 1 ret
+
 ; Though extremely rare, it's possible that we know a particular value is
 ; stored in the heap at some key, just not which one. This subroutine takes
 ; a value V to search for and a starting index I, and either returns the first
