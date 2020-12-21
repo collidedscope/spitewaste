@@ -162,6 +162,45 @@
           ]
         ]
       ]
+    },
+    "to_roman": {
+      "full": "converts the number N to a string of roman numerals R\n[N] => [R]\n\n[2020] => [\"MMXX\"]\n[1666] => [\"MDCLXVI\"]\n[1337] => [\"MCCCXXXVII\"]\n[94] => [\"XCIV\"]\n",
+      "desc": "converts the number N to a string of roman numerals R",
+      "effect": "[N] => [R]",
+      "cases": [
+        [
+          [
+            2020
+          ],
+          [
+            186001101
+          ]
+        ],
+        [
+          [
+            1666
+          ],
+          [
+            324036115620429
+          ]
+        ],
+        [
+          [
+            1337
+          ],
+          [
+            678615166826675495373
+          ]
+        ],
+        [
+          [
+            94
+          ],
+          [
+            181559768
+          ]
+        ]
+      ]
     }
   },
   "math": {

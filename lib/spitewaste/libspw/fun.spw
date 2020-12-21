@@ -56,3 +56,24 @@ _collatz_done: pop ret
 
 ; ruby:
 ;   push "'" :strcat push "ruby -e 'p " swap :strcat shell ret
+
+$_to_roman(r, v) {
+  push `v` :divmod swap push `r` swap :strrep
+  push -2 load swap :strcat push -2 swap store
+}
+
+; converts the number N to a string of roman numerals R
+; [N] => [R]
+;
+; [2020] => ["MMXX"]
+; [1666] => ["MDCLXVI"]
+; [1337] => ["MCCCXXXVII"]
+; [94] => ["XCIV"]
+to_roman: push -2,0 store
+  $_to_roman("M", 1000) $_to_roman("CM", 900)
+  $_to_roman("D", 500)  $_to_roman("CD", 400)
+  $_to_roman("C", 100)  $_to_roman("XC", 90)
+  $_to_roman("L", 50)   $_to_roman("XL", 40)
+  $_to_roman("X", 10)   $_to_roman("IX", 9)
+  $_to_roman("V", 5)    $_to_roman("IV", 4)
+  $_to_roman("I", 1) push 2 sub load ret
