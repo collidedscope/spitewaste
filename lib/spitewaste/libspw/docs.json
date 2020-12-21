@@ -5095,9 +5095,9 @@
       ]
     },
     "hex2rgb": {
-      "full": "converts the #RRGGBB (leading '#' optional) color string S to a length-3\narray containing the individual components as integers in the range 0-255\n[S] => [R G B 3]\n\n[\"#000000\"] => [0 0 0 3]\n[\"ffffff\"]  => [255 255 255 3]\n[\"#102030\"] => [16 32 48 3]\n[\"c0ffee\"] => [192 255 238 3]\n",
-      "desc": "converts the #RRGGBB (leading '#' optional) color string S to a length-3\narray containing the individual components as integers in the range 0-255",
-      "effect": "[S] => [R G B 3]",
+      "full": "converts the #RRGGBB (leading '#' optional) color string S to\nits individual RGB components as integers in the range 0-255\n[S] => [R G B]\n\n[\"#000000\"] => [0 0 0]\n[\"ffffff\"]  => [255 255 255]\n[\"#102030\"] => [16 32 48]\n[\"c0ffee\"] => [192 255 238]\n",
+      "desc": "converts the #RRGGBB (leading '#' optional) color string S to\nits individual RGB components as integers in the range 0-255",
+      "effect": "[S] => [R G B]",
       "cases": [
         [
           [
@@ -5106,8 +5106,7 @@
           [
             0,
             0,
-            0,
-            3
+            0
           ]
         ],
         [
@@ -5117,8 +5116,7 @@
           [
             255,
             255,
-            255,
-            3
+            255
           ]
         ],
         [
@@ -5128,8 +5126,7 @@
           [
             16,
             32,
-            48,
-            3
+            48
           ]
         ],
         [
@@ -5139,8 +5136,7 @@
           [
             192,
             255,
-            238,
-            3
+            238
           ]
         ]
       ]
