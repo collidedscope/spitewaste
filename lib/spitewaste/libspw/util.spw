@@ -229,3 +229,18 @@ hex2rgb:
   dup push 0 :charat push '#' :eq push 127 mul $++ div
   push 128,2 :pow :divmod :hex swap
   push 128,2 :pow :divmod :hex swap :hex ret
+
+; converts R, G, and B components to length-6 hexadecimal string S
+; ! dies if any of the values to convert aren't between 0 and 255
+; [R G B] => [S]
+;
+; [0 0 0] => ["000000"]
+; [255 255 255] => ["ffffff"]
+; [16 32 48] => ["102030"]
+; [192 255 238] => ["c0ffee"]
+rgb2hex:
+  push 3 :arydup all (push 0,255 :between?) jz _rgb2hex_invalid
+  pop copy 2 push 256,2 :pow mul
+  copy 2 push 256 mul add add
+  slide 2 :to_hex push 6,48 :rjustc ret
+_rgb2hex_invalid: push "(rgb2hex) invalid RGB" :die!

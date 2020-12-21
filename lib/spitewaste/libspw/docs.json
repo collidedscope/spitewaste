@@ -5140,6 +5140,53 @@
           ]
         ]
       ]
+    },
+    "rgb2hex": {
+      "full": "converts R, G, and B components to length-6 hexadecimal string S\n[R G B] => [S]\n\n[0 0 0] => [\"000000\"]\n[255 255 255] => [\"ffffff\"]\n[16 32 48] => [\"102030\"]\n[192 255 238] => [\"c0ffee\"]\n",
+      "desc": "converts R, G, and B components to length-6 hexadecimal string S",
+      "effect": "[R G B] => [S]",
+      "cases": [
+        [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1662253799472
+          ]
+        ],
+        [
+          [
+            255,
+            255,
+            255
+          ],
+          [
+            3532289323878
+          ]
+        ],
+        [
+          [
+            16,
+            32,
+            48
+          ],
+          [
+            1663059138609
+          ]
+        ],
+        [
+          [
+            192,
+            255,
+            238
+          ],
+          [
+            3497661143139
+          ]
+        ]
+      ]
     }
   },
   "prime": {
