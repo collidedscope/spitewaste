@@ -10,6 +10,17 @@ import util  ; dec, die!, eq
 
 $amax = 1000
 
+; places an array of N elements E at the top of the stack
+; [N E] => [A]
+;
+; [3 0] => [0 0 0 3]
+; [5 1] => [1 1 1 1 1 5]
+; [4 -2] => [-2 -2 -2 -2 4]
+aryfill: push -1 copy 2 store swap
+_aryfill_loop:
+  copy 1 swap $-- dup push 1 :eq jz _aryfill_loop
+  push -1 mul load ret
+
 ; returns the sum of the array A
 ; [A] => [sum]
 ;

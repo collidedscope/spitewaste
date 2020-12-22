@@ -3663,6 +3663,52 @@
   "test": {
   },
   "array": {
+    "aryfill": {
+      "full": "places an array of N elements E at the top of the stack\n[N E] => [A]\n\n[3 0] => [0 0 0 3]\n[5 1] => [1 1 1 1 1 5]\n[4 -2] => [-2 -2 -2 -2 4]\n",
+      "desc": "places an array of N elements E at the top of the stack",
+      "effect": "[N E] => [A]",
+      "cases": [
+        [
+          [
+            3,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            3
+          ]
+        ],
+        [
+          [
+            5,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            5
+          ]
+        ],
+        [
+          [
+            4,
+            -2
+          ],
+          [
+            -2,
+            -2,
+            -2,
+            -2,
+            4
+          ]
+        ]
+      ]
+    },
     "arysum": {
       "full": "returns the sum of the array A\n[A] => [sum]\n\n[3 1] => [3]\n[4 3 2 1 4] => [10]\n[-10 -5 7 5 10 5] => [7]\n",
       "desc": "returns the sum of the array A",
