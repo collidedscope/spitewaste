@@ -87,6 +87,7 @@ _stoi_invalid: pop pop slide 1 swap div push -2 load mul ret
 _stoi_done: swap slide 2 push -2 load mul ret
 
 ; creature comforts
+
 bin:  push  2 :stoi ret
 oct:  push  8 :stoi ret
 to_i: push 10 :stoi ret
@@ -113,6 +114,7 @@ _itos_loop:
 _itos_done: swap slide 2 push 45,-2 load mul swap :strcat ret
 
 ; creature comforts
+
 to_bin: push  2 :itos ret
 to_oct: push  8 :itos ret
 to_s:   push 10 :itos ret

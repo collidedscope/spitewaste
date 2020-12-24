@@ -14,7 +14,7 @@ task :docs do |t|
   docs = {}
 
   Dir.chdir('lib/spitewaste/libspw') do |d|
-    Dir['*.spw'].each do |path|
+    Dir['*.spw'].sort.each do |path|
       next if path['random']
       lib = File.basename path, '.spw'
       docs[lib] = extract_docs path
@@ -41,7 +41,7 @@ def extract_docs path
     end
   end
 
-  docs
+  docs.sort.to_h
 end
 
 def strpack s
