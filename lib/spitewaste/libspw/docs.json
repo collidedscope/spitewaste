@@ -3487,6 +3487,29 @@
         ]
       ]
     },
+    "memfrob": {
+      "full": "frobnicates the string S by XORing all its bytes with 42\n[S] => [S']\n\n[\"foobar\"] => [\"LEEHKX\"]\n[\"LEEHKX\"] => [\"foobar\"]\n",
+      "desc": "frobnicates the string S by XORing all its bytes with 42",
+      "effect": "[S] => [S']",
+      "cases": [
+        [
+          [
+            3943255767014
+          ],
+          [
+            3043941769932
+          ]
+        ],
+        [
+          [
+            3043941769932
+          ],
+          [
+            3943255767014
+          ]
+        ]
+      ]
+    },
     "rjust": {
       "full": "right-justifies string S to width W with spaces\n[S W C] => [S']\n\n[\"foo\" 5] => [\"  foo\"]\n[\"foobar\" 4] => [\"foobar\"]\n[\"\" 3] => [528416]\n",
       "desc": "right-justifies string S to width W with spaces",
@@ -4097,9 +4120,9 @@
       ]
     },
     "strrotl": {
-      "full": "rotates the string S to the left N times, wrapping\n[S N]\n\n[\"abc\" 0] => [\"abc\"]\n[\"abcd\" 1] => [\"bcda\"]\n[\"abcd\" 5] => [\"bcda\"]\n[\"foodbar\" 4] => [\"barfood\"]\n",
+      "full": "rotates the string S to the left N times, wrapping\n[S N] => [S']\n\n[\"abc\" 0] => [\"abc\"]\n[\"abcd\" 1] => [\"bcda\"]\n[\"abcd\" 5] => [\"bcda\"]\n[\"foodbar\" 4] => [\"barfood\"]\n",
       "desc": "rotates the string S to the left N times, wrapping",
-      "effect": "[S N]",
+      "effect": "[S N] => [S']",
       "cases": [
         [
           [
@@ -4140,9 +4163,9 @@
       ]
     },
     "strrotr": {
-      "full": "rotates the string S to the right N times, wrapping\n[S N]\n\n[\"abcd\" 1] => [\"dabc\"]\n[\"abcd\" 5] => [\"dabc\"]\n[\"foodbar\" 3] => [\"barfood\"]\n",
+      "full": "rotates the string S to the right N times, wrapping\n[S N] => [S']\n\n[\"abcd\" 1] => [\"dabc\"]\n[\"abcd\" 5] => [\"dabc\"]\n[\"foodbar\" 3] => [\"barfood\"]\n",
       "desc": "rotates the string S to the right N times, wrapping",
-      "effect": "[S N]",
+      "effect": "[S N] => [S']",
       "cases": [
         [
           [

@@ -372,7 +372,7 @@ _strdel_comp: $_strdel(:pos?)
 strsum: :strunpack push 0 :to_a reduce (add) ret
 
 ; rotates the string S to the left N times, wrapping
-; [S N]
+; [S N] => [S']
 ;
 ; ["abc" 0] => ["abc"]
 ; ["abcd" 1] => ["bcda"]
@@ -381,9 +381,18 @@ strsum: :strunpack push 0 :to_a reduce (add) ret
 strrotl: push 128 swap copy 2 :strlen mod :pow :divmod :strcat ret
 
 ; rotates the string S to the right N times, wrapping
-; [S N]
+; [S N] => [S']
 ;
 ; ["abcd" 1] => ["dabc"]
 ; ["abcd" 5] => ["dabc"]
 ; ["foodbar" 3] => ["barfood"]
 strrotr: push 0 swap sub :strrotl ret
+
+; frobnicates the string S by XORing all its bytes with 42
+; [S] => [S']
+;
+; ["foobar"] => ["LEEHKX"]
+; ["LEEHKX"] => ["foobar"]
+memfrob:
+  dup :strlen pop :strunpack push -1 load $++
+  map (push 42 :bxor) pop :strpack ret
