@@ -3616,7 +3616,7 @@
       ]
     },
     "strchop": {
-      "full": "removes the last character of a string\n[S] => [S']\n\n[\"foobar\"] => [\"fooba\"]\n[\"abc\"] => [\"ab\"]\n[\"a\"] => [\"\"]\n",
+      "full": "removes the last character of a string\n[S] => [S']\n\n[\"foobar\"] => [\"fooba\"]\n[\"abc\"] => [\"ab\"]\n[\"a\"] => [\"\"]\n[\"\"] => [\"\"]\n",
       "desc": "removes the last character of a string",
       "effect": "[S] => [S']",
       "cases": [
@@ -3639,6 +3639,14 @@
         [
           [
             97
+          ],
+          [
+            0
+          ]
+        ],
+        [
+          [
+            0
           ],
           [
             0
@@ -4358,7 +4366,7 @@
       ]
     },
     "strsum": {
-      "full": "returns the sum of the ordinal values of the characters in string S\n[S] => [N]\n\n[\"ABC\"] => [198]\n[\"012\"] => [147]\n[\"a\"] => [97]\n[\"\"] => [] TODO: bug, should be 0\n",
+      "full": "returns the sum of the ordinal values of the characters in string S\n[S] => [N]\n\n[\"ABC\"] => [198]\n[\"012\"] => [147]\n[\"a\"] => [97]\n[\"\"] => [0]\n",
       "desc": "returns the sum of the ordinal values of the characters in string S",
       "effect": "[S] => [N]",
       "cases": [
@@ -4391,7 +4399,7 @@
             0
           ],
           [
-
+            0
           ]
         ]
       ]

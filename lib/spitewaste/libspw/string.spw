@@ -207,8 +207,10 @@ center: push ' ' :centerc ret
 ; ["foobar"] => ["fooba"]
 ; ["abc"] => ["ab"]
 ; ["a"] => [""]
-; ! [""] => ERROR TODO: Should just be a no-op.
-strchop: dup :strlen push 1 sub push 0 swap :strslice ret
+; [""] => [""]
+strchop: dup jz _strchop_empty
+  dup :strlen push 1 sub push 0 swap :strslice ret
+_strchop_empty: ret
 
 ; splits string S on delimiting character C, leaving the resultant substrings
 ; on the stack as a pseudo-array (length at top of stack)
@@ -368,8 +370,10 @@ _strdel_comp: $_strdel(:pos?)
 ; ["ABC"] => [198]
 ; ["012"] => [147]
 ; ["a"] => [97]
-; [""] => [] TODO: bug, should be 0
-strsum: :strunpack push 0 :to_a reduce (add) ret
+; [""] => [0]
+strsum: dup jz _strsum_empty
+  :strunpack push 0 :to_a reduce (add) ret
+_strsum_empty: ret
 
 ; rotates the string S to the left N times, wrapping
 ; [S N] => [S']
