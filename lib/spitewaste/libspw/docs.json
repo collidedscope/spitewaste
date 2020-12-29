@@ -2761,6 +2761,37 @@
         ]
       ]
     },
+    "ratstr": {
+      "full": "converts the rational number R to a string S of the form\n\"<simplified numerator>/<simplified denominator>\"\n[R] => [S]\n\n[R(22,7)] => [\"22/7\"]\n[R(2,4)] => [\"1/2\"]\n[R(99,9)] => [\"11/1\"]\n",
+      "desc": "converts the rational number R to a string S of the form\n\"<simplified numerator>/<simplified denominator>\"",
+      "effect": "[R] => [S]",
+      "cases": [
+        [
+          [
+            94489280527
+          ],
+          [
+            116119858
+          ]
+        ],
+        [
+          [
+            8589934601
+          ],
+          [
+            825265
+          ]
+        ],
+        [
+          [
+            425201762323
+          ],
+          [
+            103536817
+          ]
+        ]
+      ]
+    },
     "ratsub": {
       "full": "returns the simplified difference of the rational numbers Ra and Rb\n[Ra Rb] => [Ra - Rb]\n\n[R(21,25)  R(-28,27)]  => [R(1267,675)]\n[R(14,7)   R(13,6)]    => [R(-1,6)]\n[R(-24,-9) R(-5,-21)]  => [R(17,7)]\n[R(-27,-2) R(-2,26)]   => [R(353,26)]\n[R(-27,3)  R(2,-22)]   => [R(-98,11)]\n[R(-4,23)  R(-9,13)]   => [R(155,299)]\n[R(-14,19) R(-18,-11)] => [R(-496,209)]\n[R(-29,21) R(-15,-16)] => [R(-779,336)]\n",
       "desc": "returns the simplified difference of the rational numbers Ra and Rb",

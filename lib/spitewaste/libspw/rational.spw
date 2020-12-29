@@ -190,3 +190,12 @@ _to_f_loop:
   swap push 10 mul
   push 2 :dig
   push -2 dup :dec load :neg? jz _to_f_loop pop ret
+
+; converts the rational number R to a string S of the form
+; "<simplified numerator>/<simplified denominator>"
+; [R] => [S]
+;
+; [R(22,7)] => ["22/7"]
+; [R(2,4)] => ["1/2"]
+; [R(99,9)] => ["11/1"]
+ratstr: :ratsimp :from_r push 2 map (:to_s) push '/' :strjoinc ret
