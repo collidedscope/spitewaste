@@ -174,3 +174,19 @@ ratpow:
   swap $RAT :divmod copy 2 mul
   copy 3 :pow swap copy 3 :pow
   swap :to_r :ratsimp slide 2 ret
+
+; converts the rational number R to a "pseudo-float" with a whole (W) part
+; and a fractional (F) part composed of P digits after the decimal point
+; [R P] => [W F]
+;
+; [R(22,7) 2] => [3 14]
+; [R(355,113) 6] => [3 141592]
+; [R(8675,309) 10] => [28 744336569] TODO: leading 0 is lost (bug)
+; [R(2,4) 3] => [0 500]
+to_f: push -2 swap store :from_r :divmod push 0 swap
+_to_f_loop:
+  push -1 load :divmod  swap
+  copy 2 push 10 mul add
+  swap push 10 mul
+  push 2 :dig
+  push -2 dup :dec load :neg? jz _to_f_loop pop ret

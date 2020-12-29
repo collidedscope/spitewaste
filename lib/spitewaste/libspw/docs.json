@@ -2840,6 +2840,53 @@
         ]
       ]
     },
+    "to_f": {
+      "full": "converts the rational number R to a \"pseudo-float\" with a whole (W) part\nand a fractional (F) part composed of P digits after the decimal point\n[R P] => [W F]\n\n[R(22,7) 2] => [3 14]\n[R(355,113) 6] => [3 141592]\n[R(8675,309) 10] => [28 744336569] TODO: leading 0 is lost (bug)\n[R(2,4) 3] => [0 500]\n",
+      "desc": "converts the rational number R to a \"pseudo-float\" with a whole (W) part\nand a fractional (F) part composed of P digits after the decimal point",
+      "effect": "[R P] => [W F]",
+      "cases": [
+        [
+          [
+            94489280527,
+            2
+          ],
+          [
+            3,
+            14
+          ]
+        ],
+        [
+          [
+            1524713390307,
+            6
+          ],
+          [
+            3,
+            141592
+          ]
+        ],
+        [
+          [
+            37258841293419,
+            10
+          ],
+          [
+            28,
+            744336569
+          ]
+        ],
+        [
+          [
+            8589934601,
+            3
+          ],
+          [
+            0,
+            500
+          ]
+        ]
+      ]
+    },
     "to_r": {
       "full": "encodes a numerator N and a denominator D as a rational number R with the\nfollowing structure: ((N × $RAT + D) << 1) + sign (0 for negative, else 1).\nThis representation is nice because, with care, it makes it so that we never\nhave to involve the heap (besides divmod) just to do fairly basic arithmetic.\n[N D] => [R]\n\n[22 7]  => [R(22,7)]\n[4 8]   => [R(4,8)]  ; no implicit simplification TODO: make it configurable?\n[5 1]   => [R(5,1)]  ; no conversion to integer (duh)\n[-3 4]  => [R(-3,4)]\n[3 -4]  => [R(-3,4)] ; sign always held in the numerator\n[-1 -3] => [R(1,3)]\n",
       "desc": "encodes a numerator N and a denominator D as a rational number R with the\nfollowing structure: ((N × $RAT + D) << 1) + sign (0 for negative, else 1).\nThis representation is nice because, with care, it makes it so that we never\nhave to involve the heap (besides divmod) just to do fairly basic arithmetic.",
