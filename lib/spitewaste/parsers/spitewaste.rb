@@ -57,7 +57,7 @@ module Spitewaste
     private
 
     def preprocess!
-      @src.prepend "import syntax\n"
+      @src << "\nimport syntax"
       resolve_imports
       seed_prng if @seen.include? 'random'
       resolve_strings
