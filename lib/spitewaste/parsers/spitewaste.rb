@@ -78,7 +78,13 @@ module Spitewaste
       while @src['import']
         imports = []
         @src.gsub!(/import\s+(\S+).*/) {
-          imports << resolve($1) if @seen.add? $1
+          if $1 == ?*
+            imports = Dir[LIBSPW + '/*.spw'].map {
+              File.read(_1) if @seen.add? File.basename(_1, '.spw')
+            }
+          else
+            imports << resolve($1) if @seen.add? $1
+          end
           '' # remove import statement
         }
         @src << imports.join(?\n)
@@ -91,7 +97,7 @@ module Spitewaste
     end
 
     def seed_prng
-      @src.prepend "push $seed,#{rand 2**31} store $seed = -9001"
+      @src.prepend "push $seed,#{rand 2**31} store $seed = -9001\n"
     end
 
     def resolve_strings
