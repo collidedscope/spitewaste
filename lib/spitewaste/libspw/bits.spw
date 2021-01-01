@@ -71,4 +71,8 @@ _blength_zero: ret
 ;
 ; [0] => [0]   [1] => [1]
 ; [7] => [3]   [8] => [1]
-popcount: push 2 :digits reduce (add) ret
+popcount: push 0
+_popcount_loop:
+  copy 1 push 2 mod add swap push 2 div
+  dup jz _popcount_done swap jump _popcount_loop
+_popcount_done: pop ret
