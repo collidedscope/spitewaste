@@ -1,8 +1,7 @@
 import array ; arycat, arydup
 import util  ; eq, inc, range
 
-; returns B raised to the power E
-; ! TODO: support negative exponents (return Rational)
+; returns B raised to the power E; if E must be negative, use ratpow instead
 ; [B E] => [B**E]
 ;
 ; [0 0] => [1],   [0 9] => [0],   [9 0] => [1]
