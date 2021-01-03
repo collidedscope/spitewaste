@@ -4,8 +4,8 @@ srand: ^$seed ret
 
 rand:
   push $seed dup dup load
-  push 3,13,10244807 mul mul mul
-  push 2,32 :pow mod
+  push 48271 mul
+  push 2,31 :pow $-- mod
   store load ret
 
 rand_range: ; [a b]
