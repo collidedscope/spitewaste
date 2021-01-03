@@ -138,6 +138,22 @@ aryat:
 _aryat_neg: copy 1 add dup jn _aryat_oob jump aryat
 _aryat_oob: push "(aryat) index out of bounds!" :die!
 
+; swaps the elements at indices I and J in array A
+; [A I J] => [A']
+;
+; [6 0 8 7 4 1 3] => [6 7 8 0 4]
+; [4 3 2 1 4 0 2] => [2 3 4 1 4]
+; [3 2 1 3 1 1] => [3 2 1 3]
+aryswap: copy 1 copy 1 sub jz _aryswap_noop
+  ^-7 ^-6
+  :arydup @-6 :aryat ^-8
+  :arydup @-7 :aryat ^-9
+  @-6 :aryremove
+  @-7 $-- :aryremove
+  @-6 @-9 :aryinsert
+  @-7 @-8 :aryinsert ret
+_aryswap_noop: pop pop ret
+
 ; returns the minimum and maximum elements of array A
 ; [A] => [min max]
 ;
