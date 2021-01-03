@@ -227,6 +227,71 @@
         ]
       ]
     },
+    "aryinsert": {
+      "full": "inserts the element E into array A at index I, increasing its length by 1\n[A I E]\n\n[9 5 2 3 1 4] => [9 4 5 2 4]\n[1 1 0 7] => [7 1 2]\n[3 1 1 7] => [3 7 2]\n[7 5 2 1 6] => [7 6 5 3]\n",
+      "desc": "inserts the element E into array A at index I, increasing its length by 1",
+      "effect": "[A I E]",
+      "cases": [
+        [
+          [
+            9,
+            5,
+            2,
+            3,
+            1,
+            4
+          ],
+          [
+            9,
+            4,
+            5,
+            2,
+            4
+          ]
+        ],
+        [
+          [
+            1,
+            1,
+            0,
+            7
+          ],
+          [
+            7,
+            1,
+            2
+          ]
+        ],
+        [
+          [
+            3,
+            1,
+            1,
+            7
+          ],
+          [
+            3,
+            7,
+            2
+          ]
+        ],
+        [
+          [
+            7,
+            5,
+            2,
+            1,
+            6
+          ],
+          [
+            7,
+            6,
+            5,
+            3
+          ]
+        ]
+      ]
+    },
     "arypop": {
       "full": "removes the element at the end of the array A, decreasing its length by 1\n[A] => [A']\n\n[10 1] => [0]\n[1 2 3 4 4] => [1 2 3 3]\n[7 10 20 30 3] => [7 10 20 2]\n",
       "desc": "removes the element at the end of the array A, decreasing its length by 1",
@@ -333,6 +398,59 @@
             5,
             8,
             4,
+            3
+          ]
+        ]
+      ]
+    },
+    "aryremove": {
+      "full": "removes the element at index I in array A, decreasing its length by 1\n[A I]\n\n[6 0 9 3 1] => [6 9 2]\n[7 5 3 1 4 0] => [5 3 1 3]\n[1 3 5 7 4 3] => [1 3 5 3]\n",
+      "desc": "removes the element at index I in array A, decreasing its length by 1",
+      "effect": "[A I]",
+      "cases": [
+        [
+          [
+            6,
+            0,
+            9,
+            3,
+            1
+          ],
+          [
+            6,
+            9,
+            2
+          ]
+        ],
+        [
+          [
+            7,
+            5,
+            3,
+            1,
+            4,
+            0
+          ],
+          [
+            5,
+            3,
+            1,
+            3
+          ]
+        ],
+        [
+          [
+            1,
+            3,
+            5,
+            7,
+            4,
+            3
+          ],
+          [
+            1,
+            3,
+            5,
             3
           ]
         ]
