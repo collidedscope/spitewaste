@@ -38,6 +38,22 @@ arydup:
   dup $++ push -2 copy 1 store
   times (@-2 $-- :ncopy) ret
 
+; returns 1 if the arrays A1 and A2 have the same length and
+; contain the same elements in the same order, 0 otherwise
+; [A1 A2] => [0 | 1]
+;
+; [1 2 3 3 1 2 3 3] => [1]
+; [1 2 3 3 3 2 1 3] => [0]
+; [1 2 2 1 2 3 3] => [0]
+; [1 2 3 3 1 2 2] => [0]
+; [7 10 2 7 10 2] => [1]
+; [6 1 9 1] => [0]
+aryeq: dup $++ :roll copy 1 copy 1 :eq jz _aryeq_difflen ; length mismatch
+  ^-1 times (@-1 :ncopy :eq jz _aryeq_no)
+  push 1 @-1 :nslide ret
+_aryeq_no: push 0 @-1 @-5 sub $-- :nslide ret ; ! -5 is magic from times()
+_aryeq_difflen: add push 0 swap :nslide ret
+
 ; places the element E at the end of the array A, increasing its length by 1
 ; [A E] => [A']
 ;
