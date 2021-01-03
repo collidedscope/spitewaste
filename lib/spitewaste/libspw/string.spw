@@ -385,7 +385,7 @@ strrotl: push 128 swap copy 2 :strlen mod :pow :divmod :strcat ret
 ; ["abcd" 1] => ["dabc"]
 ; ["abcd" 5] => ["dabc"]
 ; ["foodbar" 3] => ["barfood"]
-strrotr: push 0 swap sub :strrotl ret
+strrotr: push -1 mul :strrotl ret
 
 ; frobnicates the string S by XORing all its bytes with 42
 ; [S] => [S']
