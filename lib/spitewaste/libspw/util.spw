@@ -52,6 +52,7 @@ $range_loop(_steprange_down_loop, :gte)
 
 ; prints the string at the top of the stack and halts execution after pushing
 ; something onto the stack to signal abnormal termination/unclean exit
+; [...] => [... 1]
 die!: :println push 1 exit
 
 ; for stoi and itos

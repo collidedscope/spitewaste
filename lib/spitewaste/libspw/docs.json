@@ -4906,9 +4906,9 @@
       ]
     },
     "die!": {
-      "full": "prints the string at the top of the stack and halts execution\n",
-      "desc": "",
-      "effect": "prints the string at the top of the stack and halts execution",
+      "full": "prints the string at the top of the stack and halts execution after pushing\nsomething onto the stack to signal abnormal termination/unclean exit\n[...] => [... 1]\n",
+      "desc": "prints the string at the top of the stack and halts execution after pushing\nsomething onto the stack to signal abnormal termination/unclean exit",
+      "effect": "[...] => [... 1]",
       "cases": [
 
       ]
