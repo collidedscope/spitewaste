@@ -2603,6 +2603,14 @@
       "cases": [
 
       ]
+    },
+    "strfry": {
+      "full": "shuffles the characters of the string S, producing a random anagram\n[S] => [S']\n",
+      "desc": "shuffles the characters of the string S, producing a random anagram",
+      "effect": "[S] => [S']",
+      "cases": [
+
+      ]
     }
   },
   "rational": {
@@ -4914,6 +4922,25 @@
           ],
           [
             0
+          ]
+        ]
+      ]
+    },
+    "strtoa": {
+      "full": "gets the characters of the string S onto the stack as a pseudo-array, but\nwith a leading 0 on the assumption that it'll eventually be repacked\n\n[\"abc\"] => [0 99 98 97 3]\n",
+      "desc": "gets the characters of the string S onto the stack as a pseudo-array, but",
+      "effect": "with a leading 0 on the assumption that it'll eventually be repacked",
+      "cases": [
+        [
+          [
+            1634657
+          ],
+          [
+            0,
+            99,
+            98,
+            97,
+            3
           ]
         ]
       ]

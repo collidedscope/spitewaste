@@ -387,11 +387,15 @@ strrotl: push 128 swap copy 2 :strlen mod :pow :divmod :strcat ret
 ; ["foodbar" 3] => ["barfood"]
 strrotr: push -1 mul :strrotl ret
 
+; gets the characters of the string S onto the stack as a pseudo-array, but
+; with a leading 0 on the assumption that it'll eventually be repacked
+;
+; ["abc"] => [0 99 98 97 3]
+strtoa: dup :strlen pop :strunpack @-1 $++ ret
+
 ; frobnicates the string S by XORing all its bytes with 42
 ; [S] => [S']
 ;
 ; ["foobar"] => ["LEEHKX"]
 ; ["LEEHKX"] => ["foobar"]
-memfrob:
-  dup :strlen pop :strunpack @-1 $++
-  map (push 42 :bxor) pop :strpack ret
+memfrob: :strtoa map (push 42 :bxor) pop :strpack ret

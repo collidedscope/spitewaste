@@ -37,4 +37,9 @@ push 1,10 :range dup :shuffle
 push 4,9,5,7,1,2,6,3,10,8,10
 :aryeq :assert_nz
 
+push "strfrying"
+push 100 :srand
+push "foobar" :strfry
+push "ofrboa" :assert_eq
+
 exit
