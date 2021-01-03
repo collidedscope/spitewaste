@@ -1907,8 +1907,8 @@
       ]
     },
     "pow": {
-      "full": "returns B raised to the power E\n[B E] => [B**E]\n\n[0 0] => [1],   [0 9] => [0],   [9 0] => [1]\n[3 2] => [9],   [2 3] => [8],   [7 4] => [2401]\n[-2 3] => [-8]  [-5 0] => [1]   [-4 4] => [256]\n",
-      "desc": "returns B raised to the power E",
+      "full": "returns B raised to the power E; if E must be negative, use ratpow instead\n[B E] => [B**E]\n\n[0 0] => [1],   [0 9] => [0],   [9 0] => [1]\n[3 2] => [9],   [2 3] => [8],   [7 4] => [2401]\n[-2 3] => [-8]  [-5 0] => [1]   [-4 4] => [256]\n",
+      "desc": "returns B raised to the power E; if E must be negative, use ratpow instead",
       "effect": "[B E] => [B**E]",
       "cases": [
         [
