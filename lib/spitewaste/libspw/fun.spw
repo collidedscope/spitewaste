@@ -36,6 +36,12 @@ _isop_resume: sub add swap push 128 div jump _isop_loop
 _isop_no: dup jump _isop_resume
 _isop_done: pop ret
 
+$_do_collatz() {
+  dup push 2 mod
+  swap copy 1 push 2 mul $++ mul
+  push 2 copy 2 sub div add
+}
+
 ; returns the elements of the Collatz sequence for integer N as a pseudo-array
 ; ! may run forever on some as-yet-unknown input
 ; [N] => [A]
@@ -48,11 +54,22 @@ _isop_done: pop ret
 collatz: push 1 ; sequence length
 _collatz_loop:
   copy 1 dup push 1 sub jz _collatz_done
-  dup push 2 mod
-  swap copy 1 push 2 mul $++ mul
-  push 2 copy 2 sub div add
-  swap $++ jump _collatz_loop
+  $_do_collatz() swap $++ jump _collatz_loop
 _collatz_done: pop ret
+
+; returns the length L of the Collatz sequence for integer N
+; ! may run forever on some as-yet-unknown input
+; [N] => [L]
+;
+; [1] => [1]
+; [4] => [3]
+; [7] => [17]
+; [189] => [107]
+collatz_len: push 1 swap
+_collatz_len_loop:
+  dup $-- jz _collatz_done
+  $_do_collatz() swap $++ swap jump _collatz_len_loop
+  copy 1 dup push 1 sub jz _collatz_done
 
 ; ruby:
 ;   push "'" :strcat push "ruby -e 'p " swap :strcat shell ret

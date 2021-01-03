@@ -1459,6 +1459,45 @@
         ]
       ]
     },
+    "collatz_len": {
+      "full": "returns the length L of the Collatz sequence for integer N\n[N] => [L]\n\n[1] => [1]\n[4] => [3]\n[7] => [17]\n[189] => [107]\n",
+      "desc": "returns the length L of the Collatz sequence for integer N",
+      "effect": "[N] => [L]",
+      "cases": [
+        [
+          [
+            1
+          ],
+          [
+            1
+          ]
+        ],
+        [
+          [
+            4
+          ],
+          [
+            3
+          ]
+        ],
+        [
+          [
+            7
+          ],
+          [
+            17
+          ]
+        ],
+        [
+          [
+            189
+          ],
+          [
+            107
+          ]
+        ]
+      ]
+    },
     "isop": {
       "full": "returns the sum of the alphabetical characters in string S where A=1, B=2...\n[S] => [sum]\n\n[\"Math\"] => [42]\n[\"wizards\"] => [100]\n[\"AbCd\"] => [10]\n",
       "desc": "returns the sum of the alphabetical characters in string S where A=1, B=2...",
