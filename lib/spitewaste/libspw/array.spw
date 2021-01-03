@@ -175,6 +175,21 @@ _sort_loop:
   push 0 copy 1 sub jn _sort_loop
   push 3 sub load ret
 
+; returns 0 if any of the elements in array A is
+; strictly less than the one before it, 1 otherwise
+;
+; [1 2 3 3] => [1]
+; [3 2 1 3] => [0]
+; [1 1 2 2 4] => [1]
+; [1 2 3 4 3 5] => [0]
+sorted?: $--
+_sorted_loop:
+  copy 1 copy 3 sub jn _sorted_no
+  $-- dup jz _sorted_yes
+  slide 1 jump _sorted_loop
+_sorted_no: $++ push 0 swap :nslide ret
+_sorted_yes: push 1 slide 3 ret
+
 ; reverses the array A
 ; [A] => [A']
 ;

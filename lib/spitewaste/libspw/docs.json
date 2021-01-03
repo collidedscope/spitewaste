@@ -794,6 +794,60 @@
           ]
         ]
       ]
+    },
+    "sorted?": {
+      "full": "returns 0 if any of the elements in array A is\nstrictly less than the one before it, 1 otherwise\n\n[1 2 3 3] => [1]\n[3 2 1 3] => [0]\n[1 1 2 2 4] => [1]\n[1 2 3 4 3 5] => [0]\n",
+      "desc": "returns 0 if any of the elements in array A is",
+      "effect": "strictly less than the one before it, 1 otherwise",
+      "cases": [
+        [
+          [
+            1,
+            2,
+            3,
+            3
+          ],
+          [
+            1
+          ]
+        ],
+        [
+          [
+            3,
+            2,
+            1,
+            3
+          ],
+          [
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            1,
+            2,
+            2,
+            4
+          ],
+          [
+            1
+          ]
+        ],
+        [
+          [
+            1,
+            2,
+            3,
+            4,
+            3,
+            5
+          ],
+          [
+            0
+          ]
+        ]
+      ]
     }
   },
   "bits": {
