@@ -118,9 +118,9 @@ module Spitewaste
       # quick push (`push 1,2,3` desugars to individual pushes)
       @src.gsub!(/push \S+/) { |m| m.split(?,) * ' push ' }
       # quick store (`^2` = `push 2 swap store`)
-      @src.gsub!(/\^(-?\d+)/, 'push \1 swap store')
+      @src.gsub!(/\^(\S+)/, 'push \1 swap store')
       # quick load (`@2` = `push 2 load`)
-      @src.gsub!(/@(-?\d+)/, 'push \1 load')
+      @src.gsub!(/@(\S+)/, 'push \1 load')
     end
 
     def gensym
