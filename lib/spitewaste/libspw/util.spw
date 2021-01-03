@@ -50,8 +50,9 @@ steprange: swap push -1 copy 1 store copy 2 sub
 $range_loop(_steprange_loop, :lte)
 $range_loop(_steprange_down_loop, :gte)
 
-; prints the string at the top of the stack and halts execution
-die!: :println exit
+; prints the string at the top of the stack and halts execution after pushing
+; something onto the stack to signal abnormal termination/unclean exit
+die!: :println push 1 exit
 
 ; for stoi and itos
 alpha: push "0123456789abcdefghijklmnopqrstuvwxyz" ret
