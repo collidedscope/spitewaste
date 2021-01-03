@@ -19,4 +19,4 @@ rand_range:
 
 ; returns an array A of N random integers between 1 and D (inclusive)
 ; [N D] => [A]
-dice: ^-2 push 1 :aryfill map (@-2 :rand_range) ret
+dice: ^-2 dup ^-1 times (push 1 @-2 :rand_range) @-1 ret
