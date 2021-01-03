@@ -141,10 +141,10 @@ module Spitewaste
       parse = -> s { s.split(?,).map &:strip }
 
       # Macro "functions" get handled first.
-      @src.gsub!(/(\$\S+?)\(([^)]+)\)\s*{(.+?)}/m) {
+      @src.gsub!(/(\$\S+?)\(([^)]*)\)\s*{(.+?)}/m) {
         @macros[$1] ||= [$2, $3]; ''
       }
-      @src.gsub!(/(\$\S+?)\(([^)]+)\)/) {
+      @src.gsub!(/(\$\S+?)\(([^)]*)\)/) {
         params, body = @macros[$1]
         raise "no macro function '#$1'" unless body
         map = parse[params].zip(parse[$2]).to_h
