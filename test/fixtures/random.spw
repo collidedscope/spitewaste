@@ -5,10 +5,10 @@ push 1 :srand
 push "srand updates $seed"
 @$seed push 1 :assert_eq
 
-push "rand with seed 1 is 48271"
+push "rand with seed 1"
 :rand push 48271 :assert_eq
 
-push "next three rands mod-10 are [4, 6, 7]"
+push "next three rands mod-10"
 :rand push 10 mod push 100 mul
 :rand push 10 mod push 10 mul add
 :rand push 10 mod add push 467 :assert_eq
@@ -17,18 +17,24 @@ push 42 :srand
 push "srand again updates $seed again"
 @$seed push 42 :assert_eq
 
-push "rand with seed 42 is 2027382"
+push "rand with seed 42"
 :rand push 2027382 :assert_eq
 
-push "rand_range(1, 1000) = 408 with seed 2027382"
+push "rand_range(1, 1000)"
 push 1,1000 :rand_range push 408 :assert_eq
 
-push "seed should now be 1226992407"
+push "seed check"
 @$seed push 1226992407 :assert_eq
 
-push "rolling a 4d20 now gives [18, 16, 3, 18]"
+push "rolling a 4d20"
 push 4,20 :dice
 push 18,16,3,18,4
+:aryeq :assert_nz
+
+push "shuffling a range"
+push 1337 :srand
+push 1,10 :range dup :shuffle
+push 4,9,5,7,1,2,6,3,10,8,10
 :aryeq :assert_nz
 
 exit

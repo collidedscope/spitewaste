@@ -2588,6 +2588,14 @@
 
       ]
     },
+    "shuffle": {
+      "full": "shuffles the array A in-place using the modern Fisher-Yates algorithm\n[A] => [A']\n",
+      "desc": "shuffles the array A in-place using the modern Fisher-Yates algorithm",
+      "effect": "[A] => [A']",
+      "cases": [
+
+      ]
+    },
     "srand": {
       "full": "seeds the random number generator with integer S\n[S] => []\n",
       "desc": "seeds the random number generator with integer S",

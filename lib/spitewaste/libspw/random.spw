@@ -20,3 +20,10 @@ rand_range:
 ; returns an array A of N random integers between 1 and D (inclusive)
 ; [N D] => [A]
 dice: ^-2 dup ^-1 times (push 1 @-2 :rand_range) @-1 ret
+
+; shuffles the array A in-place using the modern Fisher-Yates algorithm
+; [A] => [A']
+shuffle: dup $-- ^-3
+_shuffle_loop:
+  push 0 @-3 :rand_range @-3 :aryswap
+  push -3 :dec @-3 push -1 mul jn _shuffle_loop ret
