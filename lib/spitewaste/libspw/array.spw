@@ -73,7 +73,7 @@ aryshift: dup :dig $-- ret
 aryunshift: swap dup times (dup $++ :roll swap) $++ ret
 
 ; inserts the element E into array A at index I, increasing its length by 1
-; [A I E]
+; [A I E] => [A']
 ;
 ; [9 5 2 3 1 4] => [9 4 5 2 4]
 ; [1 1 0 7] => [7 1 2]
@@ -82,7 +82,7 @@ aryunshift: swap dup times (dup $++ :roll swap) $++ ret
 aryinsert: swap copy 2 swap sub $++ :bury $++ ret
 
 ; removes the element at index I in array A, decreasing its length by 1
-; [A I]
+; [A I] => [A']
 ;
 ; [6 0 9 3 1] => [6 9 2]
 ; [7 5 3 1 4 0] => [5 3 1 3]
