@@ -1,14 +1,22 @@
 import math ; pow
 
+; seeds the random number generator with integer S
+; [S] => []
 srand: ^$seed ret
 
+; returns the next number N in the linear congruential generator (better MINSTD)
+; [] => [N]
 rand:
   push $seed dup dup load
   push 48271 mul
   push 2,31 :pow $-- mod
   store load ret
 
-rand_range: ; [a b]
+; returns a random integer I between A and B (inclusive)
+; [A B] => [I]
+rand_range:
   $++ copy 1 sub :rand swap mod add ret
 
+; returns an array A of N random integers between 1 and D (inclusive)
+; [N D] => [A]
 dice: ^-2 push 1 :aryfill map (@-2 :rand_range) ret

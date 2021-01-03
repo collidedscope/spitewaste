@@ -2555,6 +2555,40 @@
       ]
     }
   },
+  "random": {
+    "dice": {
+      "full": "returns an array A of N random integers between 1 and D (inclusive)\n[N D] => [A]\n",
+      "desc": "returns an array A of N random integers between 1 and D (inclusive)",
+      "effect": "[N D] => [A]",
+      "cases": [
+
+      ]
+    },
+    "rand": {
+      "full": "returns the next number N in the linear congruential generator (better MINSTD)\n[] => [N]\n",
+      "desc": "returns the next number N in the linear congruential generator (better MINSTD)",
+      "effect": "[] => [N]",
+      "cases": [
+
+      ]
+    },
+    "rand_range": {
+      "full": "returns a random integer I between A and B (inclusive)\n[A B] => [I]\n",
+      "desc": "returns a random integer I between A and B (inclusive)",
+      "effect": "[A B] => [I]",
+      "cases": [
+
+      ]
+    },
+    "srand": {
+      "full": "seeds the random number generator with integer S\n[S] => []\n",
+      "desc": "seeds the random number generator with integer S",
+      "effect": "[S] => []",
+      "cases": [
+
+      ]
+    }
+  },
   "rational": {
     "from_r": {
       "full": "decomposes the rational number R into its numerator N and denominator D\n[R] => [N D]\n\n[R(22,7)] => [22 7]\n[R(-3,4)] => [-3 4]\n[R(3,-4)] => [-3 4]\n[R(4,8)]  => [4 8]  ; no implicit simplification\n",

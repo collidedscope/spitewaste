@@ -15,9 +15,8 @@ task :docs do |t|
 
   Dir.chdir('lib/spitewaste/libspw') do |d|
     Dir['*.spw'].sort.each do |path|
-      next if path['random'] # tested separately due to statefulness
-      lib = File.basename path, '.spw'
-      docs[lib] = extract_docs path
+      mod = File.basename path, '.spw'
+      docs[mod] = extract_docs path
     end
 
     File.open('docs.json', ?w) { |f|

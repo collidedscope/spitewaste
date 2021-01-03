@@ -5,9 +5,10 @@ class LibspwTest < Minitest::Test
   docs = File.expand_path '../lib/spitewaste/libspw/docs.json', __dir__
   db = JSON.load File.read docs
 
-  # Generate a Spitewaste program that just imports the entire standard library.
-  # We'll be hot-loading instructions into the dummy main.
-  spw = db.keys.map { |lib| "import #{lib}\n" }.join + 'main: exit'
+  mods = db.keys - ['random'] # tested separately due to statefulness
+  # Generate a Spitewaste program that imports all of the documented standard
+  # library modules. We'll be hot-loading instructions into the dummy main.
+  spw = mods.map { "import #{_1}\n" }.join + 'main: exit'
 
   tmp = Tempfile.new
   as = Spitewaste::Assembler.new spw,
@@ -20,9 +21,9 @@ class LibspwTest < Minitest::Test
   ws.parse
   ws.interpret
 
-  db.each do |lib, fns|
+  db.each do |mod, fns|
     fns.each do |fn, data|
-      define_method "test_libspw_#{lib}/#{fn}" do
+      define_method "test_libspw_#{mod}/#{fn}" do
         data['cases'].each do |stack, expected|
           ws.stack = stack
           ws.run_live [[:call, symbols[fn]]]
