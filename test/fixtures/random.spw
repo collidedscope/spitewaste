@@ -1,0 +1,17 @@
+import random
+import test
+
+push 1 :srand
+
+push "srand updates $seed"
+@$seed push 1 :assert_eq
+
+push ":rand with seed 1 is 48271"
+:rand push 48271 :assert_eq
+
+push "next three rands mod-10 are: 4, 6, 7"
+:rand push 10 mod push 100 mul
+:rand push 10 mod push 10 mul add
+:rand push 10 mod add push 467 :assert_eq
+
+exit
