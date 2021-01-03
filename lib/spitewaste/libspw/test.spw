@@ -8,3 +8,6 @@ assert_eq:
   push ", got " :print onum
   push " for test " swap :strcat :die!
 _assert_eq_yes: pop pop pop ret
+
+assert_nz: jz _assert_nz_no pop ret
+_assert_nz_no: push "expected nonzero for test " swap :strcat :die!
