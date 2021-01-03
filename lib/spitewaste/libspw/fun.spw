@@ -59,7 +59,7 @@ _collatz_done: pop ret
 
 $_to_roman(r, v) {
   push `v` :divmod swap push `r` swap :strrep
-  push -2 load swap :strcat push -2 swap store
+  @-2 swap :strcat ^-2
 }
 
 ; converts the number N to a string of roman numerals R

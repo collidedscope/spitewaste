@@ -12,8 +12,8 @@ $bitfun(op, bit, done) {
 push -2,1,-1,0 store store
 _`op`_loop: push -1
   copy 2 push 2 mod copy 2 push 2 mod `bit`
-  push -1 load swap push -2 load dup push 2 mul
-  push -2 swap store mul add store
+  @-1 swap @-2 dup push 2 mul
+  ^-2 mul add store
   push 2 div swap push 2 div
   dup copy 2 mul jz _`op`_done swap jump _`op`_loop
 _`op`_done: `done` ret
@@ -35,7 +35,7 @@ band: $bitfun(band, mul, mul $-- load)
 ; [61 77] => [125]   [93 65] => [93]
 ; [14 87] => [95]    [71 37] => [103]
 ; [7 19]  => [23]    [38 92] => [126]
-bor: $bitfun(bor, add $++ push 2 div, add push -2 load mul push -1 load add)
+bor: $bitfun(bor, add $++ push 2 div, add @-2 mul @-1 add)
 
 ; returns the bitwise XOR of A and B
 ; [A B] => [A ^ B]
@@ -44,7 +44,7 @@ bor: $bitfun(bor, add $++ push 2 div, add push -2 load mul push -1 load add)
 ; [51 5]  => [54]    [97 77] => [44]
 ; [39 65] => [102]   [12 26] => [22]
 ; [44 36] => [8]     [6 21]  => [19]
-bxor: $bitfun(bxor, :neq, add push -2 load mul push -1 load add)
+bxor: $bitfun(bxor, :neq, add @-2 mul @-1 add)
 
 ; returns the infinite-precision bitwise NOT of N by inverting all of its bits
 ; [N] => [~N]

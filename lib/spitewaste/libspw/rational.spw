@@ -187,9 +187,9 @@ _ratpow_neg: push -1 mul swap :ratinv swap :ratpow ret
 ; [R(355,113) 6] => [3 141592]
 ; [R(8675,309) 10] => [28 744336569] TODO: leading 0 is lost (bug)
 ; [R(2,4) 3] => [0 500]
-to_f: push -2 swap store :from_r :divmod push 0 swap
+to_f: ^-2 :from_r :divmod push 0 swap
 _to_f_loop:
-  push -1 load :divmod  swap
+  @-1 :divmod  swap
   copy 2 push 10 mul add
   swap push 10 mul
   push 2 :dig

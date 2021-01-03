@@ -224,13 +224,13 @@ _strchop_empty: ret
 ; ["foo,,bar" ','] => ["foo" "" "bar" 3]
 ; ["/foo/bar/" '/'] => ["" "foo" "bar" "" 4]
 strsplit:
-  push -3 push 1 store ; number of found substrings
-  push -2 swap store ; stash delimiter to allow some stack juggling
+  push -3,1 store ; number of found substrings
+  ^-2 ; stash delimiter to allow some stack juggling
 _strsplit_loop:
-  dup dup push -2 load
+  dup dup @-2
   :strindex dup jn _strsplit_done ; done when index of delimiter is -1
   push 0 swap :strslice
-  swap copy 1 push -3 load
+  swap copy 1 @-3
   swap :strlen
   swap push -3 swap push 1 add store ; update number of found
   push 1 add push 128 swap :pow div ; shrink haystack
@@ -248,11 +248,10 @@ lines: push 10 :strsplit ret
 ; ["foo" "bar" "baz" 3 '--'] => ["foo--bar--baz"]
 ; ["foo" 1 "?!"] => ["foo"]
 strjoinc:
-  dup :strlen pop ; get delimiter length into -1
-  push -2 swap store
-  map (push -2 load :strcat) ; add delimiter to all elements
+  dup :strlen pop ^-2 ; get delimiter length into -1
+  map (@-2 :strcat) ; add delimiter to all elements
   swap push 128 copy 1 :strlen
-  push -2 load :strlen
+  @-2 :strlen
   sub :pow mod swap ; remove delimiter from last and flow into strjoin
 
 ; concatenates the pseudo-array of strings A into string S
@@ -289,9 +288,8 @@ _strcountc_done: swap slide 2 ret
 ; ["eunoia" "aeiou"] => [5]
 ; ["why" "aeiou"] => [0]
 strcount:
-  swap push -2 swap store
-  :strunpack push 0 :to_a
-  map (push -2 load swap :strcountc)
+  swap ^-2 :strunpack push 0 :to_a
+  map (@-2 swap :strcountc)
   reduce (add) ret
 
 ; translates all characters in A to the corresponding characters in B
@@ -303,16 +301,13 @@ strcount:
 ; ["abcd" "abc" "xyz"] => ["xyzd"]
 ; ["foobar" "oba" "ele"] => ["feeler"]
 ; ["abcdcba" "abcd" "xyz|"] => ["xyz|zyx"]
-strtrans:
-  push -3 swap store
-  push -2 swap store
-  dup :strlen push -1 swap store
-  :strunpack push -1 load
+strtrans: ^-3 ^-2
+  dup :strlen ^-1 :strunpack @-1
   map (:_strtrans) pop :strpack ret
 _strtrans:
-  dup push -2 load swap :strindex
+  dup @-2 swap :strindex
   dup jn _strtrans_no
-  push -3 load swap :charat
+  @-3 swap :charat
   slide 1 ret
 _strtrans_no: pop ret
 
@@ -346,8 +341,8 @@ _strsqueeze_skip: pop jump _strsqueeze_loop
 _strsqueeze_done: pop :strpack :strrev ret
 
 $_strdel(cmp) {
-  :strunpack push -1 load :strlen
-  select (push -2 load swap :strindex `cmp`)
+  :strunpack @-1 :strlen
+  select (@-2 swap :strindex `cmp`)
   pop :strpack ret
 }
 
@@ -398,5 +393,5 @@ strrotr: push 0 swap sub :strrotl ret
 ; ["foobar"] => ["LEEHKX"]
 ; ["LEEHKX"] => ["foobar"]
 memfrob:
-  dup :strlen pop :strunpack push -1 load $++
+  dup :strlen pop :strunpack @-1 $++
   map (push 42 :bxor) pop :strpack ret

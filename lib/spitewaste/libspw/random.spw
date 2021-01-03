@@ -1,6 +1,6 @@
 import math ; pow
 
-srand: push $seed swap store ret
+srand: ^$seed ret
 
 rand:
   push $seed dup dup load
@@ -11,6 +11,4 @@ rand:
 rand_range: ; [a b]
   copy 1 sub :rand swap mod add ret
 
-dice:
-  push -2 swap store push 1 :aryfill
-  map (push -2 load :rand_range) ret
+dice: ^-2 push 1 :aryfill map (@-2 :rand_range) ret

@@ -51,7 +51,7 @@ ilog: push -1,0 store ; accumulator at -1
 _ilog_loop: ; [n b]
   swap copy 1 div dup jz _ilog_done
   push -1 :inc swap jump _ilog_loop
-_ilog_done: push -1 load slide 2 ret
+_ilog_done: @-1 slide 2 ret
 
 ; returns the greatest common divisor of A and B
 ; [A B] => [gcd(A, B)]
@@ -111,10 +111,7 @@ abs: dup :sign mul ret
 ; [42 6] => [7 0]
 ; [ 1 5] => [0 1]
 ; ! [9 0] => [!!] TODO: find a way to expect exceptions
-divmod:
-  push -1 swap store
-  dup push -1 load div
-  swap push -1 load mod ret
+divmod: ^-1 dup @-1 div swap @-1 mod ret
 
 ; returns whether N is greater than 0
 ; [N] => [N > 0]
@@ -138,11 +135,11 @@ neg?: :sign push -1 :eq ret
 ; [25] => [1 5 25 3] ; no duplicate for perfect squares
 ; [60] => [1 2 3 4 5 6 60 30 20 15 12 10 12]
 divisors: ; [n]
-  dup push -1 swap store ; preserve N because array operations
+  dup ^-1 ; preserve N because array operations
   :isqrt push 1 swap :range dup ; 1..isqrt(N)
-  reject (push -1 load swap mod) :arydup ; get first half of divisors
-  map (push -1 load swap div) :arycat ; map first half to second half
-  push -1 load copy 2 dup mul sub jz _divisors_square ret
+  reject (@-1 swap mod) :arydup ; get first half of divisors
+  map (@-1 swap div) :arycat ; map first half to second half
+  @-1 copy 2 dup mul sub jz _divisors_square ret
 _divisors_square: slide 1 $-- ret ; de-duplicate when N is a perfect square
 
 ; returns the number of ways to choose K elements from a set of N

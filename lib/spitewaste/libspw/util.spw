@@ -26,7 +26,7 @@ _range_down:
 
 $range_loop(fn, cmp) {
 `fn`:
-  dup copy 2 add push -1 load `cmp` jz _`fn`_done
+  dup copy 2 add @-1 `cmp` jz _`fn`_done
   copy 1 copy 1 add swap jump `fn`
 _`fn`_done: pop ret
 }
@@ -72,7 +72,7 @@ alpha: push "0123456789abcdefghijklmnopqrstuvwxyz" ret
 ; ["-123" 10] => [-123]
 ; ["-ff" 16] => [-255]
 stoi: swap dup :_stoi_sign swap copy 1 :eq
-  push 2 mul $-- push -2 swap store push 0
+  push 2 mul $-- ^-2 push 0
 _stoi_loop: ; [b s a]
   swap dup jz _stoi_done
   swap copy 2 copy 2
@@ -83,8 +83,8 @@ _stoi_loop: ; [b s a]
   mul add swap push 128 div swap
   jump _stoi_loop
 _stoi_sign: dup push 0 :charat push '-' :eq copy 1 :strlen :strslice ret
-_stoi_invalid: pop pop slide 1 swap div push -2 load mul ret
-_stoi_done: swap slide 2 push -2 load mul ret
+_stoi_invalid: pop pop slide 1 swap div @-2 mul ret
+_stoi_done: swap slide 2 @-2 mul ret
 
 ; creature comforts
 
@@ -111,7 +111,7 @@ _itos_loop:
   swap :strcat
   swap copy 2 div
   swap jump _itos_loop
-_itos_done: swap slide 2 push 45,-2 load mul swap :strcat ret
+_itos_done: swap slide 2 push 45 @-2 mul swap :strcat ret
 
 ; creature comforts
 
@@ -129,12 +129,10 @@ to_hex: push 16 :itos ret
 ; [256 16] => [1 0 0 3]
 digits:
   copy 1 jz _digits_zero ; special case
-  push -1 swap store
-  push -1 swap ; sentinel value
+  ^-1 push -1 swap ; sentinel value
 _digits_loop:
   dup jz _digits_done
-  push -1 load :divmod
-  swap jump _digits_loop
+  @-1 :divmod swap jump _digits_loop
 _digits_zero: dup div ret
 _digits_done: push 1 sub :to_a ret
 

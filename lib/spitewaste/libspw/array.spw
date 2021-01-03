@@ -36,7 +36,7 @@ arysum: reduce (add) ret
 ; [7 50 10 2] => [7 50 10 2 50 10 2]
 arydup:
   dup $++ push -2 copy 1 store
-  times (push -2 load $-- :ncopy) ret
+  times (@-2 $-- :ncopy) ret
 
 ; places the element E at the end of the array A, increasing its length by 1
 ; [A E] => [A']
@@ -99,15 +99,15 @@ arycat: dup $++ :roll add ret
 ;;;
 
 arypack:
-  :arydup reduce (:max) $++ push -1 swap store
-  $-- times (push -1 load mul add)
-  push $amax mul push -1 load add
-  push $amax mul push -10 load add ret
+  :arydup reduce (:max) $++ ^-1
+  $-- times (@-1 mul add)
+  push $amax mul @-1 add
+  push $amax mul @-10 add ret
 
 aryunpack:
-  push $amax :divmod push -2 swap store
-  push $amax :divmod push -1 swap store
-  push -2 load times (push -1 load :divmod swap)
+  push $amax :divmod ^-2
+  push $amax :divmod ^-1
+  @-2 times (@-1 :divmod swap)
   push 2 sub load ret
 
 arylen: push $amax mod ret
@@ -161,8 +161,8 @@ _aryswap_noop: pop pop ret
 ; [6 8 -3 4 0 5] => [-3 8]
 ; [7 1] => [7 7]
 minmax:
-  :arydup reduce (:max) push -1 swap store
-  reduce (:min) push -1 load ret
+  :arydup reduce (:max) ^-1
+  reduce (:min) @-1 ret
 
 ;;; TODO: make sort not atrociously inefficient
 
@@ -170,7 +170,7 @@ sort: push -3 copy 1 store ; preserve length
 _sort_loop:
   :arydup reduce (:min)
   push -1 copy 1 store copy 1 $++ :bury ; stash minimum element
-  :arydup push -1 load :aryindex
+  :arydup @-1 :aryindex
   copy 1 swap sub :dig $-- ; remove minimum element from array
   push 0 copy 1 sub jn _sort_loop
   push 3 sub load ret
@@ -196,4 +196,4 @@ aryrep: push -1 swap push -3 copy 1 store store
 _aryrep_loop:
   push -1 dup :dec load jz _aryrep_done
   :arydup jump _aryrep_loop
-_aryrep_done: push -3 load $-- times (:arycat) ret
+_aryrep_done: @-3 $-- times (:arycat) ret
