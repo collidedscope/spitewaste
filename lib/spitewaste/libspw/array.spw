@@ -10,6 +10,12 @@ import util  ; dec, die!, eq
 
 $amax = 1000
 
+; prints the array A to stdout in the form [e1,e2,...]
+; [A] => []
+aryprint:
+  map (:to_s) push ',' :strjoinc
+  push '[' ochr :print push ']' ochr ret
+
 ; places an array of N elements E at the top of the stack
 ; [N E] => [A]
 ;
