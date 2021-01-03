@@ -1,12 +1,6 @@
 require 'test_helper'
 require_relative 'fixtures/whitespace'
 
-FIXTURES = File.expand_path 'fixtures', __dir__
-
-def get_fixture file
-  File.read File.join(FIXTURES, file)
-end
-
 class SpitewasteTest < Minitest::Test
   include Spitewaste
   extend Minitest::Spec::DSL
