@@ -246,3 +246,15 @@ rgb2hex:
   copy 2 push 256 mul add add
   slide 2 :to_hex push 6,48 :rjustc ret
 _rgb2hex_invalid: push "(rgb2hex) invalid RGB" :die!
+
+; stashes the array A in negative heap space starting at index I
+; [A I] => []
+aryheap:
+  $++ dup copy 2 store
+  swap times ($-- swap copy 1 swap store) pop ret
+
+; restores the heaped array starting at index I
+; [I] => [A]
+heapary:
+  $++ dup load swap copy 1 sub swap
+  times (dup load swap $++) load ret

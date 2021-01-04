@@ -5043,6 +5043,14 @@
 
       ]
     },
+    "aryheap": {
+      "full": "stashes the array A in negative heap space starting at index I\n[A I] => []\n",
+      "desc": "stashes the array A in negative heap space starting at index I",
+      "effect": "[A I] => []",
+      "cases": [
+
+      ]
+    },
     "between?": {
       "full": "returns 1 if the number N is between A and B (inclusive), 0 otherwise\n[N A B]\n\n[5 0 10] => [1]\n[11 0 10] => [0]\n[4 0 4] => [1]\n[-1 0 4] => [0]\n[-5 -10 0] => [1]\n[3 4 2] => [0]\n",
       "desc": "returns 1 if the number N is between A and B (inclusive), 0 otherwise",
@@ -5327,6 +5335,14 @@
       "full": "Though extremely rare, it's possible that we know a particular value is\nstored in the heap at some key, just not which one. This subroutine takes\na value V to search for and a starting index I, and either returns the first\nkey associated with that value or loops forever. Probably don't touch.\n[V I]\n",
       "desc": "Though extremely rare, it's possible that we know a particular value is\nstored in the heap at some key, just not which one. This subroutine takes\na value V to search for and a starting index I, and either returns the first\nkey associated with that value or loops forever. Probably don't touch.",
       "effect": "[V I]",
+      "cases": [
+
+      ]
+    },
+    "heapary": {
+      "full": "restores the heaped array starting at index I\n[I] => [A]\n",
+      "desc": "restores the heaped array starting at index I",
+      "effect": "[I] => [A]",
       "cases": [
 
       ]
