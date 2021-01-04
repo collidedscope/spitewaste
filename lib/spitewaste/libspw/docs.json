@@ -2564,6 +2564,14 @@
     }
   },
   "random": {
+    "bogosort": {
+      "full": "sorts the array A if you're lucky\n[A] => [A']\n",
+      "desc": "sorts the array A if you're lucky",
+      "effect": "[A] => [A']",
+      "cases": [
+
+      ]
+    },
     "dice": {
       "full": "returns an array A of N random integers between 1 and D (inclusive)\n[N D] => [A]\n",
       "desc": "returns an array A of N random integers between 1 and D (inclusive)",

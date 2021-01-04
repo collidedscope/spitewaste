@@ -1,3 +1,4 @@
+import array  ; sorted?
 import math   ; pow
 import string ; strtoa
 
@@ -32,3 +33,7 @@ _shuffle_loop:
 ; shuffles the characters of the string S, producing a random anagram
 ; [S] => [S']
 strfry: :strtoa :shuffle pop :strpack ret
+
+; sorts the array A if you're lucky
+; [A] => [A']
+bogosort: :shuffle :arydup :sorted? jz bogosort ret

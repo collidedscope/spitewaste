@@ -42,4 +42,10 @@ push 100 :srand
 push "foobar" :strfry
 push "ofrboa" :assert_eq
 
+push "bogosorting"
+push 69 :srand
+push 3,1,4,2,4 :bogosort
+push 1,2,3,4,4
+:aryeq :assert_nz
+
 exit
