@@ -152,7 +152,7 @@ module Spitewaste
       }
 
       @src.gsub!(/(\$\S+)\s*=\s*(.+)/) { @macros[$1] ||= $2; '' }
-      @src.gsub!(/(\$\S+)/) { @macros[$1] || raise("no macro '#$1'") }
+      @src.gsub!(/(\$[^)\s]+)/) { @macros[$1] || raise("no macro '#$1'") }
     end
 
     def eliminate_dead_code!
