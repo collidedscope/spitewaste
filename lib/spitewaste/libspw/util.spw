@@ -258,3 +258,8 @@ aryheap:
 heapary:
   $++ dup load swap copy 1 sub swap
   times (dup load swap $++) load ret
+
+; swaps the elements in the heap at indices I and J
+; ! TODO: make heap effects doctest-able
+; [I J] => []
+heapswap: dup load swap copy 2 load store store ret

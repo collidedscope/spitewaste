@@ -5347,6 +5347,14 @@
 
       ]
     },
+    "heapswap": {
+      "full": "swaps the elements in the heap at indices I and J\n[I J] => []\n",
+      "desc": "swaps the elements in the heap at indices I and J",
+      "effect": "[I J] => []",
+      "cases": [
+
+      ]
+    },
     "hex2rgb": {
       "full": "converts the #RRGGBB (leading '#' optional) color string S to\nits individual RGB components as integers in the range 0-255\n[S] => [R G B]\n\n[\"#000000\"] => [0 0 0]\n[\"ffffff\"]  => [255 255 255]\n[\"#102030\"] => [16 32 48]\n[\"c0ffee\"] => [192 255 238]\n",
       "desc": "converts the #RRGGBB (leading '#' optional) color string S to\nits individual RGB components as integers in the range 0-255",
