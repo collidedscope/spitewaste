@@ -219,11 +219,10 @@ _sorted_yes: push 1 slide 3 ret
 ; [1 2 3 3] => [3 2 1 3]
 ; [7 1] => [7 1]
 ; [5 4 3 2 1 5] => [1 2 3 4 5 5]
-aryrev: push -3 copy 1 store
-_aryrev_loop:
-  swap copy 1 :bury $--
-  push 0 copy 1 sub jn _aryrev_loop
-  push 3 sub load ret
+aryrev:
+  push -10 :aryheap push -10
+  @-9 times (dup load swap $--)
+  pop @-9 ret
 
 ; returns the array A replicated N times
 ; ! N must be greater than 1
