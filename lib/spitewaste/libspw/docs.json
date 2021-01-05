@@ -5331,7 +5331,7 @@
         ]
       ]
     },
-    "heap_seeking_missile": {
+    "heap-seeking_missile": {
       "full": "Though extremely rare, it's possible that we know a particular value is\nstored in the heap at some key, just not which one. This subroutine takes\na value V to search for and a starting index I, and either returns the first\nkey associated with that value or loops forever. Probably don't touch.\n[V I]\n",
       "desc": "Though extremely rare, it's possible that we know a particular value is\nstored in the heap at some key, just not which one. This subroutine takes\na value V to search for and a starting index I, and either returns the first\nkey associated with that value or loops forever. Probably don't touch.",
       "effect": "[V I]",

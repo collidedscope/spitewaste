@@ -215,8 +215,8 @@ between?: copy 2 :gte swap copy 2 :lte mul slide 1 ret
 ; a value V to search for and a starting index I, and either returns the first
 ; key associated with that value or loops forever. Probably don't touch.
 ; [V I]
-heap_seeking_missile:
-  $++ dup load copy 2 :eq jz heap_search
+heap-seeking_missile:
+  $++ dup load copy 2 :eq jz heap-seeking_missile
   slide 1 ret
 
 ; converts the #RRGGBB (leading '#' optional) color string S to
