@@ -112,7 +112,7 @@ module Spitewaste
       flow:  %i[jump jz jn ret exit],
       math:  %i[add sub mul div mod],
       heap:  %i[store load],
-      io:    %i[ichr inum ochr onum],
+      io:    %i[ichr inum ochr onum shell],
       calls: %i[call label]
     }.flat_map { |type, insns| insns.map { |i| [i, type] } }.to_h
 
