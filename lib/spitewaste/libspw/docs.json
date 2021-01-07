@@ -6180,6 +6180,14 @@
           ]
         ]
       ]
+    },
+    "time": {
+      "full": "returns the number of nanoseconds N since the Unix epoch\n[] => [N]\n",
+      "desc": "returns the number of nanoseconds N since the Unix epoch",
+      "effect": "[] => [N]",
+      "cases": [
+
+      ]
     }
   }
 }

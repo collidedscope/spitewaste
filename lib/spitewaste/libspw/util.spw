@@ -263,3 +263,7 @@ heapary:
 ; ! TODO: make heap effects doctest-able
 ; [I J] => []
 heapswap: dup load swap copy 2 load store store ret
+
+; returns the number of nanoseconds N since the Unix epoch
+; [] => [N]
+time: push "date +%s%N" shell :to_i ret
