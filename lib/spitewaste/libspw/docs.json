@@ -1746,41 +1746,49 @@
   },
   "io": {
     "getline": {
-      "full": "reads a line of input onto the top of the stack as a packed string\n",
-      "desc": "",
-      "effect": "reads a line of input onto the top of the stack as a packed string",
+      "full": "reads a line of input onto the top of the stack as a packed string\n[] => [L]\n",
+      "desc": "reads a line of input onto the top of the stack as a packed string",
+      "effect": "[] => [L]",
       "cases": [
 
       ]
     },
     "print": {
-      "full": "prints the character at the top of the stack until terminating zero\n",
-      "desc": "",
-      "effect": "prints the character at the top of the stack until terminating zero",
+      "full": "prints the character at the top of the stack until terminating zero\n[0 ... C] => []\n",
+      "desc": "prints the character at the top of the stack until terminating zero",
+      "effect": "[0 ... C] => []",
       "cases": [
 
       ]
     },
     "println": {
-      "full": "print with newline\n",
-      "desc": "",
-      "effect": "print with newline",
+      "full": "print with newline\n[0 ... C] => []\n",
+      "desc": "print with newline",
+      "effect": "[0 ... C] => []",
+      "cases": [
+
+      ]
+    },
+    "prompt": {
+      "full": "displays the string S then reads a line of input\n[S] => [L]\n",
+      "desc": "displays the string S then reads a line of input",
+      "effect": "[S] => [L]",
       "cases": [
 
       ]
     },
     "readall": {
-      "full": "consume stdin until EOF\n",
-      "desc": "",
-      "effect": "consume stdin until EOF",
+      "full": "consume stdin until EOF into the string S\n[] => [S]\n",
+      "desc": "consume stdin until EOF into the string S",
+      "effect": "[] => [S]",
       "cases": [
 
       ]
     },
     "readfile": {
-      "full": "returns the contents C of the file at path P (a string)\nNON-STANDARD! This function makes use of the `shell` instruction, which is\nonly(?) available in the Spiceweight Whitespace interpreter.\n",
-      "desc": "returns the contents C of the file at path P (a string)\nNON-STANDARD! This function makes use of the `shell` instruction, which is",
-      "effect": "only(?) available in the Spiceweight Whitespace interpreter.",
+      "full": "returns the contents C of the file at path P (a string)\nNON-STANDARD! This function makes use of the `shell` instruction, which is\nonly(?) available in the Spiceweight Whitespace interpreter.\n[P] => [C]\n",
+      "desc": "returns the contents C of the file at path P (a string)\nNON-STANDARD! This function makes use of the `shell` instruction, which is\nonly(?) available in the Spiceweight Whitespace interpreter.",
+      "effect": "[P] => [C]",
       "cases": [
 
       ]
