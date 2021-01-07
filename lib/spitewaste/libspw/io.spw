@@ -39,3 +39,8 @@ _readall_loop:
   :strcat jump _readall_loop
 
 _readall_done: pop ret
+
+; returns the contents C of the file at path P (a string)
+; NON-STANDARD! This function makes use of the `shell` instruction, which is
+; only(?) available in the Spiceweight Whitespace interpreter.
+readfile: push "cat " swap :strcat shell ret

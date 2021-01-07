@@ -5,7 +5,7 @@ class LibspwTest < Minitest::Test
   docs = File.expand_path '../lib/spitewaste/libspw/docs.json', __dir__
   db = JSON.load File.read docs
 
-  mods = db.keys - ['random'] # tested separately due to statefulness
+  mods = db.keys - %w[io random] # tested separately due to statefulness
   # Generate a Spitewaste program that imports all of the documented standard
   # library modules. We'll be hot-loading instructions into the dummy main.
   spw = mods.map { "import #{_1}\n" }.join + 'main: exit'

@@ -1776,6 +1776,14 @@
       "cases": [
 
       ]
+    },
+    "readfile": {
+      "full": "returns the contents C of the file at path P (a string)\nNON-STANDARD! This function makes use of the `shell` instruction, which is\nonly(?) available in the Spiceweight Whitespace interpreter.\n",
+      "desc": "returns the contents C of the file at path P (a string)\nNON-STANDARD! This function makes use of the `shell` instruction, which is",
+      "effect": "only(?) available in the Spiceweight Whitespace interpreter.",
+      "cases": [
+
+      ]
     }
   },
   "math": {
