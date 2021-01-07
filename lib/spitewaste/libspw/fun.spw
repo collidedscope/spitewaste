@@ -94,3 +94,17 @@ to_roman: push -2,0 store
   $_to_roman("X", 10)   $_to_roman("IX", 9)
   $_to_roman("V", 5)    $_to_roman("IV", 4)
   $_to_roman("I", 1) push 2 sub load ret
+
+; applies the ROT13 "cipher" to the string S
+; [S] => [S']
+;
+; ["gnat"] => ["tang"]
+; ["purely"] => ["cheryl"]
+; ["cat.PNG"] => ["png.CAT"]
+; ["Hello, world."] => ["Uryyb, jbeyq."]
+; ["a123z"] => ["n123m"]
+ROT13:
+  push "AZ" :strexpand push "az" :strexpand :strcat
+  push "NZ" :strexpand push "AM" :strexpand
+  push "nz" :strexpand push "am" :strexpand
+  :strcat :strcat :strcat :strtrans ret

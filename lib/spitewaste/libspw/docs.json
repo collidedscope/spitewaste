@@ -1455,6 +1455,53 @@
     }
   },
   "fun": {
+    "ROT13": {
+      "full": "applies the ROT13 \"cipher\" to the string S\n[S] => [S']\n\n[\"gnat\"] => [\"tang\"]\n[\"purely\"] => [\"cheryl\"]\n[\"cat.PNG\"] => [\"png.CAT\"]\n[\"Hello, world.\"] => [\"Uryyb, jbeyq.\"]\n[\"a123z\"] => [\"n123m\"]\n",
+      "desc": "applies the ROT13 \"cipher\" to the string S",
+      "effect": "[S] => [S']",
+      "cases": [
+        [
+          [
+            244873063
+          ],
+          [
+            217821428
+          ]
+        ],
+        [
+          [
+            4186733066992
+          ],
+          [
+            3743573177443
+          ]
+        ],
+        [
+          [
+            314962935099619
+          ],
+          [
+            371687373272944
+          ]
+        ],
+        [
+          [
+            905009539406525881141375688
+          ],
+          [
+            906989270706565425435408725
+          ]
+        ],
+        [
+          [
+            32856905953
+          ],
+          [
+            29367245038
+          ]
+        ]
+      ]
+    },
     "anagrams?": {
       "full": "returns whether the strings S and T are composed of the same characters\n[S T] => [0 | 1]\n\n[\"allergy\" \"gallery\"] => [1]\n[\"largely\" \"regally\"] => [1]\n[\"foo\" \"bar\"] => [0]\n",
       "desc": "returns whether the strings S and T are composed of the same characters",
