@@ -21,6 +21,10 @@ module Spitewaste
     return :whitespace if white > black
     program[/import|[^-\w\s]/] ? :spitewaste : :assembly
   end
+
+  def strpack s
+    s.bytes.zip(0..).sum { |b, e| b * 128 ** e }
+  end
 end
 
 require 'spitewaste/assembler'

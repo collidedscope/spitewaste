@@ -148,7 +148,9 @@ module Spitewaste
         params, body = @macros[$1]
         raise "no macro function '#$1'" unless body
         map = parse[params].zip(parse[$2]).to_h
-        body.gsub(/`(.+?)`/) { map[$1] }
+        body
+          .gsub(/`(.+?)`/) { map[$1] }
+          .gsub(/#(\S+)/) { "push #{Spitewaste.strpack map[$1]}" }
       }
 
       @src.gsub!(/(\$\S+)\s*=\s*(.+)/) { @macros[$1] ||= $2; '' }
