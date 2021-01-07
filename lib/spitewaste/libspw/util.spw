@@ -267,3 +267,10 @@ heapswap: dup load swap copy 2 load store store ret
 ; returns the number of nanoseconds N since the Unix epoch
 ; [] => [N]
 time: push "date +%s%N" shell :to_i ret
+
+$bench(insns) {
+  #insns :println
+  :time ^0 `insns` :time @0 sub
+  push 10,9 :pow :divmod swap onum
+  push '.' ochr :to_s push 9,48 :rjustc :println
+}
