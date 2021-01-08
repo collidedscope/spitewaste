@@ -4261,6 +4261,49 @@
         ]
       ]
     },
+    "strbegins?": {
+      "full": "returns 1 if the string S begins with substring T, 0 otherwise\n[S T] => [0 | 1]\n\n[\"foobar\" \"foo\"] => [1]\n[\"foobar\" \"boo\"] => [0]\n[\"abc123\" \"123\"] => [0]\n[\" foo\" \" \"] = [1]\n",
+      "desc": "returns 1 if the string S begins with substring T, 0 otherwise",
+      "effect": "[S T] => [0 | 1]",
+      "cases": [
+        [
+          [
+            3943255767014,
+            1832934
+          ],
+          [
+            1
+          ]
+        ],
+        [
+          [
+            3943255767014,
+            1832930
+          ],
+          [
+            0
+          ]
+        ],
+        [
+          [
+            1765872824673,
+            842033
+          ],
+          [
+            0
+          ]
+        ],
+        [
+          [
+            234615584,
+            32
+          ],
+          [
+            1
+          ]
+        ]
+      ]
+    },
     "strcat": {
       "full": "takes two packed strings and returns their concatenation (as a packed string)\n[S T] => [S+T]\n\n[\"foo\" \"\"] => [\"foo\"]\n[\"\" \"foo\"] => [\"foo\"]\n[\"foo\" \"bar\"] => [\"foobar\"]\n",
       "desc": "takes two packed strings and returns their concatenation (as a packed string)",
@@ -4468,6 +4511,49 @@
           ],
           [
             31641465569
+          ]
+        ]
+      ]
+    },
+    "strends?": {
+      "full": "returns 1 if the string S ends with substring T, 0 otherwise\n[S T] => [0 | 1]\n\n[\"foobar\" \"bar\"] => [1]\n[\"foobar\" \"foo\"] => [0]\n[\"abc123\" \"abc\"] => [0]\n[\"foo \" \" \"] = [1]\n",
+      "desc": "returns 1 if the string S ends with substring T, 0 otherwise",
+      "effect": "[S T] => [0 | 1]",
+      "cases": [
+        [
+          [
+            3943255767014,
+            1880290
+          ],
+          [
+            1
+          ]
+        ],
+        [
+          [
+            3943255767014,
+            1832934
+          ],
+          [
+            0
+          ]
+        ],
+        [
+          [
+            1765872824673,
+            1634657
+          ],
+          [
+            0
+          ]
+        ],
+        [
+          [
+            68941798,
+            32
+          ],
+          [
+            1
           ]
         ]
       ]

@@ -399,3 +399,25 @@ strtoa: dup :strlen pop :strunpack @-1 $++ ret
 ; ["foobar"] => ["LEEHKX"]
 ; ["LEEHKX"] => ["foobar"]
 memfrob: :strtoa map (push 42 :bxor) pop :strpack ret
+
+; returns 1 if the string S begins with substring T, 0 otherwise
+; [S T] => [0 | 1]
+;
+; ["foobar" "foo"] => [1]
+; ["foobar" "boo"] => [0]
+; ["abc123" "123"] => [0]
+; [" foo" " "] = [1]
+strbegins?:
+  dup :strlen copy 2 swap push 0 swap
+  :strslice :eq slide 1 ret
+
+; returns 1 if the string S ends with substring T, 0 otherwise
+; [S T] => [0 | 1]
+;
+; ["foobar" "bar"] => [1]
+; ["foobar" "foo"] => [0]
+; ["abc123" "abc"] => [0]
+; ["foo " " "] = [1]
+strends?:
+  :strrev dup :strlen copy 2 :strrev swap push 0 swap
+  :strslice :eq slide 1 ret
