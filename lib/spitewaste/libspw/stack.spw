@@ -1,6 +1,6 @@
 ;;; Heavy-handed stack manipulation
 
-; These subrtouines do some pretty intricate stack-based operations, relying
+; These subroutines do some pretty intricate stack-based operations, relying
 ; heavily on clobbering the heap in order to maintain their "bookkeeping".
 ; Many of them use heap addresses -10 and lower, unbounded, so they're only
 ; meant to be used in a pinch or when there just isn't much of an alternative.
