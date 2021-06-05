@@ -599,6 +599,52 @@ schemes:
       cyan:    '0x99faf2'
       white:   '0xffffff'
 
+  konsole_linux: &konsole_linux
+    primary:
+      foreground: '0xe3e3e3'
+      bright_foreground: '0xffffff'
+      dim_foreground:    '0xe3e3e3'
+      background: '0x1f1f1f'
+      bright_background: '0x686868' # not sure
+      dim_background:    '0x1f1f1f' # not sure
+    cursor:
+      text: '0x191622'
+      cursor: '0xf8f8f2'
+    search:
+      matches:
+        foreground: '0xb2b2b2'
+        background: '0xb26818'
+      focused_match:
+        foreground: CellBackground
+        background: CellForeground
+    normal:
+      black:   '0x000000'
+      red:     '0xb21818'
+      green:   '0x18b218'
+      yellow:  '0xb26818'
+      blue:    '0x1818b2'
+      magenta: '0xb218b2'
+      cyan:    '0x18b2b2'
+      white:   '0xb2b2b2'
+    bright:
+      black:   '0x686868'
+      red:     '0xff5454'
+      green:   '0x54ff54'
+      yellow:  '0xffff54'
+      blue:    '0x5454ff'
+      magenta: '0xff54ff'
+      cyan:    '0x54ffff'
+      white:   '0xffffff'
+    dim:
+      black:   '0x000000'
+      red:     '0xb21818'
+      green:   '0x18b218'
+      yellow:  '0xb26818'
+      blue:    '0x1818b2'
+      magenta: '0xb218b2'
+      cyan:    '0x18b2b2'
+      white:   '0xb2b2b2'
+
   low_contrast: &low_contrast
     primary:
       background: '0x333333'
@@ -717,6 +763,41 @@ schemes:
       cyan:    '0x5fb3b3'
       white:   '0xadb5c0'
 
+  omni: &omni
+    primary:
+      background: '0x191622'
+      foreground: '0xe1e1e6'
+    cursor:
+      text: '0x191622'
+      cursor: '0xf8f8f2'
+    normal:
+      black: '0x000000'
+      red: '0xff5555'
+      green: '0x50fa7b'
+      yellow: '0xeffa78'
+      blue: '0xbd93f9'
+      magenta: '0xff79c6'
+      cyan: '0x8d79ba'
+      white: '0xbfbfbf'
+    bright:
+      black: '0x4d4d4d'
+      red: '0xff6e67'
+      green: '0x5af78e'
+      yellow: '0xeaf08d'
+      blue: '0xcaa9fa'
+      magenta: '0xff92d0'
+      cyan: '0xaa91e3'
+      white: '0xe6e6e6'
+    dim:
+      black: '0x000000'
+      red: '0xa90000'
+      green: '0x049f2b'
+      yellow: '0xa3b106'
+      blue: '0x530aba'
+      magenta: '0xbb006b'
+      cyan: '0x433364'
+      white: '0x5f5f5f'
+
   one_dark: &one_dark
     primary:
       background: '0x1e2127'
@@ -738,6 +819,29 @@ schemes:
       blue:    '0x61afef'
       magenta: '0xc678dd'
       cyan:    '0x56b6c2'
+      white:   '0xffffff'
+
+  palenight: &palenight
+    primary:
+      background: '0x292d3e'
+      foreground: '0xd0d0d0'
+    normal:
+      black:   '0x292d3e'
+      red:     '0xf07178'
+      green:   '0xc3e88d'
+      yellow:  '0xffcb6b'
+      blue:    '0x82aaff'
+      magenta: '0xc792ea'
+      cyan:    '0x89ddff'
+      white:   '0xd0d0d0'
+    bright:
+      black:   '0x434758'
+      red:     '0xff8b92'
+      green:   '0xddffa7'
+      yellow:  '0xffe585'
+      blue:    '0x9cc4ff'
+      magenta: '0xe1acff'
+      cyan:    '0xa3f7ff'
       white:   '0xffffff'
 
   papercolor_light: &papercolor_light
@@ -811,6 +915,29 @@ schemes:
       magenta: '0x6855de'
       cyan:    '0x4fb8cc'
       white:   '0xf1f1f1'
+
+  remedy_dark: &remedy_dark
+    primary:
+      background: '0x2c2b2a'
+      foreground: '0xf9e7c4'
+    normal:
+      black:   '0x282a2e'
+      blue:    '0x5f819d'
+      cyan:    '0x5e8d87'
+      green:   '0x8c9440'
+      magenta: '0x85678f'
+      red:     '0xa54242'
+      white:   '0x707880'
+      yellow:  '0xde935f'
+    bright:
+      black:   '0x373b41'
+      blue:    '0x81a2be'
+      cyan:    '0x8abeb7'
+      green:   '0xb5bd68'
+      magenta: '0xb294bb'
+      red:     '0xcc6666'
+      white:   '0xc5c8c6'
+      yellow:  '0xf0c674'
 
   snazzy: &snazzy
     primary:
