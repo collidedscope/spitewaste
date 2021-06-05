@@ -4,7 +4,8 @@ require 'yaml'
 
 module Spitewaste
   class ImageEmitter < Emitter
-    SCHEMES  = YAML.load_file(File.join __dir__, 'schemes.yaml')['schemes']
+    schemes  = File.read File.join __dir__, 'schemes.yaml'
+    SCHEMES  = YAML.safe_load(schemes, aliases: true)['schemes']
     LINEFEED = ChunkyPNG::Image.from_file File.join __dir__, 'linefeed.png'
     DEFAULTS =  {
       colors: 'gruvbox_dark',
