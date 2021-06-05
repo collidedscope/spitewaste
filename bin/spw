@@ -7,5 +7,6 @@ require 'spitewaste/cli/exec'
 require 'spitewaste/cli/compile'
 require 'spitewaste/cli/convert'
 require 'spitewaste/cli/image'
+require 'spitewaste/cli/version'
 
 SpitewasteCLI.start ARGV
